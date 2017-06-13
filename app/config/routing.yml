@@ -1,6 +1,6 @@
 app:
-    resource: "@UserBundle/Controller/"
+    resource: "@UserBundle/Controller/Api"
     type:     annotation
-    prefix:   /users
+    prefix:   /api/v1
     defaults:
         _format: json

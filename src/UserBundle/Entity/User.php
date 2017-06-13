@@ -31,6 +31,7 @@ use Doctrine\ORM\Mapping\Column;
  */
 class User extends BaseUser
 {
+
     const ROLE_ADMIN = 'ROLE_ADMIN';
 
     /**
@@ -46,6 +47,37 @@ class User extends BaseUser
      * @ORM\OneToMany(targetEntity="UserAddOnEmail", mappedBy="user", cascade={"persist"})
      */
     private $addOnEmails;
+
+    /**
+     * Тип используемого автомобиля
+     * @ORM\Column(name="cargo_type", type="string", nullable=false)
+     */
+    private $cargoType;
+
+    /**
+     * Телефон
+     * @ORM\Column(name="phone", type="string", nullable=false)
+     */
+    private $phone;
+
+    /**
+     * Город
+     * @ORM\OneToOne(targetEntity="City")
+     * @ORM\JoinColumn(name="city_id", referencedColumnName="id")
+     */
+    private $city;
+
+    /**
+     * Районы города
+     * @ORM\Column(name="city_district", type="string", nullable=false)
+     */
+    private $cityDistrict;
+
+    /**
+     * Районы города
+     * @ORM\Column(name="description", type="text")
+     */
+    private $description;
 
     public function __construct()
     {
@@ -75,4 +107,55 @@ class User extends BaseUser
     {
         return $this->addOnEmails;
     }
+
+    public function getCargoType()
+    {
+        return $this->cargoType;
+    }
+
+    public function getPhone()
+    {
+        return $this->phone;
+    }
+
+    public function getCity()
+    {
+        return $this->city;
+    }
+
+    public function getCityDistrict()
+    {
+        return $this->cityDistrict;
+    }
+
+    public function getDescription()
+    {
+        return $this->description;
+    }
+
+    public function setCargoType($cargoType)
+    {
+        $this->cargoType = $cargoType;
+    }
+
+    public function setPhone($phone)
+    {
+        $this->phone = $phone;
+    }
+
+    public function setCity(City $city)
+    {
+        $this->city = $city;
+    }
+
+    public function setCityDistrict($cityDistrict)
+    {
+        $this->cityDistrict = $cityDistrict;
+    }
+
+    public function setDescription($description)
+    {
+        $this->description = $description;
+    }
+
 }

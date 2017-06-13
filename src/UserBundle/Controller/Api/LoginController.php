@@ -1,6 +1,6 @@
 <?php
 
-namespace UserBundle\Controller;
+namespace UserBundle\Controller\Api;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;

@@ -4,9 +4,11 @@ namespace UserBundle\Helper;
 
 use Symfony\Component\HttpFoundation\Response;
 use JMS\Serializer\SerializationContext;
+use UserBundle\Model\ApiError;
 
 trait ControllerHelper
 {
+
     /**
      * Set base HTTP headers.
      *
@@ -22,6 +24,14 @@ trait ControllerHelper
         return $response;
     }
 
+    public function raiseError($code, $message, $trace = array())
+    {
+        $apiError = new ApiError($code, $message);
+
+        return $this->setBaseHeaders(new Response($this->serialize(array('error' => 1,
+                            'error_info' => $apiError->toArray()))));
+    }
+
     /**
      * Data serializing via JMS serializer.
      *
@@ -35,6 +45,7 @@ trait ControllerHelper
         $context->setSerializeNull(true);
 
         return $this->get('jms_serializer')
-            ->serialize($data, 'json', $context);
+                        ->serialize($data, 'json', $context);
     }
+
 }
