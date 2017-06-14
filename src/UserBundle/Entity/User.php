@@ -33,6 +33,9 @@ class User extends BaseUser
 {
 
     const ROLE_ADMIN = 'ROLE_ADMIN';
+    const WORK_AREA_ALL = 'ALL';
+    const WORK_AREA_CITY = 'CITY';
+    const WORK_AREA_SUBURBAN = 'SUBURBAN';
 
     /**
      * @var int
@@ -75,13 +78,61 @@ class User extends BaseUser
 
     /**
      * Районы города
-     * @ORM\Column(name="description", type="text")
+     * @ORM\Column(name="description", type="text", nullable=true)
      */
     private $description;
+
+    /**
+     * Габариты
+     * @ORM\Column(name="dimensions", type="array", nullable=true)
+     */
+    private $dimensions;
+
+    /**
+     * Наличие грузчиков
+     * @ORM\Column(name="loaders", type="boolean")
+     */
+    private $loaders;
+
+    /**
+     * Область работы (город/обл/все) 
+     * @ORM\Column(name="work_area", type="string", nullable=true)
+     */
+    private $workArea;
+
+    /**
+     * Марка автомобиля
+     * @ORM\Column(name="auto_type", type="string", nullable=true)
+     */
+    private $autoType;
+
+    /**
+     * Стоимость в час
+     * @ORM\Column(name="price", type="integer")
+     */
+    private $price;
+
+    /**
+     * Минимальное кол-во часов
+     * @ORM\Column(name="min_hour", type="integer")
+     */
+    private $minHour;
+
+    /**
+     * Настройки рабочего времени
+     * @ORM\Column(name="work_time_settings", type="array")
+     */
+    private $workTimeSettings;
 
     public function __construct()
     {
         $this->addOnEmails = new ArrayCollection();
+        $this->dimensions = array();
+        $this->loaders = false;
+        $this->workArea = self::WORK_AREA_ALL;
+        $this->price = 0;
+        $this->minHour = 1;
+        $this->workTimeSettings = array();
     }
 
     /**
@@ -156,6 +207,76 @@ class User extends BaseUser
     public function setDescription($description)
     {
         $this->description = $description;
+    }
+
+    public function setDimensions($dimensions)
+    {
+        $this->dimensions = $dimensions;
+    }
+
+    public function getDimensions()
+    {
+        return $this->dimensions;
+    }
+
+    public function setLoaders($hasLoaders)
+    {
+        $this->loaders = $hasLoaders;
+    }
+
+    public function hasLoaders()
+    {
+        $this->loaders;
+    }
+
+    public function setWorkArea($area)
+    {
+        $this->workArea = $area;
+    }
+
+    public function getWorkArea()
+    {
+        return $this->workArea;
+    }
+
+    public function setAutoType($auto)
+    {
+        $this->autoType = $auto;
+    }
+
+    public function getAutoType()
+    {
+        return $this->autoType;
+    }
+
+    public function setPrice($price)
+    {
+        $this->price = $price;
+    }
+
+    public function getPrice()
+    {
+        return $this->price;
+    }
+
+    public function setMinHour($minHour)
+    {
+        $this->minHour = $minHour;
+    }
+
+    public function getMinHour()
+    {
+        return $this->minHour;
+    }
+
+    public function setWorkTimeSettings($workTimeSettings)
+    {
+        $this->workTimeSettings = $workTimeSettings;
+    }
+
+    public function getWorkTimeSettings()
+    {
+        return $this->workTimeSettings;
     }
 
 }

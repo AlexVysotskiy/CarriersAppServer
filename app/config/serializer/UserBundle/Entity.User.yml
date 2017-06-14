@@ -1,0 +1,19 @@
+UserBundle\Entity\User:
+    exclusion_policy: ALL
+    properties:
+        id:
+            expose: true
+        username:
+            expose: true
+        email:
+            expose: true
+        cargoType:
+            expose: true
+        phone:
+            expose: true
+        city:
+            expose: true
+        cityDistrict:
+            expose: true
+        description:
+            expose: true

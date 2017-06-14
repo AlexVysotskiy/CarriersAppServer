@@ -67,7 +67,7 @@ class GeoControllerController extends Controller
                 throw new \Exception('Region with given id not found!');
             }
         } catch (\Exception $e) {
-
+            
             return $this->raiseError($e->getCode(), $e->getMessage());
         }
 

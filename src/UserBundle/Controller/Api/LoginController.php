@@ -13,31 +13,28 @@ use UserBundle\Service\MyUserManager;
 
 class LoginController extends Controller
 {
+
     use \UserBundle\Helper\ControllerHelper;
 
     /**
-     * @Route("/login", name="user_login")
+     * @Route("/login/{phone}/{password}", name="api_v1_user_login")
      * @Method("POST")
      */
     public function loginAction(Request $request)
     {
-        $usernameOrEmail = $request->getUser();
-        $password = $request->getPassword();
+        $phone = $request->get('phone');
+        $password = $request->get('password');
 
-        /** @var MyUserManager */
-        $userManager = $this->get('my_user_manager');
+        /* @var $userManager \FOS\UserBundle\Model\UserManagerInterface */
+        $userManager = $this->get('fos_user.user_manager');
 
-        $user = $userManager->findUserByUsernameOrEmail($usernameOrEmail);
+        $user = $userManager->findUserBy(array(
+            'phone' => '$phone',
+        ));
 
-        if (!$user) {
-            throw $this->createNotFoundException();
-        }
-
-        $isValid = $this->get('security.password_encoder')
-            ->isPasswordValid($user, $password);
-
-        if (!$isValid) {
-            throw new BadCredentialsException();
+        if (!$user || $this->get('security.password_encoder')
+                        ->isPasswordValid($user, $password)) {
+            return $this->raiseError(1, 'Введен неверный телефон/пароль.');
         }
 
         $token = $this->getToken($user);
@@ -56,10 +53,10 @@ class LoginController extends Controller
     public function getToken(User $user)
     {
         return $this->container->get('lexik_jwt_authentication.encoder')
-                ->encode([
-                    'username' => $user->getUsername(),
-                    'exp' => $this->getTokenExpiryDateTime(),
-                ]);
+                        ->encode([
+                            'username' => $user->getUsername(),
+                            'exp' => $this->getTokenExpiryDateTime(),
+        ]);
     }
 
     /**
@@ -71,8 +68,9 @@ class LoginController extends Controller
     {
         $tokenTtl = $this->container->getParameter('lexik_jwt_authentication.token_ttl');
         $now = new \DateTime();
-        $now->add(new \DateInterval('PT'.$tokenTtl.'S'));
+        $now->add(new \DateInterval('PT' . $tokenTtl . 'S'));
 
         return $now->format('U');
     }
+
 }

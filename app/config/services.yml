@@ -1,8 +1,7 @@
 # Learn more about services, parameters and containers at
 # http://symfony.com/doc/current/book/service_container.html
 parameters:
-    car_available: [cargo_300, cargo_700, cargo_1500, cargo_3000, cargo_6000, cargo_over_6000]
-        
+    cargo_types: [cargo_300, cargo_700, cargo_1500, cargo_3000, cargo_6000, cargo_over_6000]
 
 services:
     token_authenticator:
