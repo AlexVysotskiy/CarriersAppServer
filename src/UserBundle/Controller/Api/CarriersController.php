@@ -29,19 +29,70 @@ class CarriersController extends Controller
     {
         $cityId = abs(intval($request->get('cityId')));
 
-        /* @var $em \Doctrine\ORM\EntityManager */
-        $em = $this->get('doctrine.orm.entity_manager');
-        /* @var $repo \Doctrine\ORM\EntityRepository */
-        $repo = $em->getRepository('UserBundle\Entity\User');
-        $list = $repo->findBy(array(
+        $lastId = $request->get('lastId');
+        $count = abs(intval($request->get('count')));
+        if (!$count) {
+            $count = 30;
+        }
+
+        $list = $this->getCarriersList(array(
             'city' => $cityId
-        ));
+                ), $lastId, $count);
 
         $response = new Response($this->serialize(
                         array('list' => $list)
                 ), Response::HTTP_OK);
 
         return $this->setBaseHeaders($response);
+    }
+
+    /**
+     * @Route("/carriers_list_filtered/{cityId}/{cargoType}", name = "api_v1_carriers_list")
+     * @Method("POST")
+     */
+    public function carriersListFilteredByTypeAction(Request $request)
+    {
+        $cityId = abs(intval($request->get('cityId')));
+        $cargoType = $request->get('cargoType');
+
+        $lastId = $request->get('lastId');
+        $count = abs(intval($request->get('count')));
+        if (!$count) {
+            $count = 30;
+        }
+
+        $list = $this->getCarriersList(array(
+            'city' => $cityId,
+            'cargoType' => $cargoType
+                ), $lastId, $count);
+
+        $response = new Response($this->serialize(
+                        array('list' => $list)
+                ), Response::HTTP_OK);
+
+        return $this->setBaseHeaders($response);
+    }
+
+    protected function getCarriersList($conditions = array(), $lastId = null, $count = 30)
+    {
+        /* @var $em \Doctrine\ORM\EntityManager */
+        $em = $this->get('doctrine.orm.entity_manager');
+
+        $query = "select u from UserBundle\Entity\User u where";
+
+        foreach ($conditions as $name => $value) {
+            $query .= " u.$name = $value and";
+        }
+
+        $query = rtrim($query, 'and');
+
+        if ($lastId) {
+            $query .= " and u.id < $lastId";
+        }
+
+        $query .= " LIMIT $count";
+
+        return $em->createQuery($query)->getResult();
     }
 
     /**
