@@ -51,6 +51,7 @@ class User extends BaseUser
      */
     private $addOnEmails;
 
+    
     /**
      * Тип используемого автомобиля
      * @ORM\Column(name="cargo_type", type="string", nullable=false)
@@ -65,7 +66,7 @@ class User extends BaseUser
 
     /**
      * Город
-     * @ORM\OneToOne(targetEntity="City")
+     * @ORM\ManyToOne(targetEntity="City")
      * @ORM\JoinColumn(name="city_id", referencedColumnName="id")
      */
     private $city;
@@ -158,7 +159,7 @@ class User extends BaseUser
     {
         return $this->addOnEmails;
     }
-
+    
     public function getCargoType()
     {
         return $this->cargoType;

@@ -21,7 +21,7 @@ class RegistrationController extends BaseController
 
     /**
      * @Route("/register", name="api_v1_user_register")
-     * @Method("GET")
+     * @Method("POST")
      */
     public function registerAction(Request $request)
     {
@@ -61,14 +61,15 @@ class RegistrationController extends BaseController
 
             /* @var $user \UserBundle\Entity\User */
             $user = $userManager->createUser();
-            $user->setEnabled(true);
-            $user->setUsername($params['username']);
-            $user->setEmail($params['phone']);
-            $user->setPlainPassword($params['password']);
-            $user->setCargoType($params['cargo_type']);
-            $user->setPhone($params['phone']);
-            $user->setCityDistrict($params['city_district']);
-            $user->setDescription(substr($params['description'], 0, 255));
+            $user->setEnabled(true)
+                    ->setUsername($params['username'])
+                    ->setEmail($params['phone'])
+                    ->setPhone($params['phone'])
+                    ->setName($params['username'])
+                    ->setPlainPassword($params['password'])
+                    ->setCargoType($params['cargo_type'])
+                    ->setCityDistrict($params['city_district'])
+                    ->setDescription(substr($params['description'], 0, 255));
 
             if (isset($params['auto_type'])) {
                 $user->setAutoType(substr($params['auto_type'], 0, 255));
@@ -82,9 +83,8 @@ class RegistrationController extends BaseController
                 $dimensions = array();
             }
 
-            $user->setDimensions($dimensions);
-
-            $user->setLoaders($params['loaders'] == 1);
+            $user->setDimensions($dimensions)
+                    ->setLoaders($params['loaders'] == 1);
 
             if (isset($params['work_area'])) {
 
@@ -101,8 +101,8 @@ class RegistrationController extends BaseController
                 $user->setWorkArea($workArea);
             }
 
-            $user->setPrice($params['price']);
-            $user->setMinHour($params['min_hour']);
+            $user->setPrice($params['price'])
+                    ->setMinHour($params['min_hour']);
 
             if (isset($params['work_time']) && ($settings = json_decode($params['work_time'], true))) {
 

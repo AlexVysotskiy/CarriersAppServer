@@ -17,7 +17,7 @@ class LoginController extends Controller
     use \UserBundle\Helper\ControllerHelper;
 
     /**
-     * @Route("/login/{phone}/{password}", name="api_v1_user_login")
+     * @Route("/login", name="api_v1_user_login")
      * @Method("POST")
      */
     public function loginAction(Request $request)
@@ -29,12 +29,16 @@ class LoginController extends Controller
         $userManager = $this->get('fos_user.user_manager');
 
         $user = $userManager->findUserBy(array(
-            'phone' => '$phone',
+            'phone' => $phone,
         ));
 
-        if (!$user || $this->get('security.password_encoder')
+        if (!$user) {
+//            return $this->raiseError(1, 'Введен неверный телефон/пароль1.');
+        }
+        
+        if (!$this->get('security.password_encoder')
                         ->isPasswordValid($user, $password)) {
-            return $this->raiseError(1, 'Введен неверный телефон/пароль.');
+//            return $this->raiseError(1, 'Введен неверный телефон/пароль.');
         }
 
         $token = $this->getToken($user);
