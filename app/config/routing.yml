@@ -1,6 +1,13 @@
-app:
+app_api:
     resource: "@UserBundle/Controller/Api"
     type:     annotation
     prefix:   /api/v1
+    defaults:
+        _format: json
+        
+app_base:
+    resource: "@UserBundle/Controller/Base"
+    type:     annotation
+    prefix:   /
     defaults:
         _format: json
