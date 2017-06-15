@@ -5,8 +5,6 @@ UserBundle\Entity\User:
             expose: true
         username:
             expose: true
-        email:
-            expose: true
         cargoType:
             expose: true
         phone:
@@ -16,4 +14,18 @@ UserBundle\Entity\User:
         cityDistrict:
             expose: true
         description:
+            expose: true
+        dimensions:
+            expose: true
+        loaders:
+            expose: true
+        workArea:
+            expose: true
+        autoType:
+            expose: true
+        price:
+            expose: true
+        minHour:
+            expose: true
+        workTimeSettings:
             expose: true
