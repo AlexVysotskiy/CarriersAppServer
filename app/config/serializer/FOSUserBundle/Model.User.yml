@@ -1,4 +1,4 @@
-UserBundle\Entity\User:
+FOS\UserBundle\Model\User:
     exclusion_policy: ALL
     properties:
         id:

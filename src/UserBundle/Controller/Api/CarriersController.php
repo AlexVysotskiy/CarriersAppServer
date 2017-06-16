@@ -97,7 +97,7 @@ class CarriersController extends Controller
 
     /**
      * @Route("/carrier_info/{carrierId}", name = "api_v1_carrier_info")
-     * @Method("POST")
+     * @Method("GET")
      */
     public function carrierInfoAction(Request $request)
     {
@@ -106,7 +106,6 @@ class CarriersController extends Controller
         /* @var $userManager \FOS\UserBundle\Model\UserManagerInterface */
         $userManager = $this->get('fos_user.user_manager');
         $carrier = $userManager->findUserBy(array('id' => $carrierId));
-
 
         $response = new Response($this->serialize(
                         array('carrier' => $carrier)

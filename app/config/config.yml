@@ -93,10 +93,12 @@ jms_serializer:
     metadata:    
         auto_detection: true
         directories:
-            UserBundle:
-                namespace_prefix: UserBundle
-                path: %kernel.root_dir%/config/serializer/UserBundle
-            FOSUserBundle:
-                namespace_prefix: FOS\UserBundle\Model
-                path: %kernel.root_dir%/config/serializer/UserBundle
+            - { path: %kernel.root_dir%/config/serializer/FOSUserBundle, namespace_prefix: 'FOS\UserBundle' }
+            - { path: %kernel.root_dir%/config/serializer/UserBundle, namespace_prefix: 'UserBundle' }
+#            UserBundle:
+#                namespace_prefix: UserBundle
+#                path: %kernel.root_dir%/config/serializer/UserBundle
+#            FOSUserBundle:
+#                namespace_prefix: "FOS\\UserBundle\\Model"
+#                path: %kernel.root_dir%/config/serializer/FOSUserBundle
 
