@@ -65,7 +65,6 @@ class RegistrationController extends BaseController
                     ->setUsername($params['username'])
                     ->setEmail($params['phone'])
                     ->setPhone($params['phone'])
-                    ->setName($params['username'])
                     ->setPlainPassword($params['password'])
                     ->setCargoType($params['cargo_type'])
                     ->setCityDistrict($params['city_district'])
