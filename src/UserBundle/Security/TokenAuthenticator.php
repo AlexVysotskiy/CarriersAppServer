@@ -16,6 +16,7 @@ use Symfony\Component\Security\Guard\AbstractGuardAuthenticator;
 
 class TokenAuthenticator extends AbstractGuardAuthenticator
 {
+
     private $jwtEncoder;
     private $em;
 
@@ -28,11 +29,14 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
     public function getCredentials(Request $request)
     {
         $extractor = new AuthorizationHeaderTokenExtractor(
-            'Bearer',
-            'Authorization'
+                'Bearer', 'Authorization'
         );
 
         $token = $extractor->extract($request);
+
+        if (!$token && $request->isMethod('POST')) {
+            $token = $request->get('access_token');
+        }
 
         if (!$token) {
             return;
@@ -52,8 +56,8 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
         $username = $data['username'];
 
         return $this->em
-            ->getRepository('UserBundle:User')
-            ->findOneBy(['username' => $username]);
+                        ->getRepository('UserBundle:User')
+                        ->findOneBy(['username' => $username]);
     }
 
     public function checkCredentials($credentials, UserInterface $user)
@@ -63,10 +67,12 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
 
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception)
     {
+        
     }
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, $providerKey)
     {
+        
     }
 
     public function supportsRememberMe()
@@ -78,4 +84,5 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
     {
         return new Response('{"error": 1, "error_info":{"message": "Необходима авторизация!"}}', Response::HTTP_UNAUTHORIZED);
     }
+
 }
