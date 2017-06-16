@@ -51,7 +51,6 @@ class User extends BaseUser
      */
     private $addOnEmails;
 
-    
     /**
      * Тип используемого автомобиля
      * @ORM\Column(name="cargo_type", type="string", nullable=false)
@@ -159,7 +158,7 @@ class User extends BaseUser
     {
         return $this->addOnEmails;
     }
-    
+
     public function getCargoType()
     {
         return $this->cargoType;
@@ -188,31 +187,43 @@ class User extends BaseUser
     public function setCargoType($cargoType)
     {
         $this->cargoType = $cargoType;
+
+        return $this;
     }
 
     public function setPhone($phone)
     {
         $this->phone = $phone;
+
+        return $this;
     }
 
     public function setCity(City $city)
     {
         $this->city = $city;
+
+        return $this;
     }
 
     public function setCityDistrict($cityDistrict)
     {
         $this->cityDistrict = $cityDistrict;
+
+        return $this;
     }
 
     public function setDescription($description)
     {
         $this->description = $description;
+
+        return $this;
     }
 
     public function setDimensions($dimensions)
     {
         $this->dimensions = $dimensions;
+
+        return $this;
     }
 
     public function getDimensions()
@@ -223,6 +234,9 @@ class User extends BaseUser
     public function setLoaders($hasLoaders)
     {
         $this->loaders = $hasLoaders;
+
+
+        return $this;
     }
 
     public function hasLoaders()
@@ -233,6 +247,9 @@ class User extends BaseUser
     public function setWorkArea($area)
     {
         $this->workArea = $area;
+
+
+        return $this;
     }
 
     public function getWorkArea()
@@ -243,6 +260,9 @@ class User extends BaseUser
     public function setAutoType($auto)
     {
         $this->autoType = $auto;
+
+
+        return $this;
     }
 
     public function getAutoType()
@@ -253,6 +273,9 @@ class User extends BaseUser
     public function setPrice($price)
     {
         $this->price = $price;
+
+
+        return $this;
     }
 
     public function getPrice()
@@ -263,6 +286,9 @@ class User extends BaseUser
     public function setMinHour($minHour)
     {
         $this->minHour = $minHour;
+
+
+        return $this;
     }
 
     public function getMinHour()
@@ -273,6 +299,9 @@ class User extends BaseUser
     public function setWorkTimeSettings($workTimeSettings)
     {
         $this->workTimeSettings = $workTimeSettings;
+
+
+        return $this;
     }
 
     public function getWorkTimeSettings()
