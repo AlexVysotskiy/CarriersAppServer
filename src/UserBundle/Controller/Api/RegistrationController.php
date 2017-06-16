@@ -116,7 +116,8 @@ class RegistrationController extends BaseController
 
             $response = new Response($this->serialize(array(
                         'success' => 1,
-                        'user' => $user
+                        'user' => $user,
+                        'token' => $this->getToken($user)
                     )), Response::HTTP_CREATED);
 
             return $this->setBaseHeaders($response);

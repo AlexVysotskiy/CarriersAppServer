@@ -32,49 +32,16 @@ class LoginController extends Controller
             'phone' => $phone,
         ));
 
-        if (!$user) {
-//            return $this->raiseError(1, 'Введен неверный телефон/пароль1.');
-        }
-        
-        if (!$this->get('security.password_encoder')
+        if (!$user || !$this->get('security.password_encoder')
                         ->isPasswordValid($user, $password)) {
-//            return $this->raiseError(1, 'Введен неверный телефон/пароль.');
+
+            return $this->raiseError(1, 'Введен неверный телефон/пароль.');
         }
 
         $token = $this->getToken($user);
         $response = new Response($this->serialize(['token' => $token]), Response::HTTP_OK);
 
         return $this->setBaseHeaders($response);
-    }
-
-    /**
-     * Returns token for user.
-     *
-     * @param User $user
-     *
-     * @return array
-     */
-    public function getToken(User $user)
-    {
-        return $this->container->get('lexik_jwt_authentication.encoder')
-                        ->encode([
-                            'username' => $user->getUsername(),
-                            'exp' => $this->getTokenExpiryDateTime(),
-        ]);
-    }
-
-    /**
-     * Returns token expiration datetime.
-     *
-     * @return string Unixtmestamp
-     */
-    private function getTokenExpiryDateTime()
-    {
-        $tokenTtl = $this->container->getParameter('lexik_jwt_authentication.token_ttl');
-        $now = new \DateTime();
-        $now->add(new \DateInterval('PT' . $tokenTtl . 'S'));
-
-        return $now->format('U');
     }
 
 }
