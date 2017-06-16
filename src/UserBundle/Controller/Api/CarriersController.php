@@ -22,7 +22,7 @@ class CarriersController extends Controller
     use \UserBundle\Helper\ControllerHelper;
 
     /**
-     * @Route("/carriers_list/{cityId}", name = "api_v1_carriers_list")
+     * @Route("/full_carriers_list/{cityId}", name = "api_v1_carriers_list")
      * @Method("GET")
      */
     public function carriersListAction(Request $request)
@@ -65,7 +65,7 @@ class CarriersController extends Controller
             'city' => $cityId,
             'cargoType' => $cargoType
                 ), $lastId, $count);
-
+        
         $response = new Response($this->serialize(
                         array('list' => $list)
                 ), Response::HTTP_OK);
@@ -81,7 +81,7 @@ class CarriersController extends Controller
         $query = "select u from UserBundle\Entity\User u where";
 
         foreach ($conditions as $name => $value) {
-            $query .= " u.$name = $value and";
+            $query .= " u.$name = " . (is_numeric($value) ? $value : "'$value'" ) . " and";
         }
 
         $query = rtrim($query, 'and');
@@ -90,9 +90,9 @@ class CarriersController extends Controller
             $query .= " and u.id < $lastId";
         }
 
-        $query .= " LIMIT $count";
+//        $query .= " LIMIT $count";
 
-        return $em->createQuery($query)->getResult();
+        return $em->createQuery($query)->setMaxResults($count)->getResult();
     }
 
     /**
