@@ -139,7 +139,7 @@ class RegistrationController extends BaseController
             if (!$values['username'] || $values['username'] == '') {
 
                 throw new \Exception('Имя является обязательным полем!', 1);
-            } elseif (!preg_match('/^[a-zа-я\-_]+(\s[a-zа-я\-_]+)?$/i', $values['username'])) {
+            } elseif (!preg_match('/^[a-zа-я\-_]+(\s[a-zа-я\-_]+)?$/iu', $values['username'])) {
 
                 throw new \Exception('Введите корректное имя!', 1);
             } elseif (mb_strlen($values['username']) > 200) {
