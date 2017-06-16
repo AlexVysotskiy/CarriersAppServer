@@ -5,6 +5,8 @@ namespace UserBundle\Helper;
 use Symfony\Component\HttpFoundation\Response;
 use JMS\Serializer\SerializationContext;
 use UserBundle\Model\ApiError;
+use UserBundle\Entity\User;
+use UserBundle\Service\MyUserManager;
 
 trait ControllerHelper
 {
