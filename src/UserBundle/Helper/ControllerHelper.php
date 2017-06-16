@@ -63,7 +63,7 @@ trait ControllerHelper
     {
         return $this->container->get('lexik_jwt_authentication.encoder')
                         ->encode([
-                            'username' => $user->getUsername(),
+                            'phone' => $user->getPhone(),
                             'exp' => $this->getTokenExpiryDateTime(),
         ]);
     }

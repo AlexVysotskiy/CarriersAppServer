@@ -53,11 +53,11 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
             throw new CustomUserMessageAuthenticationException('Invalid Token');
         }
 
-        $username = $data['username'];
+        $username = $data['phone'];
 
         return $this->em
                         ->getRepository('UserBundle:User')
-                        ->findOneBy(['username' => $username]);
+                        ->findOneBy(['phone' => $username]);
     }
 
     public function checkCredentials($credentials, UserInterface $user)
