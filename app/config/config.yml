@@ -96,4 +96,7 @@ jms_serializer:
             UserBundle:
                 namespace_prefix: UserBundle
                 path: %kernel.root_dir%/config/serializer/UserBundle
+            FOSUserBundle:
+                namespace_prefix: FOS\UserBundle\Model
+                path: %kernel.root_dir%/config/serializer/UserBundle
 
