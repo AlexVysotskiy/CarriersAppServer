@@ -56,7 +56,7 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
         $username = $data['phone'];
 
         return $this->em
-                        ->getRepository('UserBundle:User')
+                        ->getRepository('UserBundle\Entity\User')
                         ->findOneBy(['phone' => $username]);
     }
 

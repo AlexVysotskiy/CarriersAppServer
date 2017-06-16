@@ -15,6 +15,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 class AuthController extends Controller
 {
 
+    use \UserBundle\Helper\ControllerHelper;
+
     /**
      * @Route("/user_info", name="api_v1_user_info")
      * @Method("POST")
