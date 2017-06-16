@@ -23,7 +23,7 @@ class CarriersController extends Controller
 
     /**
      * @Route("/carriers_list/{cityId}", name = "api_v1_carriers_list")
-     * @Method("POST")
+     * @Method("GET")
      */
     public function carriersListAction(Request $request)
     {
@@ -48,7 +48,7 @@ class CarriersController extends Controller
 
     /**
      * @Route("/carriers_list_filtered/{cityId}/{cargoType}", name = "api_v1_carriers_list")
-     * @Method("POST")
+     * @Method("GET")
      */
     public function carriersListFilteredByTypeAction(Request $request)
     {
