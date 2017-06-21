@@ -31,4 +31,27 @@ class AuthController extends Controller
         return $this->setBaseHeaders($response);
     }
 
+    /**
+     * @Route("/edit", name="api_v1_user_edit")
+     * @Method("POST")
+     */
+    public function userEditAction(Request $request)
+    {
+        try {
+
+            $user = $this->getUser();
+            $this->get('my_user_manager')->editUser($user, $request);
+
+            $response = new Response($this->serialize(array(
+                        'success' => 1,
+                        'user' => $user
+                    )), Response::HTTP_CREATED);
+
+            return $this->setBaseHeaders($response);
+        } catch (\Exception $e) {
+
+            return $this->raiseError($e->getCode(), $e->getMessage());
+        }
+    }
+
 }

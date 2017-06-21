@@ -136,6 +136,12 @@ class User extends BaseUser
      */
     private $workTimeSettings;
 
+    /**
+     * Является ли профиль скрытый
+     * @ORM\Column(name="hidden", type="boolean")
+     */
+    private $hidden = 0;
+
     public function __construct()
     {
         $this->addOnEmails = new ArrayCollection();
@@ -194,6 +200,11 @@ class User extends BaseUser
     public function getDescription()
     {
         return $this->description;
+    }
+
+    public function getImage($type)
+    {
+        return $type == 'profile' ? $this->getImageProfile() : $this->getImageAuto();
     }
 
     public function getImageProfile()
@@ -273,9 +284,20 @@ class User extends BaseUser
         return $this;
     }
 
+    public function setHidden($hidden)
+    {
+        $this->hidden = (bool) $hidden;
+        return $this;
+    }
+
     public function hasLoaders()
     {
         $this->loaders;
+    }
+
+    public function isHidden()
+    {
+        $this->hidden;
     }
 
     public function setWorkArea($area)

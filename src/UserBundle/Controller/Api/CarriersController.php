@@ -65,34 +65,12 @@ class CarriersController extends Controller
             'city' => $cityId,
             'cargoType' => $cargoType
                 ), $lastId, $count);
-        
+
         $response = new Response($this->serialize(
                         array('list' => $list)
                 ), Response::HTTP_OK);
 
         return $this->setBaseHeaders($response);
-    }
-
-    protected function getCarriersList($conditions = array(), $lastId = null, $count = 30)
-    {
-        /* @var $em \Doctrine\ORM\EntityManager */
-        $em = $this->get('doctrine.orm.entity_manager');
-
-        $query = "select u from UserBundle\Entity\User u where";
-
-        foreach ($conditions as $name => $value) {
-            $query .= " u.$name = " . (is_numeric($value) ? $value : "'$value'" ) . " and";
-        }
-
-        $query = rtrim($query, 'and');
-
-        if ($lastId) {
-            $query .= " and u.id < $lastId";
-        }
-
-        $query .= " ORDER BY u.id DESC";
-
-        return $em->createQuery($query)->setMaxResults($count)->getResult();
     }
 
     /**
@@ -112,6 +90,30 @@ class CarriersController extends Controller
                 ), Response::HTTP_OK);
 
         return $this->setBaseHeaders($response);
+    }
+
+    protected function getCarriersList($conditions = array(), $lastId = null, $count = 30)
+    {
+        /* @var $em \Doctrine\ORM\EntityManager */
+        $em = $this->get('doctrine.orm.entity_manager');
+
+        $query = "select u from UserBundle\Entity\User u where";
+
+        foreach ($conditions as $name => $value) {
+            
+            $query .= " u.$name = " . (is_numeric($value) ? $value : "'$value'" ) . " and";
+        }
+
+        $query = rtrim($query, 'and') . ' and u.hidden != 1';
+
+        if ($lastId) {
+            
+            $query .= " and u.id < $lastId";
+        }
+
+        $query .= " ORDER BY u.id DESC";
+
+        return $em->createQuery($query)->setMaxResults($count)->getResult();
     }
 
 }

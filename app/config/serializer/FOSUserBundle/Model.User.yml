@@ -33,3 +33,5 @@ FOS\UserBundle\Model\User:
             expose: true
         imgAuto:
             expose: true
+        hidden:
+            expose: true
