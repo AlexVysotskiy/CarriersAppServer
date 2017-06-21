@@ -54,11 +54,15 @@ class MyUserManager extends UserManager
     public function editUser(User $user, Request $request)
     {
         $params = $this->getParameters($request, array('new_image'));
-        
+
         $params['images'] = $params['new_image'];
 
         $validatorsList = $this->getValidatorsList();
         $validatorsList['phone'] = new Validation\User\EditedPhoneValidation($this, $user->getPhone());
+
+        if (!$params['password']) {
+            unset($validatorsList['password']);
+        }
 
         $validator = new Validation\Validator($validatorsList);
         $validator->validate($params);
@@ -110,8 +114,7 @@ class MyUserManager extends UserManager
 
         // настройка изображений
         $images = array();
-        if($user->getId())
-        {
+        if ($user->getId()) {
             $images['auto'] = $user->getImageAuto();
             $images['profile'] = $user->getImageProfile();
         }
@@ -128,7 +131,6 @@ class MyUserManager extends UserManager
         $user->setUsername($params['username'])
                 ->setEmail($params['phone'])
                 ->setPhone($params['phone'])
-                ->setPlainPassword($params['password'])
                 ->setCargoType($params['cargo_type'])
                 ->setCityDistrict($params['city_district'])
                 ->setDescription(substr($params['description'], 0, 255))
@@ -143,6 +145,12 @@ class MyUserManager extends UserManager
                 ->setImageProfile(isset($images['profile']) ? $images['profile'] : null)
                 ->setImageAuto(isset($images['auto']) ? $images['auto'] : null)
                 ->setHidden(intval($params['hidden']));
+
+
+        // костыль для регистрации
+        if (!$user->getId() || $params['password']) {
+            $user->setPlainPassword($params['password']);
+        }
 
         $this->updateUser($user);
     }
