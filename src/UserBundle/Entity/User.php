@@ -119,6 +119,18 @@ class User extends BaseUser
     private $minHour;
 
     /**
+     * Изображение профиля
+     * @ORM\Column(name="img_profile", type="string", nullable=true)
+     */
+    private $imgProfile;
+
+    /**
+     * Изображение автомобиля
+     * @ORM\Column(name="img_auto", type="string", nullable=true)
+     */
+    private $imgAuto;
+
+    /**
      * Настройки рабочего времени
      * @ORM\Column(name="work_time_settings", type="array")
      */
@@ -184,6 +196,16 @@ class User extends BaseUser
         return $this->description;
     }
 
+    public function getImageProfile()
+    {
+        return $this->imgProfile;
+    }
+
+    public function getImageAuto()
+    {
+        return $this->imgAuto;
+    }
+
     public function setCargoType($cargoType)
     {
         $this->cargoType = $cargoType;
@@ -236,6 +258,18 @@ class User extends BaseUser
         $this->loaders = $hasLoaders;
 
 
+        return $this;
+    }
+
+    public function setImageProfile($imgProfile)
+    {
+        $this->imgProfile = $imgProfile;
+        return $this;
+    }
+
+    public function setImageAuto($imgAuto)
+    {
+        $this->imgAuto = $imgAuto;
         return $this;
     }
 

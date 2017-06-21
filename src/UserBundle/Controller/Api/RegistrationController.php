@@ -35,6 +35,7 @@ class RegistrationController extends BaseController
             'city_district',
             'description',
             'dimensions',
+            'images',
             'loaders',
             'work_area',
             'auto_type',
@@ -56,35 +57,17 @@ class RegistrationController extends BaseController
 
         try {
 
-            /* @var $userManager \FOS\UserBundle\Model\UserManagerInterface */
-            $userManager = $this->get('fos_user.user_manager');
-
-            /* @var $user \UserBundle\Entity\User */
-            $user = $userManager->createUser();
-            $user->setEnabled(true)
-                    ->setUsername($params['username'])
-                    ->setEmail($params['phone'])
-                    ->setPhone($params['phone'])
-                    ->setPlainPassword($params['password'])
-                    ->setCargoType($params['cargo_type'])
-                    ->setCityDistrict($params['city_district'])
-                    ->setDescription(substr($params['description'], 0, 255));
-
-            if (isset($params['auto_type'])) {
-                $user->setAutoType(substr($params['auto_type'], 0, 255));
-            }
-
+            // размеры
+            $dimensions = array();
             if (isset($params['dimensions'])) {
                 $dimensions = json_decode($params['dimensions'], true);
             }
-
             if (!$dimensions) {
                 $dimensions = array();
             }
 
-            $user->setDimensions($dimensions)
-                    ->setLoaders($params['loaders'] == 1);
-
+            // область работы
+            $workArea = User::WORK_AREA_ALL;
             if (isset($params['work_area'])) {
 
                 $workArea = json_decode($params['work_area'], true);
@@ -96,21 +79,54 @@ class RegistrationController extends BaseController
                 } else {
                     $workArea = User::WORK_AREA_ALL;
                 }
-
-                $user->setWorkArea($workArea);
             }
 
-            $user->setPrice($params['price'])
-                    ->setMinHour($params['min_hour']);
-
+            // настройка времени работы
+            $workSettings = array();
             if (isset($params['work_time']) && ($settings = json_decode($params['work_time'], true))) {
-
-                $user->setWorkTimeSettings($settings);
+                $workSettings = $settings;
             }
+
+            // настройка изображений
+            $images = array();
+            if (isset($params['images']) && ($settings = json_decode($params['images'], true))) {
+
+                /* @var $imageHelper \UserBundle\Helper\UserImageHelper */
+                $imageHelper = $this->get('image_carriers_helper');
+
+                foreach (array('profile', 'auto') as $prefix) {
+                    if (isset($settings[$prefix]) && ($file = $imageHelper->processUserImage(trim($settings[$prefix]), $prefix))) {
+                        $images[$prefix] = $file;
+                    }
+                }
+            }
+
+            /* @var $userManager \FOS\UserBundle\Model\UserManagerInterface */
+            $userManager = $this->get('fos_user.user_manager');
 
             /* @var $em \Doctrine\ORM\EntityManager */
             $em = $this->get('doctrine.orm.entity_manager');
-            $user->setCity($em->find('UserBundle\Entity\City', $params['city_id']));
+
+            /* @var $user \UserBundle\Entity\User */
+            $user = $userManager->createUser();
+            $user->setEnabled(true)
+                    ->setUsername($params['username'])
+                    ->setEmail($params['phone'])
+                    ->setPhone($params['phone'])
+                    ->setPlainPassword($params['password'])
+                    ->setCargoType($params['cargo_type'])
+                    ->setCityDistrict($params['city_district'])
+                    ->setDescription(substr($params['description'], 0, 255))
+                    ->setAutoType(isset($params['auto_type']) ? substr($params['auto_type'], 0, 255) : null)
+                    ->setDimensions($dimensions)
+                    ->setLoaders($params['loaders'] == 1)
+                    ->setWorkArea($workArea)
+                    ->setPrice($params['price'])
+                    ->setMinHour($params['min_hour'])
+                    ->setCity($em->find('UserBundle\Entity\City', $params['city_id']))
+                    ->setWorkTimeSettings($workSettings)
+                    ->setImageProfile(isset($images['profile']) ? $images['profile'] : null)
+                    ->setImageAuto(isset($images['auto']) ? $images['auto'] : null);
 
             $userManager->updateUser($user);
 

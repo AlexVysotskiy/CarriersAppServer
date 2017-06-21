@@ -29,3 +29,7 @@ FOS\UserBundle\Model\User:
             expose: true
         workTimeSettings:
             expose: true
+        imgProfile:
+            expose: true
+        imgAuto:
+            expose: true

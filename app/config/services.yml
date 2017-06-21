@@ -15,3 +15,7 @@ services:
                 - '@fos_user.util.canonical_fields_updater'
                 - '@doctrine.orm.default_entity_manager'
                 - '%fos_user.model.user.class%'
+    image_carriers_helper:
+        class: UserBundle\Helper\UserImageHelper
+        arguments:
+                - '%kernel.root_dir%/../web/bundles/carriers/'
