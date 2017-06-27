@@ -57,7 +57,7 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
 
         return $this->em
                         ->getRepository('UserBundle\Entity\User')
-                        ->findOneBy(['phone' => $username]);
+                        ->findOneBy(['phone' => $username, 'enabled' => true]);
     }
 
     public function checkCredentials($credentials, UserInterface $user)

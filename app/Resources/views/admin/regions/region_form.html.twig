@@ -1,0 +1,81 @@
+<form id="add-region-form" data-parsley-validate class="form-horizontal form-label-left" method="POST" action="{{ path('admin_region_add') }}">
+
+    <div class="form-group">
+        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">
+            Название <span class="required">*</span>
+        </label>
+        <div class="col-md-6 col-sm-6 col-xs-12">
+            <input type="text" id="name" name="name" required="required" class="form-control col-md-7 col-xs-12" value="{{ region ? region.getName() : '' }}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="order">
+            Порядок
+        </label>
+        <div class="col-md-6 col-sm-6 col-xs-12">
+            <input type="text" id="order" name="order" class="form-control col-md-7 col-xs-12"  value="{{ region ? region.getOrder() : '' }}">
+        </div>
+    </div>
+    <div class="form-group">
+
+        {% set defaultValue = region ? region.isActive() : true %}
+
+        <label class="control-label col-md-3 col-sm-3 col-xs-12">Активен</label>
+        <div class="col-md-6 col-sm-6 col-xs-12">
+            <div id="gender" class="btn-group" data-toggle="buttons">
+                <label class="btn btn-default {{ defaultValue ? 'active' : '' }}" data-toggle-class="btn-primary" data-toggle-passive-class="btn-default" c>
+                    <input type="radio" name="active" value="1" {{ defaultValue ? 'checked="checked"' : '' }} > &nbsp;Да
+                </label>
+                <label class="btn btn-primary  {{ defaultValue ? '' : 'active' }}" data-toggle-class="btn-primary" data-toggle-passive-class="btn-default">
+                    <input type="radio" name="active" value="0" {{ defaultValue ? '' : 'checked="checked"' }}> Нет
+                </label>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
+            <button type="submit" class="btn btn-success">Сохранить</button>
+        </div>
+    </div>
+
+    <div class="errors-list"></div>
+
+    {% if region %}
+        <input type="hidden" name="id" value="{{ region.getId() }}" />
+    {% endif %}
+
+</form>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        // ajax добавление региона
+        $('#add-region-form').on('submit', function (event) {
+
+            var errorsHolder = $(this).find('.errors-list');
+            errorsHolder.html('');
+
+            event.preventDefault();
+
+            $.post($(this).attr('action'), $(this).serialize(), function (data) {
+
+                if (data.success == 0)
+                {
+                    for (var k in data.errors)
+                    {
+                        errorsHolder.append('<div class="alert alert-danger alert-dismissible fade in">' + data.errors[k] + '</div>');
+                    }
+
+                } else if (data.reload || true)
+                {
+                    location.reload();
+                } else
+                {
+                    errorsHolder.append('<div class="alert alert-success alert-dismissible fade in">Изменения успешно сохранены!</div>');
+                }
+            }, 'json');
+
+        });
+    });
+</script>

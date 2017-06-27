@@ -32,6 +32,16 @@ class City
      */
     private $region;
 
+    /**
+     * @ORM\Column(name="sort_order", type="integer")
+     */
+    private $order = 0;
+
+    /**
+     * @ORM\Column(name="active", type="boolean")
+     */
+    private $active = true;
+
     public function getId()
     {
         return $this->id;
@@ -47,6 +57,16 @@ class City
         return $this->region;
     }
 
+    public function getOrder()
+    {
+        return $this->order;
+    }
+
+    public function isActive()
+    {
+        return $this->active;
+    }
+
     public function setId($id)
     {
         $this->id = $id;
@@ -60,6 +80,16 @@ class City
     public function setRegion($region)
     {
         $this->region = $region;
+    }
+
+    public function setOrder($order)
+    {
+        $this->order = $order;
+    }
+
+    public function setActive($active)
+    {
+        $this->active = (bool) $active;
     }
 
 }

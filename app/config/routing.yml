@@ -11,3 +11,8 @@ app_base:
     prefix:   /
     defaults:
         _format: json
+
+app_admin:
+    resource: "@UserBundle/Controller/Admin"
+    type:     annotation
+    prefix:   /admin
