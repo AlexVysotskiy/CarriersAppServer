@@ -154,10 +154,17 @@ class User extends BaseUser
      * @var type 
      */
     public $rating = 0;
+    
+    /**
+     *
+     * @ORM\OneToMany(targetEntity="Order", mappedBy="user")
+     */
+    public $payments;
 
     public function __construct()
     {
         $this->addOnEmails = new ArrayCollection();
+        $this->payments = new ArrayCollection();
         $this->dimensions = array();
         $this->loaders = false;
         $this->workArea = self::WORK_AREA_ALL;
