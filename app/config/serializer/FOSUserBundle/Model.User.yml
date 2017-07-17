@@ -35,3 +35,5 @@ FOS\UserBundle\Model\User:
             expose: true
         hidden:
             expose: true
+        expireDate:
+            expose: true

@@ -36,7 +36,8 @@ class CarriersController extends Controller
         }
 
         $list = $this->getCarriersList(array(
-            'city' => $cityId
+            'city' => $cityId,
+            'enabled' => true
                 ), $lastId, $count);
 
         $response = new Response($this->serialize(
@@ -104,7 +105,7 @@ class CarriersController extends Controller
             $query .= " u.$name = " . (is_numeric($value) ? $value : "'$value'" ) . " and";
         }
 
-        $query = rtrim($query, 'and') . ' and u.hidden != 1';
+        $query = rtrim($query, 'and') . ' and u.hidden != 1 and u.expireDate >= "' . date('Y-m-d H:i:s') . '"';
 
         if ($lastId) {
             
