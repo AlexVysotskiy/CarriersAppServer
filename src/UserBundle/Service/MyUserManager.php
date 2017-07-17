@@ -43,9 +43,10 @@ class MyUserManager extends UserManager
         /* @var $user \UserBundle\Entity\User */
         $user = $this->createUser();
         $user->setEnabled(true);
-
+        
         $this->fillUserValues($user, $params);
-
+        $user->setExpireDate((new \DateTime())->modify('+1 month'));
+                
         $this->updateUser($user);
 
         return $user;
