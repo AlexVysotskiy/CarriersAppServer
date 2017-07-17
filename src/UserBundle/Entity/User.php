@@ -147,6 +147,13 @@ class User extends BaseUser
      * @ORM\Column(name="expire_date", type="datetime")
      */
     protected $expireDate;
+    
+    /**
+     * Сколько раз нажали на кнопку вызова у данного водителя
+     * @ORM\Column(name="rating", type="integer")
+     * @var type 
+     */
+    public $rating = 0;
 
     public function __construct()
     {
@@ -160,6 +167,9 @@ class User extends BaseUser
         $this->expireDate = new \DateTime();
     }
     
+    /**
+     * @return \DateTime
+     */
     public function getExpireDate()
     {
         return $this->expireDate;

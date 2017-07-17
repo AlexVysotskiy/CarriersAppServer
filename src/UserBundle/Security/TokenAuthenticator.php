@@ -34,8 +34,8 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
 
         $token = $extractor->extract($request);
 
-        if (!$token && $request->isMethod('POST')) {
-            $token = $request->get('access_token');
+        if (!$token) {
+            $token = $request->get('access_token') ? : $request->get('token');
         }
 
         if (!$token) {
