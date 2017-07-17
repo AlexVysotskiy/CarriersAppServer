@@ -53,7 +53,9 @@
 
                             <div class="form-group pull-right">
                                 <input type="submit" class="btn btn-default" value="Фильтровать" />
-                                <a href="{{ path('admin_carriers_list') }}"  class="btn btn-info">Сбросить</a>
+                                <a href="{{ path('admin_carriers_list') }}"  class="btn btn-info">
+                                    Сбросить
+                                </a>
                             </div>
                         </form>
                         <div class="clearfix"></div>
@@ -161,7 +163,21 @@
                                                 {{ carrier.isEnabled() ? 'Нет' : 'Да' }}
                                             </td>
                                             <td class=" no-link last">
-
+                                                {% if carrier.isEnabled() %}
+                                                    <a href="#" class="btn btn-danger source"  data-toggle="modal" data-target=".lock-modal-lg" data-carrier="{{ carrier.getId() }}">
+                                                        Забл.
+                                                    </a>
+                                                {% else %}
+                                                    <a href="#" class="btn btn-info source"  data-toggle="modal" data-target=".unlock-modal-lg" data-carrier="{{ carrier.getId() }}">
+                                                        Разбл.
+                                                    </a>
+                                                {% endif %}
+                                                <a href="#" class="btn btn-success source"  data-toggle="modal" data-target=".act-modal-lg" data-carrier="{{ carrier.getId() }}">
+                                                    +1 месяц
+                                                </a>
+                                                <a href="#" class="btn btn-warning source"  data-toggle="modal" data-target=".deact-modal-lg" data-carrier="{{ carrier.getId() }}">
+                                                    Деакт.
+                                                </a>
                                             </td>
                                         </tr>
                                     {% endfor %}
@@ -176,15 +192,184 @@
             </div>
         </div>
     </div>
-
-
 {% endblock %}
 
 {% block modals %}
 
+    <div class="modal fade lock-modal-lg" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                    <h4 class="modal-title" id="myModalLabel">Заблокировать перевозчика</h4>
+                </div>
+
+                <div class="modal-body">
+                    Вы точно хотите заблокировать перевозчика?
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger js-togglelock" data-dismiss="modal">Заблокировать</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade unlock-modal-lg" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                    <h4 class="modal-title" id="myModalLabel">Разблокировать перевозчика</h4>
+                </div>
+
+                <div class="modal-body">
+                    Вы точно хотите разблокировать перевозчика?
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-warning js-togglelock" data-dismiss="modal">Разблокировать</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade act-modal-lg" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                    <h4 class="modal-title" id="myModalLabel">Продление активации перевозчика на 1 месяц</h4>
+                </div>
+
+                <div class="modal-body">
+                    Вы точно хотите продлить активацию перевозчика на 1 месяц?
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success js-act" data-dismiss="modal">
+                        Продлить
+                    </button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade deact-modal-lg" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                    <h4 class="modal-title" id="myModalLabel">Деактивации перевозчика</h4>
+                </div>
+
+                <div class="modal-body">
+                    Вы точно хотите деактивировать перевозчика?
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success js-deact" data-dismiss="modal">
+                        Деактивировать
+                    </button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
 {% endblock %}
 
 {% block javascripts %}
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            // модальное окно формы добавления региона
+            $('.modal')
+                    .on('show.bs.modal', function (event) {
+
+                        var button = $(event.relatedTarget);
+                        if (button.data('carrier'))
+                        {
+                            $(this).data('carrier', button.data('carrier'));
+                        }
+                    });
+
+            // мдальное окно формы добавления региона
+            $('.modal').find('.js-togglelock')
+                    .on('click', function (event) {
+
+                        event.preventDefault();
+                        event.stopPropagation();
+
+                        var button = $(this);
+                        var modal = $(this).parents('.modal').first();
+
+                        var href = '{{ path('admin_carriers_ajax_togglelock') }}';
+                        href += '?userId=' + modal.data('carrier');
+
+                        $.get(href, function (data) {
+                            location.reload();
+                        });
+                    });
+                    
+            $('.modal').find('.js-act')
+                    .on('click', function (event) {
+
+                        event.preventDefault();
+                        event.stopPropagation();
+
+                        var button = $(this);
+                        var modal = $(this).parents('.modal').first();
+
+                        var href = '{{ path('admin_carriers_ajax_activate') }}';
+                        href += '?userId=' + modal.data('carrier');
+
+                        $.get(href, function (data) {
+                            location.reload();
+                        });
+                    });
+                    
+            $('.modal').find('.js-deact')
+                    .on('click', function (event) {
+
+                        event.preventDefault();
+                        event.stopPropagation();
+
+                        var button = $(this);
+                        var modal = $(this).parents('.modal').first();
+
+                        var href = '{{ path('admin_carriers_ajax_deactivate') }}';
+                        href += '?userId=' + modal.data('carrier');
+
+                        $.get(href, function (data) {
+                            location.reload();
+                        });
+                    });
+
+
+        });
+    </script>
 
 {% endblock %}
 

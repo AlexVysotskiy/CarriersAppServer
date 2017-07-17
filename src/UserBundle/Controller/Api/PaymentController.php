@@ -43,12 +43,15 @@ class PaymentController extends BaseController
             if ($user->getId() == $userId) {
 
                 $order = new \UserBundle\Entity\Order();
+
                 $order->user = $user;
+                $order->date = new \DateTime();
                 $order->sum = $this->getParameter('payment_value');
 
                 /* @var $em \Doctrine\ORM\EntityManager */
                 $em = $this->get('doctrine.orm.entity_manager');
                 $em->persist($order);
+
                 $em->flush($order);
 
                 /* @var $payment \Idma\Robokassa\Payment */
@@ -63,11 +66,15 @@ class PaymentController extends BaseController
                                 . ' от ' . date('H:i d-m-Y'));
 
                 // redirect to payment url
+                return $this->redirectToRoute('api_v1_payment_success');
+
                 return $this->redirect($payment->getPaymentUrl());
             } else {
                 throw new \Exception('User mismatch!');
             }
         } catch (\Exception $e) {
+
+            throw $e;
             return $this->redirectToRoute('api_v1_payment_error');
         }
     }
@@ -90,7 +97,7 @@ class PaymentController extends BaseController
 
             /* @var $order \UserBundle\Entity\Order */
             if ($order = $repo->find($payment->getInvoiceId())) {
-                
+
                 if (!$order->success) {
 
                     $order->success = true;

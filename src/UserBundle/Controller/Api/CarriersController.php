@@ -113,7 +113,7 @@ class CarriersController extends Controller
         }
         
         $response = new Response($this->serialize(
-                        array('success' => 1)
+                        array('success' => isset($carrier) ? $carrier->rating : 1)
                 ), Response::HTTP_OK);
 
         return $this->setBaseHeaders($response);
@@ -131,7 +131,7 @@ class CarriersController extends Controller
             $query .= " u.$name = " . (is_numeric($value) ? $value : "'$value'" ) . " and";
         }
 
-        $query = rtrim($query, 'and') . ' and u.hidden != 1 and u.expireDate >= "' . date('Y-m-d H:i:s') . '"';
+        $query = rtrim($query, 'and') . ' and u.hidden != 1 and u.expireDate > "' . date('Y-m-d H:i:s') . '"';
 
         if ($lastId) {
 

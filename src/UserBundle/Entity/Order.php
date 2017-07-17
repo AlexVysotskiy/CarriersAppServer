@@ -2,7 +2,6 @@
 
 namespace UserBundle\Entity;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -48,8 +47,7 @@ class Order
 
     public function __construct()
     {
-        $this->date = new \DateTme();
-        $this->success = false;
+       $this->success = false;
     }
 
 }

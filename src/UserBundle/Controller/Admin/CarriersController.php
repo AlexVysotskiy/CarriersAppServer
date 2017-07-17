@@ -34,7 +34,7 @@ class CarriersController extends Controller
         $cityList = $cityRepo->findBy(array(
             'active' => true
                 ), array('id' => 'DESC', 'order' => 'ASC'));
-        
+
         $conditionId = intval($request->get('id'));
         $conditionName = $request->get('name');
         $conditionPhone = $request->get('phone');
@@ -44,15 +44,15 @@ class CarriersController extends Controller
 
         if ($conditionId || $conditionName || $conditionCity || $conditionPhone) {
 
-           $query .= ' where';
-             if ($conditionId) {
+            $query .= ' where';
+            if ($conditionId) {
                 $query .= ' u.id = ' . $conditionId . ' and';
             }
 
             if ($conditionName) {
                 $query .= ' u.username LIKE \'' . $conditionName . '%\'  and';
             }
-            
+
             if ($conditionPhone) {
                 $query .= ' u.phone LIKE \'' . $conditionPhone . '%\'  and';
             }
@@ -77,6 +77,87 @@ class CarriersController extends Controller
                         'phone' => $conditionPhone,
                         'city' => $conditionCity
                     )
+        ));
+    }
+
+    /**
+     * добавление / редактирование региона
+     * @Route("/carriers_list/toggle_lock", name="admin_carriers_ajax_togglelock")
+     */
+    public function toggleLockAjaxAction(Request $request)
+    {
+        $userId = $request->get('userId');
+
+        /* @var $em \Doctrine\ORM\EntityManager */
+        $em = $this->get('doctrine.orm.entity_manager');
+        /* @var $repo \Doctrine\ORM\EntityRepository */
+        $repo = $em->getRepository('UserBundle\Entity\User');
+
+        /* @var $user \UserBundle\Entity\User */
+        if ($user = $repo->find($userId)) {
+
+            $user->setEnabled(!$user->isEnabled());
+            $em->flush();
+        }
+
+        return new JsonResponse(array(
+            'success' => 1
+        ));
+    }
+
+    /**
+     * добавление / редактирование региона
+     * @Route("/carriers_list/activate", name="admin_carriers_ajax_activate")
+     */
+    public function activeAjaxAction(Request $request)
+    {
+        $userId = $request->get('userId');
+
+        /* @var $em \Doctrine\ORM\EntityManager */
+        $em = $this->get('doctrine.orm.entity_manager');
+        /* @var $repo \Doctrine\ORM\EntityRepository */
+        $repo = $em->getRepository('UserBundle\Entity\User');
+
+        /* @var $user \UserBundle\Entity\User */
+        if ($user = $repo->find($userId)) {
+
+            if ($user->getExpireDate()->getTimestamp() < date('U')) {
+                $user->setExpireDate(new \DateTime());
+            }
+
+            // update extire date
+            $user->getExpireDate()->modify('+1 month');
+
+            $em->flush();
+        }
+
+        return new JsonResponse(array(
+            'success' => 1
+        ));
+    }
+
+    /**
+     * добавление / редактирование региона
+     * @Route("/carriers_list/deactivate", name="admin_carriers_ajax_deactivate")
+     */
+    public function deactiveAjaxAction(Request $request)
+    {
+        $userId = $request->get('userId');
+
+        /* @var $em \Doctrine\ORM\EntityManager */
+        $em = $this->get('doctrine.orm.entity_manager');
+        /* @var $repo \Doctrine\ORM\EntityRepository */
+        $repo = $em->getRepository('UserBundle\Entity\User');
+
+        /* @var $user \UserBundle\Entity\User */
+        if ($user = $repo->find($userId)) {
+
+            $user->setExpireDate(new \DateTime());
+            $em->flush();
+        }
+
+        return new JsonResponse(array(
+            'success' => 1
         ));
     }
 

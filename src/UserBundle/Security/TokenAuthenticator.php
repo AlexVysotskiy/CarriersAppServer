@@ -37,7 +37,7 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
         if (!$token) {
             $token = $request->get('access_token') ? : $request->get('token');
         }
-
+        
         if (!$token) {
             return;
         }
@@ -45,10 +45,10 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
         return $token;
     }
 
-    public function getUser($credentials, UserProviderInterface $userProvider)
+    public function getUser($credentials, UserProviderInterface $userProvider = null)
     {
         $data = $this->jwtEncoder->decode($credentials);
-
+        
         if ($data === false) {
             throw new CustomUserMessageAuthenticationException('Invalid Token');
         }
