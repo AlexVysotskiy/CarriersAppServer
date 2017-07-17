@@ -141,6 +141,19 @@ class User extends BaseUser
      * @ORM\Column(name="hidden", type="boolean")
      */
     private $hidden = 0;
+    
+    /**
+     * До какого числа профиль оплачен
+     * @ORM\Column(name="expire_date", type="datetime")
+     */
+    protected $expireDate;
+    
+    /**
+     * Сколько раз нажали на кнопку вызова у данного водителя
+     * @ORM\Column(name="rating", type="integer")
+     * @var type 
+     */
+    public $rating = 0;
 
     public function __construct()
     {
@@ -151,6 +164,25 @@ class User extends BaseUser
         $this->price = 0;
         $this->minHour = 1;
         $this->workTimeSettings = array();
+        $this->expireDate = new \DateTime();
+    }
+    
+    /**
+     * @return \DateTime
+     */
+    public function getExpireDate()
+    {
+        return $this->expireDate;
+    }
+    
+    public function setExpireDate(\DateTime $expireDate)
+    {
+        $this->expireDate = $expireDate;
+    }
+    
+    public function isProfileExpired()
+    {
+        return $this->expireDate->getTimestamp() < date('U');
     }
 
     /**

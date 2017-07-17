@@ -36,7 +36,8 @@ class CarriersController extends Controller
         }
 
         $list = $this->getCarriersList(array(
-            'city' => $cityId
+            'city' => $cityId,
+            'enabled' => true
                 ), $lastId, $count);
 
         $response = new Response($this->serialize(
@@ -92,6 +93,32 @@ class CarriersController extends Controller
         return $this->setBaseHeaders($response);
     }
 
+    /**
+     * Обновляет количесвто вызовов у перевозчика
+     * @Route("/carrier_info_update/rating/{carrierId}", name = "api_v1_carrier_info_update_rating")
+     * @Method("GET")
+     */
+    public function carrierRatingUpdateAction(Request $request)
+    {
+        $carrierId = abs(intval($request->get('carrierId')));
+
+        /* @var $userManager \FOS\UserBundle\Model\UserManagerInterface */
+        $userManager = $this->get('fos_user.user_manager');
+
+        /* @var $carrier User */
+        if ($carrier = $userManager->findUserBy(array('id' => $carrierId))) {
+            
+            $carrier->rating++;
+            $userManager->updateUser($carrier);
+        }
+        
+        $response = new Response($this->serialize(
+                        array('success' => 1)
+                ), Response::HTTP_OK);
+
+        return $this->setBaseHeaders($response);
+    }
+
     protected function getCarriersList($conditions = array(), $lastId = null, $count = 30)
     {
         /* @var $em \Doctrine\ORM\EntityManager */
@@ -100,18 +127,18 @@ class CarriersController extends Controller
         $query = "select u from UserBundle\Entity\User u where";
 
         foreach ($conditions as $name => $value) {
-            
+
             $query .= " u.$name = " . (is_numeric($value) ? $value : "'$value'" ) . " and";
         }
 
-        $query = rtrim($query, 'and') . ' and u.hidden != 1';
+        $query = rtrim($query, 'and') . ' and u.hidden != 1 and u.expireDate >= "' . date('Y-m-d H:i:s') . '"';
 
         if ($lastId) {
-            
+
             $query .= " and u.id < $lastId";
         }
 
-        $query .= " ORDER BY u.id DESC";
+        $query .= " ORDER BY u.rating ASC,  u.id DESC";
 
         return $em->createQuery($query)->setMaxResults($count)->getResult();
     }

@@ -90,6 +90,9 @@ jms_serializer:
     property_naming:
         separator:  _
         lower_case: true
+    handlers:
+        datetime:
+            default_format: "U"
     metadata:    
         auto_detection: true
         directories:

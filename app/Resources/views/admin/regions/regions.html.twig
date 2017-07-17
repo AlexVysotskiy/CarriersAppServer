@@ -1,0 +1,228 @@
+{% extends 'base_admin.html.twig' %}
+
+{% block body %}
+
+
+    <div class="">
+        <div class="page-title">
+            <div class="title_left">
+            </div>
+        </div>
+
+        <div class="clearfix"></div>
+
+        <div class="row">
+
+            <div class="clearfix"></div>
+
+            <div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="x_panel">
+                    <div class="x_title">
+
+                        <h2>
+                            Регионы
+                        </h2>
+
+                        <div class="navbar-right panel_toolbox">
+                            <a href="#" class="btn btn-success source"  data-toggle="modal" data-target=".add-region-modal-lg">
+                                Добавить
+                            </a>
+                            <a href="#" class="btn btn-danger source js-remove-region-trigger" data-toggle="modal" data-target=".remove-region-modal-lg" disabled="disabled">
+                                Удалить
+                            </a>
+                        </div>
+
+                        <div class="clearfix"></div>
+
+                    </div>
+
+                    <div class="x_content">
+
+                        <div class="table-responsive">
+                            <table id="regions-list-table" class="table table-striped jambo_table bulk_action">
+                                <thead>
+                                    <tr class="headings">
+                                        <th>
+                                            <input type="checkbox" id="check-all" class="flat">
+                                        </th>
+                                        <th class="column-title">
+                                            #
+                                        </th>
+                                        <th class="column-title">
+                                            Название
+                                        </th>
+                                        <th class="column-title">
+                                            Активность
+                                        </th>
+                                        <th class="column-title">
+                                            Порядок
+                                        </th>
+                                        <th class="column-title no-link last">
+                                            <span class="nobr">Действия</span>
+                                        </th>
+                                        <th class="bulk-actions" colspan="5">
+                                            <a class="antoo" style="color:#fff; font-weight:500;">Действие над записями ( <span class="action-cnt"> </span> ) <i class="fa fa-chevron-down"></i></a>
+                                        </th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+
+                                    {% for num, region in list %}
+                                        <tr class="{{ num % 2 == 0 ? 'even' : 'odd' }} pointer">
+                                            <td class="a-center ">
+                                                <input type="checkbox" class="flat" name="table_records" value="{{ region.getId() }}" />
+                                            </td>
+                                            <td class=" ">
+                                                {{ region.getId()  }}
+                                            </td>
+                                            <td class="">
+                                                {{ region.getName()  }}
+                                            </td>
+                                            <td class="">
+                                                {{ region.isActive() ? 'Да' : 'Нет' }}
+                                            </td>
+                                            <td class="">
+                                                {{ region.getOrder()  }}
+                                            </td>
+                                            <td class=" last">
+                                                <a href="#" class="btn btn-info source "  data-toggle="modal" data-target=".add-region-modal-lg" data-region="{{ region.getId() }}">
+                                                    Редактировать
+                                                </a>
+                                                {#  <a href="#" class="btn btn-danger source">
+                                                      Удалить
+                                                  </a>#}
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+
+                                </tbody>
+                            </table>
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+{% endblock %}
+
+{% block modals %}
+
+    <div class="modal fade add-region-modal-lg" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                    <h4 class="modal-title" id="myModalLabel">Добавить регион</h4>
+                </div>
+
+                <div class="modal-body">
+
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade remove-region-modal-lg" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                    <h4 class="modal-title" id="myModalLabel">Удалить регион(ы)</h4>
+                </div>
+
+                <div class="modal-body">
+                    Вы точно хотите удалить выбранные регионы?
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
+                    <button type="button" class="btn btn-danger js-remove" data-dismiss="modal">Удалить</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            var table = $('#regions-list-table');
+
+            table.on('changeInput', function (event, count) {
+
+                if (count)
+                {
+                    $('.js-remove-region-trigger').removeAttr('disabled');
+                } else
+                {
+                    $('.js-remove-region-trigger').attr('disabled', 'disabled');
+                }
+            });
+
+            // модальное окно формы добавления региона
+            $('.add-region-modal-lg')
+                    .on('show.bs.modal', function (event) {
+
+                        var button = $(event.relatedTarget);
+
+                        var href = '{{ path('admin_region_add') }}';
+                        if (button.data('region'))
+                        {
+                            href += '?id=' + button.data('region');
+                        }
+
+                        $(this).find('.modal-body').load(href);
+                    })
+                    .on('hidden.bs.modal', function (event) {
+                        $(this).find('.modal-body').html('');
+                    });
+
+            // модальное окно формы для удаления регионов
+            $('.remove-region-modal-lg').find('.js-remove')
+                    .on('click', function (event) {
+
+                        event.preventDefault();
+                        event.stopPropagation();
+
+                        var button = $(this);
+
+                        var href = '{{ path('admin_region_remove') }}';
+
+                        var list = [];
+                        $(".bulk_action input[name='table_records']:checked").each(function () {
+                            list.push($(this).val());
+                        });
+
+                        if (list.length)
+                        {
+                            $.post(href, {list: list}, function (data) {
+                                location.reload();
+                            });
+                        }
+                    });
+
+
+        });
+    </script>
+
+{% endblock %}
+

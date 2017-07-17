@@ -34,8 +34,8 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
 
         $token = $extractor->extract($request);
 
-        if (!$token && $request->isMethod('POST')) {
-            $token = $request->get('access_token');
+        if (!$token) {
+            $token = $request->get('access_token') ? : $request->get('token');
         }
 
         if (!$token) {
@@ -57,7 +57,7 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
 
         return $this->em
                         ->getRepository('UserBundle\Entity\User')
-                        ->findOneBy(['phone' => $username]);
+                        ->findOneBy(['phone' => $username, 'enabled' => true]);
     }
 
     public function checkCredentials($credentials, UserInterface $user)

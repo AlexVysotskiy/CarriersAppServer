@@ -2,6 +2,16 @@
 # http://symfony.com/doc/current/book/service_container.html
 parameters:
     cargo_types: [cargo_300, cargo_700, cargo_1500, cargo_3000, cargo_6000, cargo_over_6000]
+    payment_value: 100        
+    robokassa:
+        id: Greybrick
+        login: superadmin
+        password: 7fd7xFX8Rg
+        merchant_id: carriers_app
+        paymentsPasswords:
+            pass1: 1232321312
+            pass2: sdsada
+        testMode: true
 
 services:
     token_authenticator:

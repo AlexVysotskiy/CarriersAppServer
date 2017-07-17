@@ -24,9 +24,19 @@ class Region
     private $id;
 
     /**
-     * @ORM\Column(type="string", nullable=false)
+     * @ORM\Column(name="name", type="string", nullable=false)
      */
     private $name;
+
+    /**
+     * @ORM\Column(name="sort_order", type="integer")
+     */
+    private $order = 0;
+
+    /**
+     * @ORM\Column(name="active", type="boolean")
+     */
+    private $active = true;
 
     /**
      * @ORM\OneToMany(targetEntity="City", mappedBy="region", cascade={"persist"})
@@ -48,6 +58,16 @@ class Region
         return $this->name;
     }
 
+    public function getOrder()
+    {
+        return $this->order;
+    }
+
+    public function isActive()
+    {
+        return $this->active;
+    }
+
     public function setId($id)
     {
         $this->id = $id;
@@ -56,6 +76,16 @@ class Region
     public function setName($name)
     {
         $this->name = $name;
+    }
+
+    public function setOrder($order)
+    {
+        $this->order = $order;
+    }
+
+    public function setActive($active)
+    {
+        $this->active = (bool) $active;
     }
 
     /**
