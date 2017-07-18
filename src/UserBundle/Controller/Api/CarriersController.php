@@ -65,7 +65,8 @@ class CarriersController extends Controller
 
         $list = $this->getCarriersList(array(
             'city' => $cityId,
-            'cargoType' => $cargoType
+            'cargoType' => $cargoType,
+            'enabled' => true
                 ), $lastId, $count);
 
         $response = new Response($this->serialize(
