@@ -129,6 +129,7 @@ class PaymentController extends BaseController
      */
     public function failAction(Request $request)
     {
+        return $this->redirect('unity://success');
         return new \Symfony\Component\HttpFoundation\JsonResponse(array('success' => 0));
     }
 
@@ -138,6 +139,7 @@ class PaymentController extends BaseController
      */
     public function successAction(Request $request)
     {
+        return $this->redirect('unity://fail');
         return new \Symfony\Component\HttpFoundation\JsonResponse(array('success' => 1));
     }
 
