@@ -138,7 +138,7 @@ class CarriersController extends Controller
             $query .= " and u.id < $lastId";
         }
 
-        $query .= " ORDER BY u.rating ASC,  u.id DESC";
+        //$query .= " ORDER BY u.rating ASC, u.id DESC";
 
         return $em->createQuery($query)->setMaxResults($count)->getResult();
     }
