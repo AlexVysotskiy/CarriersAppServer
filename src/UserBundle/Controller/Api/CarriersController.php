@@ -37,7 +37,7 @@ class CarriersController extends Controller
 
         $list = $this->getCarriersList(array(
             'city' => $cityId,
-            'enabled' => true
+            'enabled' => 1
                 ), $lastId, $count);
 
         $response = new Response($this->serialize(
@@ -138,7 +138,7 @@ class CarriersController extends Controller
             $query .= " and u.id < $lastId";
         }
 
-        //$query .= " ORDER BY u.rating ASC, u.id DESC";
+        $query .= " ORDER BY u.rating ASC, u.id DESC";
 
         return $em->createQuery($query)->setMaxResults($count)->getResult();
     }
