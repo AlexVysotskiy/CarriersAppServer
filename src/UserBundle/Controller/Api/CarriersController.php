@@ -2,7 +2,8 @@
 
 namespace UserBundle\Controller\Api;
 
-use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\
+HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -64,7 +65,8 @@ class CarriersController extends Controller
 
         $list = $this->getCarriersList(array(
             'city' => $cityId,
-            'cargoType' => $cargoType
+            'cargoType' => $cargoType,
+            'enabled' => true
                 ), $lastId, $count);
 
         $response = new Response($this->serialize(
@@ -131,14 +133,14 @@ class CarriersController extends Controller
             $query .= " u.$name = " . (is_numeric($value) ? $value : "'$value'" ) . " and";
         }
 
-        $query = rtrim($query, 'and') . ' and u.hidden != 1 and u.expireDate > "' . date('Y-m-d H:i:s') . '"';
+        $query = rtrim($query, 'and') . ' and u.hidden != 1 and u.expireDate > \'' . date('Y-m-d H:i:s') . '\'';
 
         if ($lastId) {
 
             $query .= " and u.id < $lastId";
         }
 
-        $query .= " ORDER BY u.rating ASC,  u.id DESC";
+        $query .= " ORDER BY u.rating ASC, u.id DESC";
 
         return $em->createQuery($query)->setMaxResults($count)->getResult();
     }

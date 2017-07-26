@@ -110,6 +110,9 @@
                                             Телефон
                                         </th>
                                         <th class="column-title">
+                                            Тип перевозки
+                                        </th>
+                                        <th class="column-title">
                                             Фото профиля
                                         </th>
                                         <th class="column-title">
@@ -142,6 +145,9 @@
                                             </td>
                                             <td >
                                                 {{ carrier.getPhone() }}
+                                            </td>
+                                            <td >
+                                                {{ carrier.getCargoType() }}
                                             </td>
                                             <td >
                                                 {% if carrier.getImageProfile()  %}

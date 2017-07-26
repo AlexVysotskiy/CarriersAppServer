@@ -95,6 +95,7 @@ class PaymentController extends BaseController
 
                 /* @var $payment \Idma\Robokassa\Payment */
                 $payment = $this->initRobokassaPayment();
+
                 $payment->setInvoiceId($order->id)
                         ->setSum($order->sum)
                         ->setDescription('Оплата за ' . $order->term . ' месяц(-а,-ев) использования сервиса пользователем #'
@@ -137,12 +138,14 @@ class PaymentController extends BaseController
                 if (!$order->success) {
 
                     $order->success = true;
-                    if ($order->user->getExpireDate()->getTimestamp() < date('U')) {
+                    $this->activateProfile($order->user, $order->term);
+
+                    /*if ($order->user->getExpireDate()->getTimestamp() < date('U')) {
                         $order->user->setExpireDate(new \DateTime());
-                    }
+                    }*/
 
                     // update extire date
-                    $order->user->getExpireDate()->modify('+' . $order->term . ' month');
+                    //$order->user->getExpireDate()->modify('+1 month');
 
                     $em->flush();
                 }
@@ -165,6 +168,8 @@ class PaymentController extends BaseController
      */
     public function failAction(Request $request)
     {
+        return $this->redirect('unity://fail');
+
         return new \Symfony\Component\HttpFoundation\JsonResponse(array('success' => 0));
     }
 
@@ -174,7 +179,40 @@ class PaymentController extends BaseController
      */
     public function successAction(Request $request)
     {
+        if ($userId = $request->get('testUserId')) {
+
+            /* @var $em \Doctrine\ORM\EntityManager */
+            $em = $this->get('doctrine.orm.entity_manager');
+
+            /* @var $repo */
+            $repo = $em->getRepository('UserBundle\Entity\User');
+
+            if ($user = $repo->find($userId)) {
+
+                $robokassaSettings = $this->getParameter('robokassa');
+                if (isset($robokassaSettings['testMode']) && $robokassaSettings['testMode']) {
+                    $this->activateProfile($user);
+                }
+            }
+
+        }
+
+
+        return $this->redirect('unity://success');
         return new \Symfony\Component\HttpFoundation\JsonResponse(array('success' => 1));
+    }
+
+    /**
+     * @param $user User
+     */
+    protected function activateProfile($user, $term)
+    {
+        if ($user->getExpireDate()->getTimestamp() < date('U')) {
+            $user->setExpireDate(new \DateTime());
+        }
+
+        // update extire date
+        $user->getExpireDate()->modify('+' . $term . ' month');
     }
 
     /**
@@ -184,7 +222,7 @@ class PaymentController extends BaseController
     {
         $robokassaSettings = $this->getParameter('robokassa');
         $payment = new \Idma\Robokassa\Payment(
-                $robokassaSettings['merchant_id'], $robokassaSettings['paymentsPasswords']['pass1'], $robokassaSettings['paymentsPasswords']['pass1'], $robokassaSettings['testMode']
+            $robokassaSettings['merchant_id'], $robokassaSettings['paymentsPasswords']['pass1'], $robokassaSettings['paymentsPasswords']['pass1'], $robokassaSettings['testMode']
         );
 
         return $payment;
