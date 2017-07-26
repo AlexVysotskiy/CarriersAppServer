@@ -81,6 +81,18 @@
                                     <li>
                                         <a href="{{ path('admin_carriers_list') }}">Перевозчики</a>
                                     </li>
+                                    <li>
+                                        <a>
+                                            <i class="fa fa-money"></i> Платежи <span class="fa fa-chevron-down"></span>
+                                        </a>
+                                        <ul class="nav child_menu">
+                                            <li><a href="{{ path('admin_payments_list') }}">Список платежей</a></li>
+                                            <li><a href="{{ path('admin_payments_types_list') }}">Настройки</a></li>
+                                        </ul>
+                                    </li>
+                                   {# <li>
+                                        <a href="{{ path('admin_carriers_list') }}">Настройки приложения</a>
+                                    </li>#}
                                 </ul>
                             </div>
 

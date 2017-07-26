@@ -145,12 +145,12 @@
                                             </td>
                                             <td >
                                                 {% if carrier.getImageProfile()  %}
-                                                    <img src="/carriersapp/bundles/carriers/{{ carrier.getImageProfile() }}" />
+                                                    <img src="/carriersapp/bundles/carriers/{{ carrier.getImageProfile() }}" style="max-width: 50px; height: auto;"/>
                                                 {% endif %}                                               
                                             </td>
                                             <td >
                                                 {% if carrier.getImageAuto()  %}
-                                                    <img src="/carriersapp/bundles/carriers/{{ carrier.getImageAuto() }}" />
+                                                    <img src="/carriersapp/bundles/carriers/{{ carrier.getImageAuto() }}" style="max-width: 50px; height: auto;"/>
                                                 {% endif %}   
                                             </td>
                                             <td >
@@ -164,20 +164,25 @@
                                             </td>
                                             <td class=" no-link last">
                                                 {% if carrier.isEnabled() %}
-                                                    <a href="#" class="btn btn-danger source"  data-toggle="modal" data-target=".lock-modal-lg" data-carrier="{{ carrier.getId() }}">
-                                                        Забл.
+                                                    <a href="#" class="btn btn-sm btn-danger source"  data-toggle="modal" data-target=".lock-modal-lg" data-carrier="{{ carrier.getId() }}">
+                                                        <i class="fa fa-lock"></i>
                                                     </a>
                                                 {% else %}
-                                                    <a href="#" class="btn btn-info source"  data-toggle="modal" data-target=".unlock-modal-lg" data-carrier="{{ carrier.getId() }}">
-                                                        Разбл.
+                                                    <a href="#" class="btn btn-sm btn-info source"  data-toggle="modal" data-target=".unlock-modal-lg" data-carrier="{{ carrier.getId() }}">
+                                                        <i class="fa fa-unlock"></i>
                                                     </a>
                                                 {% endif %}
-                                                <a href="#" class="btn btn-success source"  data-toggle="modal" data-target=".act-modal-lg" data-carrier="{{ carrier.getId() }}">
-                                                    +1 месяц
+                                                <a href="#" class="btn btn-sm btn-success source"  data-toggle="modal" data-target=".act-modal-lg" data-carrier="{{ carrier.getId() }}">
+                                                    +1 <i class="fa fa-hourglass-start"></i>
                                                 </a>
-                                                <a href="#" class="btn btn-warning source"  data-toggle="modal" data-target=".deact-modal-lg" data-carrier="{{ carrier.getId() }}">
-                                                    Деакт.
+                                                <a href="#" class="btn btn-sm btn-warning source"  data-toggle="modal" data-target=".deact-modal-lg" data-carrier="{{ carrier.getId() }}">
+                                                    <i class="fa fa-hourglass-3"></i>
                                                 </a>
+                                                    
+                                                <a href="#" class="btn btn-sm btn-info source"  data-toggle="modal" data-target=".deact-modal-lg" data-carrier="{{ carrier.getId() }}">
+                                                    <i class="fa fa-money"></i>
+                                                </a>
+
                                             </td>
                                         </tr>
                                     {% endfor %}
@@ -332,7 +337,7 @@
                             location.reload();
                         });
                     });
-                    
+
             $('.modal').find('.js-act')
                     .on('click', function (event) {
 
@@ -349,7 +354,7 @@
                             location.reload();
                         });
                     });
-                    
+
             $('.modal').find('.js-deact')
                     .on('click', function (event) {
 

@@ -1,0 +1,152 @@
+{% extends 'base_admin.html.twig' %}
+
+
+{% block filter %}
+
+    <div class="">
+
+        <div class="row">
+            <div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="x_panel">
+                    <div class="x_title">
+                        <h2>
+                            Фильтр
+                        </h2>
+                        <div class="clearfix"></div>
+                    </div>
+
+                    {% set currentFilterValues = request.get('filter') ? : {} %}
+
+                    <div class="x_content">
+                        <form class=" " method="get">
+                            <div class="form-group col-md-4">
+                                <label for="region">
+                                    Город
+                                </label>
+                                <select class="form-control" name="filter[city]">
+                                    <option value="all">Все</option>
+                                    {% for city in cities %} 
+                                        <option value="{{ city.getId() }}" {{ currentFilterValues.city is defined  and currentFilterValues.city == city.getId() ? 'selected' : '' }}>
+                                            {{ city.getName() }}
+                                        </option>
+                                    {% endfor %} 
+                                </select>
+                            </div>
+
+                            <div class="form-group pull-right">
+                                <input type="submit" class="btn btn-default" value="Фильтровать" />
+                                <a href="{{ path('admin_payments_list') }}"  class="btn btn-info">
+                                    Сбросить
+                                </a>
+                            </div>
+                        </form>
+                        <div class="clearfix"></div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+{% endblock %}
+
+
+{% block body %}
+
+    <div class="">
+
+        <div class="row">
+
+            <div class="clearfix"></div>
+
+            <div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="x_panel">
+                    <div class="x_title">
+
+                        <h2>
+                            Совершенные платежи
+                        </h2>
+
+                        <div class="navbar-right panel_toolbox">
+                            <a href="#" class="btn btn-success source"  data-toggle="modal" data-target=".add-modal-lg">
+                                Добавить
+                            </a>
+                            <a href="#" class="btn btn-danger source js-remove-type-trigger" data-toggle="modal" data-target=".remove-modal-lg" disabled="disabled">
+                                Удалить
+                            </a>
+                        </div>
+
+                        <div class="clearfix"></div>
+
+                    </div>
+
+                    <div class="x_content">
+
+                        <div class="table-responsive">
+                            <table id="regions-list-table" class="table table-striped jambo_table">
+                                <thead>
+                                    <tr class="headings">
+
+                                        <th class="column-title">
+                                            #
+                                        </th>
+                                        <th class="column-title">
+                                            Пользователь
+                                        </th>
+                                        <th class="column-title">
+                                            Дата
+                                        </th>
+                                        <th class="column-title">
+                                            Город
+                                        </th>
+                                        <th class="column-title">
+                                            Тип пакета
+                                        </th>
+                                        <th class="column-title">
+                                            Стоимость
+                                        </th>
+
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+
+                                    {% for num, order in list %}
+                                        <tr class="{{ num % 2 == 0 ? 'even' : 'odd' }} pointer">
+
+                                            <td class="">
+                                                {{ order.id }} месяц(-а/-ев)
+                                            </td>
+                                            <td class="">
+                                                {{ order.user ? order.user.getName() : "" }}
+                                            </td>
+                                            <td class="">
+                                                {{ order.date|date("H:i d/m/Y") }}
+                                            </td>
+                                            <td class="">
+                                                {{  order.term ~ 'м. ' }}
+
+                                                {% if order.user %}
+
+                                                    {% set cat = order.user.getCargoType() %}
+                                                    {{ (cat == 'cargo_over_6000' ? 'более' : 'до') ~ cat|trim('cargo_over', 'left') ~ ' кг.'}}
+                                                {% endif %}
+
+                                            </td>
+                                            <td class="">
+                                                {{ order.sum }}
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

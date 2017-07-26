@@ -26,12 +26,42 @@ class PaymentController extends BaseController
     use \UserBundle\Helper\ControllerHelper;
 
     /**
+     * @Route("/payment_pack/{cityId}/{cargoType}", name="api_v1_payment_packs")
+     * @Method("GET")
+     */
+    public function availablePackagesAction(Request $request)
+    {
+        $cityId = abs(intval($request->get('cityId')));
+        $cargoType = $request->get('cargoType');
+
+        /* @var $em \Doctrine\ORM\EntityManager */
+        $em = $this->get('doctrine.orm.entity_manager');
+
+        /* @var $repo \Doctrine\ORM\EntityRepository */
+        $repo = $em->getRepository('UserBundle\Entity\PaymentType');
+
+        $list = $repo->findBy(array(
+            'city' => $cityId,
+            'category' => $cargoType
+        ));
+
+        $response = new Response($this->serialize(
+                        array('list' => $list)
+                ), Response::HTTP_OK);
+
+        return $this->setBaseHeaders($response);
+    }
+
+    /**
      * @Route("/payment", name="api_v1_payment_make")
      * @Method("GET")
      */
     public function payAction(Request $request)
     {
         try {
+
+            /* @var $em \Doctrine\ORM\EntityManager */
+            $em = $this->get('doctrine.orm.entity_manager');
 
             /* @var $tokenAuthService \UserBundle\Security\TokenAuthenticator */
             $tokenAuthService = $this->get('token_authenticator');
@@ -40,33 +70,40 @@ class PaymentController extends BaseController
             /* @var $user User */
             $user = $tokenAuthService->getUser($credentials, null);
             $userId = $request->get('id');
+
+            $paymentPack = $request->get('payment_pack');
+
             if ($user->getId() == $userId) {
+
+                /* @var $paymentPackRepo \Doctrine\ORM\EntityRepository */
+                $paymentPackRepo = $em->getRepository('UserBundle\Entity\PaymentType');
+                /* @var $paymentPack \UserBundle\Entity\PaymentType */
+                if (!($paymentPack = $paymentPackRepo->find($paymentPack))) {
+                    throw new \Exception('Payment pack mismatch!');
+                }
 
                 $order = new \UserBundle\Entity\Order();
 
                 $order->user = $user;
+                $order->city = $user->getCity();
+                $order->term = $paymentPack->term;
                 $order->date = new \DateTime();
-                $order->sum = $this->getParameter('payment_value');
+                $order->sum = $paymentPack->value;
 
-                /* @var $em \Doctrine\ORM\EntityManager */
-                $em = $this->get('doctrine.orm.entity_manager');
                 $em->persist($order);
-
                 $em->flush($order);
 
                 /* @var $payment \Idma\Robokassa\Payment */
                 $payment = $this->initRobokassaPayment();
-
-                $payment
-                        ->setInvoiceId($order->id)
+                $payment->setInvoiceId($order->id)
                         ->setSum($order->sum)
-                        ->setDescription('Оплата за использование сервиса пользователем #'
+                        ->setDescription('Оплата за ' . $order->term . ' месяц(-а,-ев) использования сервиса пользователем #'
                                 . $user->getId()
                                 . ' ' . $user->getUsername()
                                 . ' от ' . date('H:i d-m-Y'));
 
                 // redirect to payment url
-                return $this->redirectToRoute('api_v1_payment_success');
+                //return $this->redirectToRoute('api_v1_payment_success');
 
                 return $this->redirect($payment->getPaymentUrl());
             } else {
@@ -74,7 +111,6 @@ class PaymentController extends BaseController
             }
         } catch (\Exception $e) {
 
-            throw $e;
             return $this->redirectToRoute('api_v1_payment_error');
         }
     }
@@ -106,7 +142,7 @@ class PaymentController extends BaseController
                     }
 
                     // update extire date
-                    $order->user->getExpireDate()->modify('+1 month');
+                    $order->user->getExpireDate()->modify('+' . $order->term . ' month');
 
                     $em->flush();
                 }

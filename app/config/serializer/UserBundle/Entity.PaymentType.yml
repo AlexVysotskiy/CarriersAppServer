@@ -1,0 +1,11 @@
+UserBundle\Entity\PaymentType:
+    exclusion_policy: ALL
+    properties:
+        id:
+            expose: true
+        term:
+            expose: true
+        category:
+            expose: true
+        value:
+            expose: true

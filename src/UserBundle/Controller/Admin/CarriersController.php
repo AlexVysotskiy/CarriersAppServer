@@ -38,7 +38,12 @@ class CarriersController extends Controller
         $conditionId = intval($request->get('id'));
         $conditionName = $request->get('name');
         $conditionPhone = $request->get('phone');
-        $conditionCity = intval($request->get('cityId'));
+
+        if ($request->get('cityId') === null) {
+            $conditionCity = $cityList[0]->getId();
+        } else {
+            $conditionCity = intval($request->get('cityId'));
+        }
 
         $query = "select u from UserBundle\Entity\User u";
 
