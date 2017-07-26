@@ -7,10 +7,10 @@ parameters:
         id: Greybrick
         login: superadmin
         password: 7fd7xFX8Rg
-        merchant_id: carriers_app
+        merchant_id: carriers
         paymentsPasswords:
-            pass1: 1232321312
-            pass2: sdsada
+            pass1: 'o2SjACD1N5Bz8IT5pnZz'
+            pass2: 'l58hh8UG30sEDLfClSYU'
         testMode: true
 
 services:
