@@ -68,15 +68,18 @@ class PaymentController extends BaseController
             $credentials = $tokenAuthService->getCredentials($request);
 
             /* @var $user User */
-            $user = $tokenAuthService->getUser($credentials, null);
+//            $user = $tokenAuthService->getUser($credentials, null);
             $userId = $request->get('id');
+            $user = $em->getRepository('UserBundle\Entity\User')
+                    ->findOneBy(['id' => $userId, 'enabled' => true]);
 
             $paymentPack = $request->get('payment_pack');
-
+            
             if ($user->getId() == $userId) {
 
                 /* @var $paymentPackRepo \Doctrine\ORM\EntityRepository */
                 $paymentPackRepo = $em->getRepository('UserBundle\Entity\PaymentType');
+                
                 /* @var $paymentPack \UserBundle\Entity\PaymentType */
                 if (!($paymentPack = $paymentPackRepo->find($paymentPack))) {
                     throw new \Exception('Payment pack mismatch!');
@@ -89,7 +92,7 @@ class PaymentController extends BaseController
                 $order->term = $paymentPack->term;
                 $order->date = new \DateTime();
                 $order->sum = $paymentPack->value;
-
+                
                 $em->persist($order);
                 $em->flush($order);
 
@@ -111,7 +114,7 @@ class PaymentController extends BaseController
                 throw new \Exception('User mismatch!');
             }
         } catch (\Exception $e) {
-
+            
             return $this->redirectToRoute('api_v1_payment_error');
         }
     }
@@ -140,9 +143,9 @@ class PaymentController extends BaseController
                     $order->success = true;
                     $this->activateProfile($order->user, $order->term);
 
-                    /*if ($order->user->getExpireDate()->getTimestamp() < date('U')) {
-                        $order->user->setExpireDate(new \DateTime());
-                    }*/
+                    /* if ($order->user->getExpireDate()->getTimestamp() < date('U')) {
+                      $order->user->setExpireDate(new \DateTime());
+                      } */
 
                     // update extire date
                     //$order->user->getExpireDate()->modify('+1 month');
@@ -194,7 +197,6 @@ class PaymentController extends BaseController
                     $this->activateProfile($user);
                 }
             }
-
         }
 
 
@@ -222,7 +224,7 @@ class PaymentController extends BaseController
     {
         $robokassaSettings = $this->getParameter('robokassa');
         $payment = new \Idma\Robokassa\Payment(
-            $robokassaSettings['merchant_id'], $robokassaSettings['paymentsPasswords']['pass1'], $robokassaSettings['paymentsPasswords']['pass1'], $robokassaSettings['testMode']
+                $robokassaSettings['merchant_id'], $robokassaSettings['paymentsPasswords']['pass1'], $robokassaSettings['paymentsPasswords']['pass1'], $robokassaSettings['testMode']
         );
 
         return $payment;
