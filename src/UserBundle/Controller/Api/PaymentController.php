@@ -224,7 +224,7 @@ class PaymentController extends BaseController
     {
         $robokassaSettings = $this->getParameter('robokassa');
         $payment = new \Idma\Robokassa\Payment(
-                $robokassaSettings['merchant_id'], $robokassaSettings['paymentsPasswords']['pass1'], $robokassaSettings['paymentsPasswords']['pass1'], $robokassaSettings['testMode']
+                $robokassaSettings['merchant_id'], $robokassaSettings['paymentsPasswords']['pass1'], $robokassaSettings['paymentsPasswords']['pass2'], $robokassaSettings['testMode']
         );
 
         return $payment;
