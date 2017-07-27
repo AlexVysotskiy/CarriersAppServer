@@ -9,8 +9,8 @@ parameters:
         password: 7fd7xFX8Rg
         merchant_id: carriers
         paymentsPasswords:
-            pass1: z1Dic9brYTPS2mRumf07
-            pass1: Q9JXjuqlYKcbf6a6d25k
+            pass1: VDv0ZN5l3HlLy9qIK4MJ
+            pass2: xUam5Z91d3THWml3NEPJ
             #pass1: 'o2SjACD1N5Bz8IT5pnZz'
             #pass2: 'l58hh8UG30sEDLfClSYU'
         testMode: true
