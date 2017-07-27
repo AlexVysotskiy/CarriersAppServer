@@ -116,13 +116,16 @@
                                         <tr class="{{ num % 2 == 0 ? 'even' : 'odd' }} pointer">
 
                                             <td class="">
-                                                {{ order.id }} месяц(-а/-ев)
+                                                {{ order.id }}
                                             </td>
                                             <td class="">
                                                 {{ order.user ? order.user.getName() : "" }}
                                             </td>
                                             <td class="">
                                                 {{ order.date|date("H:i d/m/Y") }}
+                                            </td>
+                                            <td class="">
+                                                {{ order.getCity().getName() }}
                                             </td>
                                             <td class="">
                                                 {{  order.term ~ 'м. ' }}

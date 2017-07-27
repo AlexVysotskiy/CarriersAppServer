@@ -159,9 +159,9 @@
                                                 {{ paymentType.value }}
                                             </td>
                                             <td class=" last">
-                                                {#  <a href="#" class="btn btn-info source "  data-toggle="modal" data-target=".add-modal-lg" data-type="{{ paymentType.id }}">
-                                                      Редактировать
-                                                  </a>#}
+                                                <a href="#" class="btn btn-info source "  data-toggle="modal" data-target=".add-modal-lg" data-type="{{ paymentType.id }}">
+                                                    Редактировать
+                                                </a>
                                             </td>
                                         </tr>
                                     {% endfor %}
@@ -255,7 +255,7 @@
                         var href = '{{ path('admin_payments_types_add') }}';
                         if (button.data('type'))
                         {
-                            href += '?id=' + button.data('region');
+                            href += '?id=' + button.data('type');
                         }
 
                         $(this).find('.modal-body').load(href);

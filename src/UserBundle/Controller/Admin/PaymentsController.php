@@ -194,7 +194,7 @@ class PaymentsController extends Controller
                 'reload' => $isNew
             ));
         } else {
-
+            
             return $this->render('admin/payments/payments_types_form.html.twig', array(
                         'paymentType' => isset($paymentType) && $paymentType ? $paymentType : null,
                         'cities' => $cityRepo->findAll(),

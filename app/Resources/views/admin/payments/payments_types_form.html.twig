@@ -8,7 +8,7 @@
         <div class="col-md-6 col-sm-6 col-xs-12">
             <select class="form-control" name="term">
                 {% for i in [1,2,3,6,12] %}
-                    <option value="{{ i }}" >{{ i }} месяц(-а/-ев)</option>
+                    <option {{ paymentType ? (paymentType.term == i ? 'selected' : '') : '' }} value="{{ i }}" >{{ i }} месяц(-а/-ев)</option>
                 {% endfor %}
             </select>    
         </div>
@@ -22,7 +22,7 @@
         <div class="col-md-6 col-sm-6 col-xs-12">
             <select class="form-control" name="category">
                 {% for cargo in cargoList %} 
-                    <option value="{{ cargo }}">
+                    <option {{ paymentType ? (paymentType.category == cargo ? 'selected' : '') : '' }} value="{{ cargo }}">
                         {{ cargo == 'cargo_over_6000' ? 'более' : 'до' }} {{ cargo|trim('cargo_over', 'left') }} кг.
                     </option>
                 {% endfor %} 
@@ -38,7 +38,7 @@
         <div class="col-md-6 col-sm-6 col-xs-12">
             <select class="form-control col-md-7 col-xs-12" name="city">
                 {% for city in cities %} 
-                    <option value="{{ city.getId() }}">
+                    <option  {{ paymentType ? (paymentType.city.getId() == city.getId() ? 'selected' : '') : '' }}  value="{{ city.getId() }}">
                         {{ city.getName() }}
                     </option>
                 {% endfor %} 
@@ -52,7 +52,7 @@
             Стоимость <span class="required">*</span>
         </label>
         <div class="col-md-6 col-sm-6 col-xs-12">
-            <input type="text" id="value" name="value" required="required" class="form-control col-md-7 col-xs-12" />
+            <input type="text" id="value" name="value" required="required" class="form-control col-md-7 col-xs-12" value="{{ paymentType ? paymentType.value : '' }}"/>
         </div>
     </div>
 
