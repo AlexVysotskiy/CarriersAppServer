@@ -22,7 +22,7 @@ class BaseController extends Controller
      */
     public function defaultAction(Request $request)
     {
-        return new Response('Hello here!');
+      return $this->render('default/index.html.twig');
     }
 
     /**
