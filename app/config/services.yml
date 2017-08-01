@@ -9,11 +9,9 @@ parameters:
         password: 7fd7xFX8Rg
         merchant_id: carriers
         paymentsPasswords:
-            pass1: VDv0ZN5l3HlLy9qIK4MJ
-            pass2: xUam5Z91d3THWml3NEPJ
-            #pass1: 'o2SjACD1N5Bz8IT5pnZz'
-            #pass2: 'l58hh8UG30sEDLfClSYU'
-        testMode: true
+            pass1: fj01Gy4LBD0iQPT2UbBd
+            pass2: vv1icXe03PX81WwOUGzL
+        testMode: false
 
 services:
     token_authenticator:
