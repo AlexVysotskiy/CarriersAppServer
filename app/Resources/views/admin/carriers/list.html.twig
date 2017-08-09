@@ -184,8 +184,8 @@
                                                 <a href="#" class="btn btn-sm btn-warning source"  data-toggle="modal" data-target=".deact-modal-lg" data-carrier="{{ carrier.getId() }}">
                                                     <i class="fa fa-hourglass-3"></i>
                                                 </a>
-                                                    
-                                                <a href="#" class="btn btn-sm btn-info source"  data-toggle="modal" data-target=".deact-modal-lg" data-carrier="{{ carrier.getId() }}">
+
+                                                <a href="#" class="btn btn-sm btn-info source"  data-toggle="modal" data-target=".pay-modal-lg" data-carrier="{{ carrier.getId() }}">
                                                     <i class="fa fa-money"></i>
                                                 </a>
 
@@ -307,6 +307,30 @@
         </div>
     </div>
 
+    <div class="modal fade pay-modal-lg" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                    <h4 class="modal-title" id="myModalLabel">Платежи перевозчика</h4>
+                </div>
+
+                <div class="modal-body">
+
+                </div>
+
+                <div class="modal-footer">
+
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
 
 {% endblock %}
 
@@ -325,6 +349,20 @@
                             $(this).data('carrier', button.data('carrier'));
                         }
                     });
+
+            $('.modal.pay-modal-lg')
+                    .on('show.bs.modal', function (event) {
+
+                        var button = $(event.relatedTarget);
+                      
+
+                        var href = '{{ path('admin_carriers_payments_list') }}';
+
+                        href += '?userId=' + button.data('carrier');
+                        $(this).find('.modal-body').load(href);
+                    });
+
+
 
             // мдальное окно формы добавления региона
             $('.modal').find('.js-togglelock')

@@ -37,8 +37,11 @@
 
         <div class="col-md-6 col-sm-6 col-xs-12">
             <select class="form-control col-md-7 col-xs-12" name="city">
+                <option  {{ paymentType and not paymentType.city ? 'selected' : '' }}  value="0">
+                    Все
+                </option>
                 {% for city in cities %} 
-                    <option  {{ paymentType ? (paymentType.city.getId() == city.getId() ? 'selected' : '') : '' }}  value="{{ city.getId() }}">
+                    <option  {{ paymentType ? (paymentType.city and paymentType.city.getId() == city.getId() ? 'selected' : '') : '' }}  value="{{ city.getId() }}">
                         {{ city.getName() }}
                     </option>
                 {% endfor %} 

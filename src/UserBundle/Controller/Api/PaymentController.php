@@ -45,8 +45,30 @@ class PaymentController extends BaseController
             'category' => $cargoType
         ));
 
+        $res = [];
+        /* @var $paymentType \UserBundle\Entity\PaymentType */
+        foreach ($list as $paymentType) {
+            $res[$paymentType->term] = $paymentType;
+        }
+
+        $qb = $em->createQueryBuilder();
+        $query = $qb->select('p')
+                ->from('UserBundle\Entity\PaymentType', "p")
+                ->where('p.city IS NULL and p.category = \'' . $cargoType . '\'')
+                ->getQuery();
+
+        $extra = [];
+        /* @var $paymentType \UserBundle\Entity\PaymentType */
+        foreach ($query->getResult() as $paymentType) {
+            $extra[$paymentType->term] = $paymentType;
+        }
+
+        $res += $extra;
+        
+        ksort($res);
+
         $response = new Response($this->serialize(
-                        array('list' => $list)
+                        array('list' => array_values($res))
                 ), Response::HTTP_OK);
 
         return $this->setBaseHeaders($response);
@@ -68,18 +90,18 @@ class PaymentController extends BaseController
             $credentials = $tokenAuthService->getCredentials($request);
 
             /* @var $user User */
-//            $user = $tokenAuthService->getUser($credentials, null);
-            $userId = $request->get('id');
-            $user = $em->getRepository('UserBundle\Entity\User')
-                    ->findOneBy(['id' => $userId, 'enabled' => true]);
+            $user = $tokenAuthService->getUser($credentials, null);
+//            $userId = $request->get('id');
+//            $user = $em->getRepository('UserBundle\Entity\User')
+//                    ->findOneBy(['id' => $userId, 'enabled' => true]);
 
             $paymentPack = $request->get('payment_pack');
-            
-            if ($user->getId() == $userId) {
+
+            if ($user) {
 
                 /* @var $paymentPackRepo \Doctrine\ORM\EntityRepository */
                 $paymentPackRepo = $em->getRepository('UserBundle\Entity\PaymentType');
-                
+
                 /* @var $paymentPack \UserBundle\Entity\PaymentType */
                 if (!($paymentPack = $paymentPackRepo->find($paymentPack))) {
                     throw new \Exception('Payment pack mismatch!');
@@ -92,7 +114,7 @@ class PaymentController extends BaseController
                 $order->term = $paymentPack->term;
                 $order->date = new \DateTime();
                 $order->sum = $paymentPack->value;
-                
+
                 $em->persist($order);
                 $em->flush($order);
 
@@ -114,7 +136,7 @@ class PaymentController extends BaseController
                 throw new \Exception('User mismatch!');
             }
         } catch (\Exception $e) {
-            
+
             return $this->redirectToRoute('api_v1_payment_error');
         }
     }

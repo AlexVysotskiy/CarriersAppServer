@@ -164,9 +164,9 @@ class PaymentsController extends Controller
 
             if (!$value) {
                 $errors[] = 'Введена неверная стоимость!';
-            } elseif (!($city = $cityRepo->find($city))) {
-                $errors[] = 'Выбран несуществующий город!';
-            }
+            } /* elseif (!($city = $cityRepo->find($city))) {
+              $errors[] = 'Выбран несуществующий город!';
+              } */
 
             if (!$errors) {
 
@@ -174,7 +174,7 @@ class PaymentsController extends Controller
 
                     $paymentType->term = $term;
                     $paymentType->category = $category;
-                    $paymentType->city = $city;
+                    $paymentType->city = ($city = $cityRepo->find($city)) ? $city : null;
                     $paymentType->value = $value;
 
                     if ($isNew) {
@@ -194,7 +194,7 @@ class PaymentsController extends Controller
                 'reload' => $isNew
             ));
         } else {
-            
+
             return $this->render('admin/payments/payments_types_form.html.twig', array(
                         'paymentType' => isset($paymentType) && $paymentType ? $paymentType : null,
                         'cities' => $cityRepo->findAll(),

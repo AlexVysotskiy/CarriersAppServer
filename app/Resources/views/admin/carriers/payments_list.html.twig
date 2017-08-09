@@ -1,0 +1,55 @@
+<div class="table-responsive">
+    <table id="regions-list-table" class="table table-striped jambo_table">
+        <thead>
+            <tr class="headings">
+
+                <th class="column-title">
+                    #
+                </th>
+
+                <th class="column-title">
+                    Дата
+                </th>
+
+                <th class="column-title">
+                    Тип пакета
+                </th>
+                <th class="column-title">
+                    Стоимость
+                </th>
+
+            </tr>
+        </thead>
+
+        <tbody>
+
+            {% for num, order in list %}
+                <tr class="{{ num % 2 == 0 ? 'even' : 'odd' }} pointer">
+
+                    <td class="">
+                        {{ order.id }}
+                    </td>
+
+                    <td class="">
+                        {{ order.date|date("H:i d/m/Y") }}
+                    </td>
+
+                    <td class="">
+                        {{  order.term ~ 'м. ' }}
+
+                        {% if order.user %}
+
+                            {% set cat = order.user.getCargoType() %}
+                            {{ (cat == 'cargo_over_6000' ? 'более' : 'до') ~ cat|trim('cargo_over', 'left') ~ ' кг.'}}
+                        {% endif %}
+
+                    </td>
+                    <td class="">
+                        {{ order.sum }}
+                    </td>
+                </tr>
+            {% endfor %}
+
+        </tbody>
+    </table>
+</div>

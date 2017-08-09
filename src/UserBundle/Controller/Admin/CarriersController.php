@@ -87,6 +87,37 @@ class CarriersController extends Controller
 
     /**
      * добавление / редактирование региона
+     * @Route("/carriers_list/payments_list", name="admin_carriers_payments_list")
+     */
+    public function paymentsListAjaxAction(Request $request)
+    {
+        $userId = $request->get('userId');
+
+        /* @var $em \Doctrine\ORM\EntityManager */
+        $em = $this->get('doctrine.orm.entity_manager');
+        /* @var $repo \Doctrine\ORM\EntityRepository */
+        $repo = $em->getRepository('UserBundle\Entity\User');
+
+        /* @var $user \UserBundle\Entity\User */
+        if ($user = $repo->find($userId)) {
+
+            /* @var $repo \Doctrine\ORM\EntityRepository */
+            $repo = $em->getRepository('UserBundle\Entity\Order');
+
+            $list = $repo->findBy(['user' => $user->getId()]);
+
+            return $this->render('admin/carriers/payments_list.html.twig', array(
+                        'list' => $list
+            ));
+        }
+
+        return new JsonResponse(array(
+            'success' => 1
+        ));
+    }
+
+    /**
+     * добавление / редактирование региона
      * @Route("/carriers_list/toggle_lock", name="admin_carriers_ajax_togglelock")
      */
     public function toggleLockAjaxAction(Request $request)

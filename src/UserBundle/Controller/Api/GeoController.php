@@ -84,4 +84,26 @@ class GeoController extends Controller
         return $this->setBaseHeaders($response);
     }
 
+    /**
+     * @Route("/cities/search/{name}", name="api_v1_cities_search")
+     * @Method("GET")
+     */
+    public function searchCityAction(Request $request)
+    {
+        $name = $request->get('name');
+        
+        /* @var $em \Doctrine\ORM\EntityManager */
+        $em = $this->get('doctrine.orm.entity_manager');
+        
+        $qb = $em->createQueryBuilder();
+        
+        $list = $qb->select('u')
+                ->from('UserBundle\Entity\City', "u")
+                ->where('u.name LIKE \'' . $name . '%\' and u.active = 1')
+                ->getQuery()->getResult();
+
+        $response = new Response($this->serialize(['list' => $list]), Response::HTTP_OK);
+        return $this->setBaseHeaders($response);
+    }
+
 }

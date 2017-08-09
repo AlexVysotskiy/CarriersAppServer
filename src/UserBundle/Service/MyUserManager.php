@@ -43,10 +43,9 @@ class MyUserManager extends UserManager
         /* @var $user \UserBundle\Entity\User */
         $user = $this->createUser();
         $user->setEnabled(true);
-        
+
         $this->fillUserValues($user, $params);
-        $user->setExpireDate((new \DateTime())->modify('+1 month'));
-                
+
         $this->updateUser($user);
 
         return $user;
@@ -147,6 +146,14 @@ class MyUserManager extends UserManager
                 ->setImageAuto(isset($images['auto']) ? $images['auto'] : null)
                 ->setHidden(intval($params['hidden']));
 
+        $freedaySetting = $this->objectManager->getRepository('UserBundle\Entity\Setting')->findOneBy(['name' => 'days']);
+        if (!$freedaySetting) {
+            $freedaySetting = 3;
+        } else {
+            $freedaySetting = abs(intval($freedaySetting->value));
+        }
+
+        $user->setExpireDate((new \DateTime())->modify('+' . $freedaySetting . ' days'));
 
         // костыль для регистрации
         if (!$user->getId() || $params['password']) {
