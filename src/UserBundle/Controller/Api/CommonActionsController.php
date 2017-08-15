@@ -27,7 +27,7 @@ class CommonActionsController extends Controller
         $repo = $em->getRepository('UserBundle\Entity\Setting');
 
         $response = new Response($this->serialize(array(
-            'phone' => $repo->findOneBy(['name' => 'phone'])
+            'phone' => $repo->findOneBy(['name' => 'phone'])->value
         )), Response::HTTP_OK);
 
         return $this->setBaseHeaders($response);
@@ -89,8 +89,8 @@ class CommonActionsController extends Controller
         if ($text = trim($request->get('text'))) {
 
             $message = (new \Swift_Message('Запрос/отзыв на обратный звонок от перевозчика #' . $user->getId() . '.'))
-                ->setFrom($email->name)
-                ->setTo($email->name)
+                ->setFrom($email->value)
+                ->setTo($email->value)
                 ->setBody(
                     'Поступил запрос/отзыв от перевозчика #' .
                     $user->getId() . ' ' . $user->getUsername() . ' '
