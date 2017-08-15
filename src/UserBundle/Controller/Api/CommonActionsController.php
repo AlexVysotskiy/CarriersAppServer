@@ -51,8 +51,8 @@ class CommonActionsController extends Controller
         $user = $em->getRepository('UserBundle\Entity\User')->find($request->get('id'));
 
         $message = (new \Swift_Message('Запрос на обратный звонок от перевозчика #' . $user->getId() . '.'))
-            ->setFrom($email->name)
-            ->setTo($email->name)
+            ->setFrom($email->value)
+            ->setTo($email->value)
             ->setBody(
                 'Поступил запрос на обратный звонок от перевозчика #' .
                 $user->getId() . ' ' . $user->getUsername() . ' '
