@@ -24,10 +24,26 @@
 
                             <div class="form-group">
                                 <label class="control-label col-md-3 col-sm-3 col-xs-12" for="days">
-                                    Охнакомительный период (дни)
+                                    Ознакомительный период (дни)
                                 </label>
                                 <div class="col-md-6 col-sm-6 col-xs-12">
-                                    <input type="text" id="days" name="settings[days]" class="form-control col-md-7 col-xs-12" value="{{ settings.days is defined ? settings.days.value : '' }}">
+                                    <input type="text" id="days" name="settings[days]" class="form-control col-md-7 col-xs-12" value="{{ settings.days is defined ? settings.days.value : '' }}" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="phone">
+                                    Телефон для связи
+                                </label>
+                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                    <input type="text" id="phone" name="settings[phone]" class="form-control col-md-7 col-xs-12" value="{{ settings.phone is defined ? settings.phone.value : '' }}" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="email">
+                                    E-mail для связи
+                                </label>
+                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                    <input type="text" id="email" name="settings[email]" class="form-control col-md-7 col-xs-12" value="{{ settings.email is defined ? settings.email.value : '' }}" />
                                 </div>
                             </div>
                             {#<div class="form-group">
