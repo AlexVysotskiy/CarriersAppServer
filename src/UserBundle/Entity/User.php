@@ -226,6 +226,9 @@ class User extends BaseUser
         return $this->phone;
     }
 
+    /**
+     * @return City
+     */
     public function getCity()
     {
         return $this->city;
