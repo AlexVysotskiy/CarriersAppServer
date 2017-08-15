@@ -51,7 +51,7 @@ class CommonActionsController extends Controller
         $user = $em->getRepository('UserBundle\Entity\User')->find($request->get('id'));
 
         $message = (new \Swift_Message('Запрос на обратный звонок от перевозчика #' . $user->getId() . '.'))
-            ->setFrom($email->value)
+            ->setFrom('Перевозчик: ' . $email->value)
             ->setTo($email->value)
             ->setBody(
                 'Поступил запрос на обратный звонок от перевозчика #' .
@@ -89,7 +89,7 @@ class CommonActionsController extends Controller
         if ($text = trim($request->get('text'))) {
 
             $message = (new \Swift_Message('Запрос/отзыв на обратный звонок от перевозчика #' . $user->getId() . '.'))
-                ->setFrom($email->value)
+                ->setFrom('Перевозчик: ' .$email->value)
                 ->setTo($email->value)
                 ->setBody(
                     'Поступил запрос/отзыв от перевозчика #' .
