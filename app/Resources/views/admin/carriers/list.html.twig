@@ -23,19 +23,22 @@
                                 <label for="name">
                                     Id водителя
                                 </label>
-                                <input type="text" id="id" name="id" class="form-control" placeholder="" value="{{ currentFilterValues.id ? currentFilterValues.id : '' }}">
+                                <input type="text" id="id" name="id" class="form-control" placeholder=""
+                                       value="{{ currentFilterValues.id ? currentFilterValues.id : '' }}">
                             </div>
                             <div class="form-group col-md-3">
                                 <label for="phone">
                                     Телефон
                                 </label>
-                                <input type="text" id="phone" name="phone" class="form-control" placeholder="" value="{{ currentFilterValues.phone ? currentFilterValues.phone : '' }}">
+                                <input type="text" id="phone" name="phone" class="form-control" placeholder=""
+                                       value="{{ currentFilterValues.phone ? currentFilterValues.phone : '' }}">
                             </div>
                             <div class="form-group col-md-3">
                                 <label for="name">
                                     Имя
                                 </label>
-                                <input type="text" id="name" name="name" class="form-control" placeholder="" value="{{ currentFilterValues.name ? currentFilterValues.name : '' }}">
+                                <input type="text" id="name" name="name" class="form-control" placeholder=""
+                                       value="{{ currentFilterValues.name ? currentFilterValues.name : '' }}">
                             </div>
                             <div class="form-group col-md-3">
                                 <label for="region">
@@ -43,17 +46,17 @@
                                 </label>
                                 <select class="form-control" name="cityId">
                                     <option value="0">Все</option>
-                                    {% for city in citiesList %} 
+                                    {% for city in citiesList %}
                                         <option value="{{ city.getId() }}" {{ currentFilterValues.city == city.getId() ? 'selected' : '' }}>
                                             {{ city.getName() }}
                                         </option>
-                                    {% endfor %} 
+                                    {% endfor %}
                                 </select>
                             </div>
 
                             <div class="form-group pull-right">
-                                <input type="submit" class="btn btn-default" value="Фильтровать" />
-                                <a href="{{ path('admin_carriers_list') }}"  class="btn btn-info">
+                                <input type="submit" class="btn btn-default" value="Фильтровать"/>
+                                <a href="{{ path('admin_carriers_list') }}" class="btn btn-info">
                                     Сбросить
                                 </a>
                             </div>
@@ -99,99 +102,115 @@
                         <div class="table-responsive">
                             <table id="regions-list-table" class="table table-striped jambo_table">
                                 <thead>
-                                    <tr class="headings">
-                                        <th class="column-title">
-                                            #
-                                        </th>
-                                        <th class="column-title">
-                                            Имя
-                                        </th>
-                                        <th class="column-title">
-                                            Телефон
-                                        </th>
-                                        <th class="column-title">
-                                            Тип перевозки
-                                        </th>
-                                        <th class="column-title">
-                                            Фото профиля
-                                        </th>
-                                        <th class="column-title">
-                                            Фото авто
-                                        </th>
-                                        <th class="column-title">
-                                            Город
-                                        </th>
-                                        <th class="column-title">
-                                            Окончание активации
-                                        </th>
-                                        <th class="column-title">
-                                            Заблокирован?
-                                        </th>
-                                        <th class="column-title no-link last">
-                                            <span class="nobr">Действия</span>
-                                        </th>
-                                    </tr>
+                                <tr class="headings">
+                                    <th class="column-title">
+                                        #
+                                    </th>
+                                    <th class="column-title">
+                                        Имя
+                                    </th>
+                                    <th class="column-title">
+                                        Телефон
+                                    </th>
+                                    <th class="column-title">
+                                        Тип перевозки
+                                    </th>
+                                    <th class="column-title">
+                                        Фото профиля
+                                    </th>
+                                    <th class="column-title">
+                                        Фото авто
+                                    </th>
+                                    <th class="column-title">
+                                        Город
+                                    </th>
+                                    <th class="column-title">
+                                        Окончание активации
+                                    </th>
+                                    <th class="column-title">
+                                        Заблокирован?
+                                    </th>
+                                    <th class="column-title no-link last">
+                                        <span class="nobr">Действия</span>
+                                    </th>
+                                </tr>
                                 </thead>
 
                                 <tbody>
 
-                                    {% for num, carrier in list %}
-                                        <tr class="{{ num % 2 == 0 ? 'even' : 'odd' }} pointer">
-                                            <td >
-                                                {{ carrier.getId() }}
-                                            </td>
-                                            <td >
-                                                {{ carrier.getUsername() }}
-                                            </td>
-                                            <td >
-                                                {{ carrier.getPhone() }}
-                                            </td>
-                                            <td >
-                                                {{ carrier.getCargoType() }}
-                                            </td>
-                                            <td >
-                                                {% if carrier.getImageProfile()  %}
-                                                    <img src="/carriersapp/bundles/carriers/{{ carrier.getImageProfile() }}" style="max-width: 50px; height: auto;"/>
-                                                {% endif %}                                               
-                                            </td>
-                                            <td >
-                                                {% if carrier.getImageAuto()  %}
-                                                    <img src="/carriersapp/bundles/carriers/{{ carrier.getImageAuto() }}" style="max-width: 50px; height: auto;"/>
-                                                {% endif %}   
-                                            </td>
-                                            <td >
-                                                {{ carrier.getCity().getName() }}
-                                            </td>
-                                            <td >
-                                                {{ carrier.getExpireDate().format('H:i:s d-m-Y') }}
-                                            </td>
-                                            <td>
-                                                {{ carrier.isEnabled() ? 'Нет' : 'Да' }}
-                                            </td>
-                                            <td class=" no-link last">
+                                {% for num, carrier in list %}
+                                    <tr class="{{ num % 2 == 0 ? 'even' : 'odd' }} pointer">
+                                        <td>
+                                            {{ carrier.getId() }}
+                                        </td>
+                                        <td>
+                                            {{ carrier.getUsername() }}
+                                        </td>
+                                        <td>
+                                            {{ carrier.getPhone() }}
+                                        </td>
+                                        <td>
+                                            {{ carrier.getCargoType() }}
+                                        </td>
+                                        <td>
+                                            {% if carrier.getImageProfile() %}
+                                                <img src="/carriersapp/bundles/carriers/{{ carrier.getImageProfile() }}"
+                                                     style="max-width: 50px; height: auto;"/>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            {% if carrier.getImageAuto() %}
+                                                <img src="/carriersapp/bundles/carriers/{{ carrier.getImageAuto() }}"
+                                                     style="max-width: 50px; height: auto;"/>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            {{ carrier.getCity().getName() }}
+                                        </td>
+                                        <td>
+                                            {{ carrier.getExpireDate().format('H:i:s d-m-Y') }}
+                                        </td>
+                                        <td>
+                                            {{ carrier.isEnabled() ? 'Нет' : 'Да' }}
+                                        </td>
+                                        <td class=" no-link last">
+
+                                            {% if carrier.removed %}
+                                                <a href="#" class="btn btn-sm btn-danger">
+                                                    Удален
+                                                </a>
+                                            {% else %}
                                                 {% if carrier.isEnabled() %}
-                                                    <a href="#" class="btn btn-sm btn-danger source"  data-toggle="modal" data-target=".lock-modal-lg" data-carrier="{{ carrier.getId() }}">
+                                                    <a href="#" class="btn btn-sm btn-danger source" data-toggle="modal"
+                                                       data-target=".lock-modal-lg"
+                                                       data-carrier="{{ carrier.getId() }}">
                                                         <i class="fa fa-lock"></i>
                                                     </a>
                                                 {% else %}
-                                                    <a href="#" class="btn btn-sm btn-info source"  data-toggle="modal" data-target=".unlock-modal-lg" data-carrier="{{ carrier.getId() }}">
+                                                    <a href="#" class="btn btn-sm btn-info source" data-toggle="modal"
+                                                       data-target=".unlock-modal-lg"
+                                                       data-carrier="{{ carrier.getId() }}">
                                                         <i class="fa fa-unlock"></i>
                                                     </a>
                                                 {% endif %}
-                                                <a href="#" class="btn btn-sm btn-success source"  data-toggle="modal" data-target=".act-modal-lg" data-carrier="{{ carrier.getId() }}">
+                                                <a href="#" class="btn btn-sm btn-success source" data-toggle="modal"
+                                                   data-target=".act-modal-lg" data-carrier="{{ carrier.getId() }}">
                                                     +1 <i class="fa fa-hourglass-start"></i>
                                                 </a>
-                                                <a href="#" class="btn btn-sm btn-warning source"  data-toggle="modal" data-target=".deact-modal-lg" data-carrier="{{ carrier.getId() }}">
+                                                <a href="#" class="btn btn-sm btn-warning source" data-toggle="modal"
+                                                   data-target=".deact-modal-lg" data-carrier="{{ carrier.getId() }}">
                                                     <i class="fa fa-hourglass-3"></i>
                                                 </a>
 
-                                                <a href="#" class="btn btn-sm btn-info source"  data-toggle="modal" data-target=".pay-modal-lg" data-carrier="{{ carrier.getId() }}">
+                                                <a href="#" class="btn btn-sm btn-info source" data-toggle="modal"
+                                                   data-target=".pay-modal-lg" data-carrier="{{ carrier.getId() }}">
                                                     <i class="fa fa-money"></i>
                                                 </a>
+                                            {% endif %}
 
-                                            </td>
-                                        </tr>
-                                    {% endfor %}
+                                        </td>
+                                    </tr>
+                                {% endfor %}
 
                                 </tbody>
                             </table>
@@ -223,7 +242,8 @@
                 </div>
 
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-danger js-togglelock" data-dismiss="modal">Заблокировать</button>
+                    <button type="button" class="btn btn-danger js-togglelock" data-dismiss="modal">Заблокировать
+                    </button>
                     <button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
                 </div>
 
@@ -247,7 +267,8 @@
                 </div>
 
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-warning js-togglelock" data-dismiss="modal">Разблокировать</button>
+                    <button type="button" class="btn btn-warning js-togglelock" data-dismiss="modal">Разблокировать
+                    </button>
                     <button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
                 </div>
 
@@ -344,8 +365,7 @@
                     .on('show.bs.modal', function (event) {
 
                         var button = $(event.relatedTarget);
-                        if (button.data('carrier'))
-                        {
+                        if (button.data('carrier')) {
                             $(this).data('carrier', button.data('carrier'));
                         }
                     });
@@ -354,14 +374,13 @@
                     .on('show.bs.modal', function (event) {
 
                         var button = $(event.relatedTarget);
-                      
+
 
                         var href = '{{ path('admin_carriers_payments_list') }}';
 
                         href += '?userId=' + button.data('carrier');
                         $(this).find('.modal-body').load(href);
                     });
-
 
 
             // мдальное окно формы добавления региона

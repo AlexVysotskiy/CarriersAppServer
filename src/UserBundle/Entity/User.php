@@ -161,6 +161,12 @@ class User extends BaseUser
      */
     public $payments;
 
+    /**
+     * Является ли профиль скрытый
+     * @ORM\Column(name="removed", type="boolean")
+     */
+    public $removed;
+
     public function __construct()
     {
         $this->addOnEmails = new ArrayCollection();
@@ -172,6 +178,7 @@ class User extends BaseUser
         $this->minHour = 1;
         $this->workTimeSettings = array();
         $this->expireDate = new \DateTime();
+        $this->removed = false;
     }
     
     /**

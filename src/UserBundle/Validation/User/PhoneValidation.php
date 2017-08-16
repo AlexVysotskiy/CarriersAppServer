@@ -27,7 +27,7 @@ class PhoneValidation extends AbstractValidation
         if (!$value || $value == '') {
             
             throw new \Exception('Телефон является обязательным полем!', 1);
-        } elseif ($this->userManager->findUserBy(array('phone' => $value))) {
+        } elseif ($this->userManager->findUserBy(array('phone' => $value, 'removed' => 0))) {
 
             throw new \Exception('Пользователь с таким телефоном уже существует!', 1);
         }

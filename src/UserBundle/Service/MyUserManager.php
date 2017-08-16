@@ -12,7 +12,7 @@ class MyUserManager extends UserManager
 
     /**
      *
-     * @var UserBundle\Helper\UserImageHelper 
+     * @var UserBundle\Helper\UserImageHelper
      */
     protected $imageHelper;
 
@@ -129,31 +129,38 @@ class MyUserManager extends UserManager
         }
 
         $user->setUsername($params['username'])
-                ->setEmail($params['phone'])
-                ->setPhone($params['phone'])
-                ->setCargoType($params['cargo_type'])
-                ->setCityDistrict($params['city_district'])
-                ->setDescription(substr($params['description'], 0, 255))
-                ->setAutoType(isset($params['auto_type']) ? substr($params['auto_type'], 0, 255) : null)
-                ->setDimensions($dimensions)
-                ->setLoaders($params['loaders'] == 1)
-                ->setWorkArea($workArea)
-                ->setPrice($params['price'])
-                ->setMinHour($params['min_hour'])
-                ->setCity($this->objectManager->find('UserBundle\Entity\City', $params['city_id']))
-                ->setWorkTimeSettings($workSettings)
-                ->setImageProfile(isset($images['profile']) ? $images['profile'] : null)
-                ->setImageAuto(isset($images['auto']) ? $images['auto'] : null)
-                ->setHidden(intval($params['hidden']));
+            ->setEmail($params['phone'])
+            ->setPhone($params['phone'])
+            ->setCargoType($params['cargo_type'])
+            ->setCityDistrict($params['city_district'])
+            ->setDescription(substr($params['description'], 0, 255))
+            ->setAutoType(isset($params['auto_type']) ? substr($params['auto_type'], 0, 255) : null)
+            ->setDimensions($dimensions)
+            ->setLoaders($params['loaders'] == 1)
+            ->setWorkArea($workArea)
+            ->setPrice($params['price'])
+            ->setMinHour($params['min_hour'])
+            ->setCity($this->objectManager->find('UserBundle\Entity\City', $params['city_id']))
+            ->setWorkTimeSettings($workSettings)
+            ->setImageProfile(isset($images['profile']) ? $images['profile'] : null)
+            ->setImageAuto(isset($images['auto']) ? $images['auto'] : null)
+            ->setHidden(intval($params['hidden']));
 
-        $freedaySetting = $this->objectManager->getRepository('UserBundle\Entity\Setting')->findOneBy(['name' => 'days']);
-        if (!$freedaySetting) {
-            $freedaySetting = 3;
-        } else {
-            $freedaySetting = abs(intval($freedaySetting->value));
+        if (!$user->getId()) {
+
+            if (!$this->findUserBy(['phone' => $params['phone']])) {
+
+                $freedaySetting = $this->objectManager->getRepository('UserBundle\Entity\Setting')->findOneBy(['name' => 'days']);
+                if (!$freedaySetting) {
+                    $freedaySetting = 3;
+                } else {
+                    $freedaySetting = abs(intval($freedaySetting->value));
+                }
+
+                $user->setExpireDate((new \DateTime())->modify('+' . $freedaySetting . ' days'));
+            }
+
         }
-
-        $user->setExpireDate((new \DateTime())->modify('+' . $freedaySetting . ' days'));
 
         // костыль для регистрации
         if (!$user->getId() || $params['password']) {
@@ -181,7 +188,7 @@ class MyUserManager extends UserManager
             'min_hour',
             'work_time',
             'hidden',
-                ), $extraParams);
+        ), $extraParams);
 
         $params = array();
 
@@ -205,7 +212,7 @@ class MyUserManager extends UserManager
                 'cargo_300', 'cargo_700',
                 'cargo_1500', 'cargo_3000',
                 'cargo_6000', 'cargo_over_6000'
-                    ], 'Выбран неверный тип перевозки!'),
+            ], 'Выбран неверный тип перевозки!'),
         );
     }
 

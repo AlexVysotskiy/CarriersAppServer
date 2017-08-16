@@ -133,7 +133,7 @@ class CarriersController extends Controller
             $query .= " u.$name = " . (is_numeric($value) ? $value : "'$value'" ) . " and";
         }
 
-        $query = rtrim($query, 'and') . ' and u.hidden != 1 and u.expireDate > \'' . date('Y-m-d H:i:s') . '\'';
+        $query = rtrim($query, 'and') . ' and u.hidden != 1 and u.removed != 1 and u.expireDate > \'' . date('Y-m-d H:i:s') . '\'';
 
         if ($lastId) {
 
