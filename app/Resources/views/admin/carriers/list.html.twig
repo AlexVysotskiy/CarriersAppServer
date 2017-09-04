@@ -102,115 +102,122 @@
                         <div class="table-responsive">
                             <table id="regions-list-table" class="table table-striped jambo_table">
                                 <thead>
-                                <tr class="headings">
-                                    <th class="column-title">
-                                        #
-                                    </th>
-                                    <th class="column-title">
-                                        Имя
-                                    </th>
-                                    <th class="column-title">
-                                        Телефон
-                                    </th>
-                                    <th class="column-title">
-                                        Тип перевозки
-                                    </th>
-                                    <th class="column-title">
-                                        Фото профиля
-                                    </th>
-                                    <th class="column-title">
-                                        Фото авто
-                                    </th>
-                                    <th class="column-title">
-                                        Город
-                                    </th>
-                                    <th class="column-title">
-                                        Окончание активации
-                                    </th>
-                                    <th class="column-title">
-                                        Заблокирован?
-                                    </th>
-                                    <th class="column-title no-link last">
-                                        <span class="nobr">Действия</span>
-                                    </th>
-                                </tr>
+                                    <tr class="headings">
+                                        <th class="column-id">
+                                            #
+                                        </th>
+                                        <th class="column-title">
+                                            Имя
+                                        </th>
+                                        <th class="column-phone">
+                                            Телефон
+                                        </th>
+                                        <th class="column-type">
+                                            Тип перевозки
+                                        </th>
+                                        <th class="column-photo1">
+                                            Фото профиля
+                                        </th>
+                                        <th class="column-photo2">
+                                            Фото авто
+                                        </th>
+                                        <th class="column-city">
+                                            Город
+                                        </th>
+                                        <th class="column-act">
+                                            Окончание активации
+                                        </th>
+                                        <th class="column-locked">
+                                            Заблокирован?
+                                        </th>
+                                        <th class="column-actions no-link last">
+                                            <span class="nobr">Действия</span>
+                                        </th>
+                                    </tr>
                                 </thead>
 
                                 <tbody>
 
-                                {% for num, carrier in list %}
-                                    <tr class="{{ num % 2 == 0 ? 'even' : 'odd' }} pointer">
-                                        <td>
-                                            {{ carrier.getId() }}
-                                        </td>
-                                        <td>
-                                            {{ carrier.getUsername() }}
-                                        </td>
-                                        <td>
-                                            {{ carrier.getPhone() }}
-                                        </td>
-                                        <td>
-                                            {{ carrier.getCargoType() }}
-                                        </td>
-                                        <td>
-                                            {% if carrier.getImageProfile() %}
-                                                <img src="/carriersapp/bundles/carriers/{{ carrier.getImageProfile() }}"
-                                                     style="max-width: 50px; height: auto;"/>
-                                            {% endif %}
-                                        </td>
-                                        <td>
-                                            {% if carrier.getImageAuto() %}
-                                                <img src="/carriersapp/bundles/carriers/{{ carrier.getImageAuto() }}"
-                                                     style="max-width: 50px; height: auto;"/>
-                                            {% endif %}
-                                        </td>
-                                        <td>
-                                            {{ carrier.getCity().getName() }}
-                                        </td>
-                                        <td>
-                                            {{ carrier.getExpireDate().format('H:i:s d-m-Y') }}
-                                        </td>
-                                        <td>
-                                            {{ carrier.isEnabled() ? 'Нет' : 'Да' }}
-                                        </td>
-                                        <td class=" no-link last">
+                                    {% for num, carrier in list %}
+                                        <tr class="{{ num % 2 == 0 ? 'even' : 'odd' }} pointer">
+                                            <td>
+                                                {{ carrier.getId() }}
+                                            </td>
+                                            <td>
+                                                {{ carrier.getUsername() }}
+                                            </td>
+                                            <td>
+                                                {{ carrier.getPhone() }}
+                                            </td>
+                                            <td>
+                                                {{ carrier.getCargoType() }}
+                                            </td>
+                                            <td>
+                                                {% if carrier.getImageProfile() %}
+                                                    <img src="/carriersapp/bundles/carriers/{{ carrier.getImageProfile() }}"
+                                                         style="max-width: 50px; height: auto;"/>
+                                                {% endif %}
+                                            </td>
+                                            <td>
+                                                {% if carrier.getImageAuto() %}
+                                                    <img src="/carriersapp/bundles/carriers/{{ carrier.getImageAuto() }}"
+                                                         style="max-width: 50px; height: auto;"/>
+                                                {% endif %}
+                                            </td>
+                                            <td>
+                                                {{ carrier.getCity().getName() }}
+                                            </td>
+                                            <td>
+                                                {{ carrier.getExpireDate().format('H:i:s d-m-Y') }}
+                                            </td>
+                                            <td>
+                                                {{ carrier.isEnabled() ? 'Нет' : 'Да' }}
+                                            </td>
+                                            <td class=" no-link last">
 
-                                            {% if carrier.removed %}
-                                                <a href="#" class="btn btn-sm btn-danger">
-                                                    Удален
-                                                </a>
-                                            {% else %}
-                                                {% if carrier.isEnabled() %}
-                                                    <a href="#" class="btn btn-sm btn-danger source" data-toggle="modal"
-                                                       data-target=".lock-modal-lg"
-                                                       data-carrier="{{ carrier.getId() }}">
-                                                        <i class="fa fa-lock"></i>
+                                                {% if carrier.removed %}
+                                                    <a href="#" class="btn btn-sm btn-danger">
+                                                        Удален
                                                     </a>
+
                                                 {% else %}
-                                                    <a href="#" class="btn btn-sm btn-info source" data-toggle="modal"
-                                                       data-target=".unlock-modal-lg"
-                                                       data-carrier="{{ carrier.getId() }}">
-                                                        <i class="fa fa-unlock"></i>
+                                                    {% if carrier.isEnabled() %}
+                                                        <a href="#"  title="Заблокировать" class="btn btn-sm btn-danger source" data-toggle="modal"
+                                                           data-target=".lock-modal-lg"
+                                                           data-carrier="{{ carrier.getId() }}">
+                                                            <i class="fa fa-lock"></i>
+                                                        </a>
+                                                    {% else %}
+                                                        <a href="#" title="Разблокировать" class="btn btn-sm btn-info source" data-toggle="modal"
+                                                           data-target=".unlock-modal-lg"
+                                                           data-carrier="{{ carrier.getId() }}">
+                                                            <i class="fa fa-unlock"></i>
+                                                        </a>
+                                                    {% endif %}
+
+                                                    <a href="#" title="Добавить месяц к активации" class="btn btn-sm btn-success source" data-toggle="modal"
+                                                       data-target=".act-modal-lg" data-carrier="{{ carrier.getId() }}">
+                                                        +1 <i class="fa fa-hourglass-start"></i>
+                                                    </a>
+
+                                                    <a href="#" title="Сбросить активацию профиля" class="btn btn-sm btn-warning source" data-toggle="modal"
+                                                       data-target=".deact-modal-lg" data-carrier="{{ carrier.getId() }}">
+                                                        <i class="fa fa-hourglass-3"></i>
+                                                    </a>
+
+                                                    <a href="#" title="Списк платежей" class="btn btn-sm btn-info source" data-toggle="modal"
+                                                       data-target=".pay-modal-lg" data-carrier="{{ carrier.getId() }}">
+                                                        <i class="fa fa-money"></i>
                                                     </a>
                                                 {% endif %}
-                                                <a href="#" class="btn btn-sm btn-success source" data-toggle="modal"
-                                                   data-target=".act-modal-lg" data-carrier="{{ carrier.getId() }}">
-                                                    +1 <i class="fa fa-hourglass-start"></i>
+                                                <a href="#" title="Удалить" class="btn btn-sm btn-danger source" data-toggle="modal"
+                                                   data-target=".remove-modal-lg"
+                                                   data-carrier="{{ carrier.getId() }}">
+                                                    <i class="fa fa-remove"></i>
                                                 </a>
-                                                <a href="#" class="btn btn-sm btn-warning source" data-toggle="modal"
-                                                   data-target=".deact-modal-lg" data-carrier="{{ carrier.getId() }}">
-                                                    <i class="fa fa-hourglass-3"></i>
-                                                </a>
-
-                                                <a href="#" class="btn btn-sm btn-info source" data-toggle="modal"
-                                                   data-target=".pay-modal-lg" data-carrier="{{ carrier.getId() }}">
-                                                    <i class="fa fa-money"></i>
-                                                </a>
-                                            {% endif %}
-
-                                        </td>
-                                    </tr>
-                                {% endfor %}
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
 
                                 </tbody>
                             </table>
@@ -226,132 +233,14 @@
 
 {% block modals %}
 
-    <div class="modal fade lock-modal-lg" tabindex="-1" role="dialog" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">
-                        <span aria-hidden="true">×</span>
-                    </button>
-                    <h4 class="modal-title" id="myModalLabel">Заблокировать перевозчика</h4>
-                </div>
-
-                <div class="modal-body">
-                    Вы точно хотите заблокировать перевозчика?
-                </div>
-
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-danger js-togglelock" data-dismiss="modal">Заблокировать
-                    </button>
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
-                </div>
-
-            </div>
-        </div>
-    </div>
-
-    <div class="modal fade unlock-modal-lg" tabindex="-1" role="dialog" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">
-                        <span aria-hidden="true">×</span>
-                    </button>
-                    <h4 class="modal-title" id="myModalLabel">Разблокировать перевозчика</h4>
-                </div>
-
-                <div class="modal-body">
-                    Вы точно хотите разблокировать перевозчика?
-                </div>
-
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-warning js-togglelock" data-dismiss="modal">Разблокировать
-                    </button>
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
-                </div>
-
-            </div>
-        </div>
-    </div>
-
-    <div class="modal fade act-modal-lg" tabindex="-1" role="dialog" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">
-                        <span aria-hidden="true">×</span>
-                    </button>
-                    <h4 class="modal-title" id="myModalLabel">Продление активации перевозчика на 1 месяц</h4>
-                </div>
-
-                <div class="modal-body">
-                    Вы точно хотите продлить активацию перевозчика на 1 месяц?
-                </div>
-
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-success js-act" data-dismiss="modal">
-                        Продлить
-                    </button>
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
-                </div>
-
-            </div>
-        </div>
-    </div>
-
-    <div class="modal fade deact-modal-lg" tabindex="-1" role="dialog" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">
-                        <span aria-hidden="true">×</span>
-                    </button>
-                    <h4 class="modal-title" id="myModalLabel">Деактивации перевозчика</h4>
-                </div>
-
-                <div class="modal-body">
-                    Вы точно хотите деактивировать перевозчика?
-                </div>
-
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-success js-deact" data-dismiss="modal">
-                        Деактивировать
-                    </button>
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
-                </div>
-
-            </div>
-        </div>
-    </div>
-
-    <div class="modal fade pay-modal-lg" tabindex="-1" role="dialog" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">
-                        <span aria-hidden="true">×</span>
-                    </button>
-                    <h4 class="modal-title" id="myModalLabel">Платежи перевозчика</h4>
-                </div>
-
-                <div class="modal-body">
-
-                </div>
-
-                <div class="modal-footer">
-
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
-                </div>
-
-            </div>
-        </div>
-    </div>
-
+    {% include 'admin/carriers/modals/act.html.twig' %}
+    {% include 'admin/carriers/modals/deact.html.twig' %}
+    {% include 'admin/carriers/modals/lock.html.twig' %}
+    {% include 'admin/carriers/modals/pay.html.twig' %}
+    {% include 'admin/carriers/modals/remove.html.twig' %}
+    {% include 'admin/carriers/modals/unlock.html.twig' %}
+    {% include 'admin/carriers/modals/allow.html.twig' %}
+    {% include 'admin/carriers/modals/disallow.html.twig' %}
 
 {% endblock %}
 
@@ -434,6 +323,41 @@
                             location.reload();
                         });
                     });
+
+            $('.modal').find('.js-total-remove')
+                    .on('click', function (event) {
+
+                        event.preventDefault();
+                        event.stopPropagation();
+
+                        var button = $(this);
+                        var modal = $(this).parents('.modal').first();
+
+                        var href = '{{ path('admin_carriers_ajax_remove') }}';
+                        href += '?userId=' + modal.data('carrier');
+
+                        $.get(href, function (data) {
+                            location.reload();
+                        });
+                    });
+
+            $('.modal').find('.js-check')
+                    .on('click', function (event) {
+
+                        event.preventDefault();
+                        event.stopPropagation();
+
+                        var button = $(this);
+                        var modal = $(this).parents('.modal').first();
+
+                        var href = '{{ path('admin_carriers_ajax_check') }}';
+                        href += '?userId=' + modal.data('carrier') + '&allow=' + (button.hasClass('allow') ? 1 : 0);
+
+                        $.get(href, function (data) {
+                            location.reload();
+                        });
+                    });
+
 
 
         });

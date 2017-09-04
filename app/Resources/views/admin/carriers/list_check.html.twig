@@ -1,0 +1,192 @@
+{% extends 'admin/carriers/list.html.twig' %}
+
+
+{% block filter %}
+
+    <div class="">
+
+        <div class="row">
+            <div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="x_panel">
+                    <div class="x_title">
+                        <h2>
+                            Фильтр
+                        </h2>
+                        <div class="clearfix"></div>
+                    </div>
+
+                    {% set currentFilterValues = filter %}
+
+                    <div class="x_content">
+                        <form class="" method="get">
+
+                            <div class="form-group col-md-3">
+                                <label for="region">
+                                    Статус
+                                </label>
+                                <select class="form-control" name="checked">
+                                    {% set statuses = {0: 'Новый', 2: 'Отклонен'} %}
+                                    {% for key,status in statuses %}
+                                        <option value="{{ key }}" {{ currentFilterValues.checked == key ? 'selected' : '' }}>
+                                            {{ status }}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
+                            <div class="form-group col-md-3">
+                                <label for="region">
+                                    Город
+                                </label>
+                                <select class="form-control" name="cityId">
+                                    <option value="0">Все</option>
+                                    {% for city in citiesList %}
+                                        <option value="{{ city.getId() }}" {{ currentFilterValues.city == city.getId() ? 'selected' : '' }}>
+                                            {{ city.getName() }}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
+                            <div class="form-group pull-right">
+                                <input type="submit" class="btn btn-default" value="Фильтровать"/>
+                                <a href="{{ path('admin_carriers_list') }}" class="btn btn-info">
+                                    Сбросить
+                                </a>
+                            </div>
+                        </form>
+                        <div class="clearfix"></div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+{% endblock %}
+
+{% block body %}
+
+    <div class="">
+
+        <div class="row">
+
+            <div class="clearfix"></div>
+
+            <div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="x_panel">
+                    <div class="x_title">
+
+                        <h2>
+                            Перевозчики
+                        </h2>
+
+                        <div class="navbar-right panel_toolbox">
+
+                        </div>
+
+                        <div class="clearfix"></div>
+
+                    </div>
+
+                    <div class="x_content">
+
+                        <div class="table-responsive">
+                            <table id="regions-list-table" class="table table-striped jambo_table">
+                                <thead>
+                                    <tr class="headings">
+                                        <th class="column-id">
+                                            #
+                                        </th>
+                                        <th class="column-title">
+                                            Имя
+                                        </th>
+                                        <th class="column-phone">
+                                            Телефон
+                                        </th>
+                                        <th class="column-type">
+                                            Тип перевозки
+                                        </th>
+                                        <th class="column-photo1">
+                                            Фото профиля
+                                        </th>
+                                        <th class="column-photo2">
+                                            Фото авто
+                                        </th>
+                                        <th class="column-city">
+                                            Город
+                                        </th>
+
+                                        <th class="column-actions no-link last">
+                                            <span class="nobr">Действия</span>
+                                        </th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+
+                                    {% for num, carrier in list %}
+                                        <tr class="{{ num % 2 == 0 ? 'even' : 'odd' }} pointer">
+                                            <td>
+                                                {{ carrier.getId() }}
+                                            </td>
+                                            <td>
+                                                {{ carrier.getUsername() }}
+                                            </td>
+                                            <td>
+                                                {{ carrier.getPhone() }}
+                                            </td>
+                                            <td>
+                                                {{ carrier.getCargoType() }}
+                                            </td>
+                                            <td>
+                                                {% if carrier.getImageProfile() %}
+                                                    <img src="/carriersapp/bundles/carriers/{{ carrier.getImageProfile() }}"
+                                                         style="max-width: 50px; height: auto;"/>
+                                                {% endif %}
+                                            </td>
+                                            <td>
+                                                {% if carrier.getImageAuto() %}
+                                                    <img src="/carriersapp/bundles/carriers/{{ carrier.getImageAuto() }}"
+                                                         style="max-width: 50px; height: auto;"/>
+                                                {% endif %}
+                                            </td>
+                                            <td>
+                                                {{ carrier.getCity().getName() }}
+                                            </td>
+
+                                            <td class=" no-link last">
+
+                                                <a href="#" title="Отклонить" class="btn btn-sm btn-warning source" data-toggle="modal"
+                                                   data-target=".disallow-modal-lg"
+                                                   data-carrier="{{ carrier.getId() }}">
+                                                    <i class="fa fa-lock"></i>
+                                                </a>
+
+                                                <a href="#" title="Одобрить" class="btn btn-sm btn-success source" data-toggle="modal"
+                                                   data-target=".allow-modal-lg"
+                                                   data-carrier="{{ carrier.getId() }}">
+                                                    <i class="fa fa-plus"></i>
+                                                </a>
+
+                                                <a href="#" title="Удалить" class="btn btn-sm btn-danger source" data-toggle="modal"
+                                                   data-target=".remove-modal-lg"
+                                                   data-carrier="{{ carrier.getId() }}">
+                                                    <i class="fa fa-remove"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+
+                                </tbody>
+                            </table>
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

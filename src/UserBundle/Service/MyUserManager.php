@@ -43,6 +43,7 @@ class MyUserManager extends UserManager
         /* @var $user \UserBundle\Entity\User */
         $user = $this->createUser();
         $user->setEnabled(true);
+        $user->checked = 0;
 
         $this->fillUserValues($user, $params);
 
@@ -129,22 +130,22 @@ class MyUserManager extends UserManager
         }
 
         $user->setUsername($params['username'])
-            ->setEmail($params['phone'])
-            ->setPhone($params['phone'])
-            ->setCargoType($params['cargo_type'])
-            ->setCityDistrict($params['city_district'])
-            ->setDescription(substr($params['description'], 0, 255))
-            ->setAutoType(isset($params['auto_type']) ? substr($params['auto_type'], 0, 255) : null)
-            ->setDimensions($dimensions)
-            ->setLoaders($params['loaders'] == 1)
-            ->setWorkArea($workArea)
-            ->setPrice($params['price'])
-            ->setMinHour($params['min_hour'])
-            ->setCity($this->objectManager->find('UserBundle\Entity\City', $params['city_id']))
-            ->setWorkTimeSettings($workSettings)
-            ->setImageProfile(isset($images['profile']) ? $images['profile'] : null)
-            ->setImageAuto(isset($images['auto']) ? $images['auto'] : null)
-            ->setHidden(intval($params['hidden']));
+                ->setEmail($params['email'])
+                ->setPhone($params['phone'])
+                ->setCargoType($params['cargo_type'])
+                ->setCityDistrict($params['city_district'])
+                ->setDescription(substr($params['description'], 0, 255))
+                ->setAutoType(isset($params['auto_type']) ? substr($params['auto_type'], 0, 255) : null)
+                ->setDimensions($dimensions)
+                ->setLoaders($params['loaders'] == 1)
+                ->setWorkArea($workArea)
+                ->setPrice($params['price'])
+                ->setMinHour($params['min_hour'])
+                ->setCity($this->objectManager->find('UserBundle\Entity\City', $params['city_id']))
+                ->setWorkTimeSettings($workSettings)
+                ->setImageProfile(isset($images['profile']) ? $images['profile'] : null)
+                ->setImageAuto(isset($images['auto']) ? $images['auto'] : null)
+                ->setHidden(intval($params['hidden']));
 
         if (!$user->getId()) {
 
@@ -159,7 +160,6 @@ class MyUserManager extends UserManager
 
                 $user->setExpireDate((new \DateTime())->modify('+' . $freedaySetting . ' days'));
             }
-
         }
 
         // костыль для регистрации
@@ -178,6 +178,7 @@ class MyUserManager extends UserManager
             'city_id',
             'cargo_type',
             'phone',
+            'email',
             'city_district',
             'description',
             'dimensions',
@@ -188,7 +189,7 @@ class MyUserManager extends UserManager
             'min_hour',
             'work_time',
             'hidden',
-        ), $extraParams);
+                ), $extraParams);
 
         $params = array();
 
@@ -203,7 +204,8 @@ class MyUserManager extends UserManager
     {
         return array(
             'username' => new Validation\User\NameValidation(),
-            'password' => new Validation\User\PasswordValidation,
+            'password' => new Validation\User\PasswordValidation(),
+            'email' => new Validation\User\EmailValidation($this),
             'phone' => new Validation\User\PhoneValidation($this),
             'price' => new Validation\User\NotZeroValidation('Стоимость является обязательным полем!'),
             'min_hour' => new Validation\User\NotZeroValidation('Количество часов является обязательным полем!'),
@@ -212,7 +214,7 @@ class MyUserManager extends UserManager
                 'cargo_300', 'cargo_700',
                 'cargo_1500', 'cargo_3000',
                 'cargo_6000', 'cargo_over_6000'
-            ], 'Выбран неверный тип перевозки!'),
+                    ], 'Выбран неверный тип перевозки!'),
         );
     }
 

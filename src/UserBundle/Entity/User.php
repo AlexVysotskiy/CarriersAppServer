@@ -141,20 +141,20 @@ class User extends BaseUser
      * @ORM\Column(name="hidden", type="boolean")
      */
     private $hidden = 0;
-    
+
     /**
      * До какого числа профиль оплачен
      * @ORM\Column(name="expire_date", type="datetime")
      */
     protected $expireDate;
-    
+
     /**
      * Сколько раз нажали на кнопку вызова у данного водителя
      * @ORM\Column(name="rating", type="integer")
      * @var type 
      */
     public $rating = 0;
-    
+
     /**
      *
      * @ORM\OneToMany(targetEntity="Order", mappedBy="user")
@@ -166,6 +166,18 @@ class User extends BaseUser
      * @ORM\Column(name="removed", type="boolean")
      */
     public $removed;
+
+    /**
+     * Является ли пользователь отмодерированным
+     * @ORM\Column(name="checked", type="integer")
+     */
+    public $checked = 1;
+
+    /**
+     * Тип используемого автомобиля
+     * @ORM\Column(name="recovery_code", type="string", nullable=true)
+     */
+    public $recoveryCode;
 
     public function __construct()
     {
@@ -180,7 +192,7 @@ class User extends BaseUser
         $this->expireDate = new \DateTime();
         $this->removed = false;
     }
-    
+
     /**
      * @return \DateTime
      */
@@ -188,12 +200,12 @@ class User extends BaseUser
     {
         return $this->expireDate;
     }
-    
+
     public function setExpireDate(\DateTime $expireDate)
     {
         $this->expireDate = $expireDate;
     }
-    
+
     public function isProfileExpired()
     {
         return $this->expireDate->getTimestamp() < date('U');

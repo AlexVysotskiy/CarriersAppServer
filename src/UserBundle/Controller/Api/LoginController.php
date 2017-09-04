@@ -32,7 +32,7 @@ class LoginController extends Controller
             'phone' => $phone,
             'removed' => 0
         ));
-
+        
         if (!$user || !$this->get('security.password_encoder')
                         ->isPasswordValid($user, $password)) {
 

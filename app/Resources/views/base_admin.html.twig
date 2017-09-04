@@ -79,7 +79,13 @@
                                         </ul>
                                     </li>
                                     <li>
-                                        <a href="{{ path('admin_carriers_list') }}">Перевозчики</a>
+                                        <a>
+                                            <i class="fa fa-home"></i> Перевозчики <span class="fa fa-chevron-down"></span>
+                                        </a>
+                                        <ul class="nav child_menu">
+                                            <li><a href="{{ path('admin_carriers_list') }}">Список</a></li>
+                                            <li><a href="{{ path('admin_carriers_check') }}">Модерация</a></li>
+                                        </ul>
                                     </li>
                                     <li>
                                         <a>

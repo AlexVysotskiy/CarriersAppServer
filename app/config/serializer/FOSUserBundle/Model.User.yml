@@ -37,3 +37,7 @@ FOS\UserBundle\Model\User:
             expose: true
         expireDate:
             expose: true
+        checked:
+            expose: true
+        email:
+            expose: true
