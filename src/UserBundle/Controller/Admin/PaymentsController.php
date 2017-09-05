@@ -34,7 +34,7 @@ class PaymentsController extends Controller
         $cityRepo = $em->getRepository('UserBundle\Entity\City');
         $cityList = $cityRepo->findBy(array(
             'active' => true
-                ), array('id' => 'DESC', 'order' => 'ASC'));
+        ), array('id' => 'DESC', 'order' => 'ASC'));
 
         $conditions = array(
             'success' => true
@@ -52,10 +52,10 @@ class PaymentsController extends Controller
         $list = $repo->findBy($conditions, array('id' => 'DESC'));
 
         return $this->render('admin/payments/list.html.twig', array(
-                    'list' => $list,
-                    'cities' => $cityList,
-                    'filters' => $filters,
-                    'request' => $request
+            'list' => $list,
+            'cities' => $cityList,
+            'filters' => $filters,
+            'request' => $request
         ));
     }
 
@@ -71,8 +71,8 @@ class PaymentsController extends Controller
         /* @var $repo \Doctrine\ORM\EntityRepository */
         $repo = $em->getRepository('UserBundle\Entity\PaymentType');
 
-        /* @var $regionsRepo \Doctrine\ORM\EntityRepository */
-        $cityRepo = $em->getRepository('UserBundle\Entity\City');
+        /* @var $paymentPackageRepo \Doctrine\ORM\EntityRepository */
+        $paymentPackageRepo = $em->getRepository('UserBundle\Entity\PaymentPackage');
 
         $conditions = array();
         if ($filters = $request->get('filter')) {
@@ -89,10 +89,11 @@ class PaymentsController extends Controller
         $list = $repo->findBy($conditions, array('id' => 'DESC'));
 
         return $this->render('admin/payments/types_list.html.twig', array(
-                    'list' => $list,
-                    'cities' => $cityRepo->findAll(),
-                    'cargoList' => $this->getParameter('cargo_types'),
-                    'request' => $request
+            'list' => $list,
+            'categories' => $paymentPackageRepo->findAll(),
+            'cargoList' => $this->getParameter('cargo_types'),
+            'request' => $request,
+            'currentFilterValues' => $conditions
         ));
     }
 
@@ -138,8 +139,8 @@ class PaymentsController extends Controller
         /* @var $repo \Doctrine\ORM\EntityRepository */
         $repo = $em->getRepository('UserBundle\Entity\PaymentType');
 
-        /* @var $cityRepo \Doctrine\ORM\EntityRepository */
-        $cityRepo = $em->getRepository('UserBundle\Entity\City');
+        /* @var $paymentPackageRepo \Doctrine\ORM\EntityRepository */
+        $paymentPackageRepo = $em->getRepository('UserBundle\Entity\PaymentPackage');
 
         if ($id = $request->get('id')) {
 
@@ -159,7 +160,7 @@ class PaymentsController extends Controller
 
             $term = abs(intval($request->get('term')));
             $category = $request->get('category');
-            $city = abs(intval($request->get('city')));
+            $package = abs(intval($request->get('package')));
             $value = abs(floatval($request->get('value')));
 
             if (!$value) {
@@ -174,7 +175,7 @@ class PaymentsController extends Controller
 
                     $paymentType->term = $term;
                     $paymentType->category = $category;
-                    $paymentType->city = ($city = $cityRepo->find($city)) ? $city : null;
+                    $paymentType->package = ($package = $paymentPackageRepo->find($package)) ? $package : null;
                     $paymentType->value = $value;
 
                     if ($isNew) {
@@ -196,9 +197,9 @@ class PaymentsController extends Controller
         } else {
 
             return $this->render('admin/payments/payments_types_form.html.twig', array(
-                        'paymentType' => isset($paymentType) && $paymentType ? $paymentType : null,
-                        'cities' => $cityRepo->findAll(),
-                        'cargoList' => $this->getParameter('cargo_types'),
+                'paymentType' => isset($paymentType) && $paymentType ? $paymentType : null,
+                'categories' => $paymentPackageRepo->findAll(),
+                'cargoList' => $this->getParameter('cargo_types'),
             ));
         }
     }

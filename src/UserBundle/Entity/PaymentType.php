@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * PaymentType entity
  * @ORM\Table("payment_type")
  * @ORM\Entity
- * 
+ *
  * @author Alexander
  */
 class PaymentType
@@ -25,17 +25,17 @@ class PaymentType
      * @ORM\Column(type="term", type="integer")
      */
     public $term;
-    
-      /**
+
+    /**
      * @ORM\Column(type="category", type="string")
      */
     public $category;
 
     /**
-     * @ORM\ManyToOne(targetEntity="City")
-     * @ORM\JoinColumn(name="city_id", referencedColumnName="id")
+     * @ORM\ManyToOne(targetEntity="PaymentPackage")
+     * @ORM\JoinColumn(name="payment_package_id", referencedColumnName="id")
      */
-    public $city;
+    public $package;
 
     /**
      * @ORM\Column(name="sort_order", type="float")

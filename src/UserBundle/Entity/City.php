@@ -42,6 +42,12 @@ class City
      */
     private $active = true;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="PaymentPackage"")
+     * @ORM\JoinColumn(name="payment_package_id", referencedColumnName="id", nullable=true)
+     */
+    public $paymentPackage;
+
     public function getId()
     {
         return $this->id;

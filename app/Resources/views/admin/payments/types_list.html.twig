@@ -46,15 +46,16 @@
                                     {% endfor %} 
                                 </select>
                             </div>
+
                             <div class="form-group col-md-4">
                                 <label for="region">
-                                    Город
+                                    Категория
                                 </label>
-                                <select class="form-control" name="filter[city]">
+                                <select class="form-control" name="filter[package]">
                                     <option value="all">Все</option>
-                                    {% for city in cities %} 
-                                        <option value="{{ city.getId() }}" {{ currentFilterValues.city is defined  and currentFilterValues.city == city.getId() ? 'selected' : '' }}>
-                                            {{ city.getName() }}
+                                    {% for category in categories %}
+                                        <option value="{{ category.id }}" {{ currentFilterValues.package is defined  and currentFilterValues.package == category.id ? 'selected' : '' }}>
+                                            {{ category.name }}
                                         </option>
                                     {% endfor %} 
                                 </select>
@@ -124,7 +125,7 @@
                                             Тип перевозчика
                                         </th>
                                         <th class="column-title">
-                                            Город
+                                            Категория
                                         </th>
                                         <th class="column-title">
                                             Стоимость
@@ -153,7 +154,7 @@
                                                 {{ paymentType.category|trim('cargo_over', 'left') }} кг.
                                             </td>
                                             <td class="">
-                                                {{ paymentType.city ? paymentType.city.getName() : 'Все' }}
+                                                {{ paymentType.package ? paymentType.package.name : 'Не определено' }}
                                             </td>
                                             <td class="">
                                                 {{ paymentType.value }}
