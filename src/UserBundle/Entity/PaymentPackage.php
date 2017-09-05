@@ -13,6 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class PaymentPackage
 {
+
     /**
      * @ORM\Id
      * @ORM\Column(type="integer")
@@ -24,4 +25,15 @@ class PaymentPackage
      * @ORM\Column(type="string", nullable=false)
      */
     public $name;
+
+    /**
+     * @ORM\OneToMany(targetEntity="PaymentType", mappedBy="package")
+     */
+    public $paymentTypes;
+
+    public function __construct()
+    {
+        $this->paymentTypes = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
 }

@@ -27,6 +27,35 @@ class BaseController extends Controller
     }
 
     /**
+     * @Route("/logout", name="admin_logout")
+     */
+    public function logoutAction(Request $request)
+    {
+        var_dump(1);
+        exit;
+        return $this->redirectToRoute('admin_dashboard');
+    }
+
+    /**
+     * @Route("/login", name="admin_login")
+     */
+    public function loginAction(Request $request)
+    {
+        $authenticationUtils = $this->get('security.authentication_utils');
+
+        // get the login error if there is one
+        $error = $authenticationUtils->getLastAuthenticationError();
+
+        // last username entered by the user
+        $lastUsername = $authenticationUtils->getLastUsername();
+
+        return $this->render('admin/login.html.twig', [
+                    'last_username' => $lastUsername,
+                    'error' => $error,
+        ]);
+    }
+
+    /**
      * @Route("/settings", name="admin_settings")
      */
     public function settingsAction(Request $request)

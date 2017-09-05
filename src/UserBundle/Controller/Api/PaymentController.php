@@ -40,32 +40,29 @@ class PaymentController extends BaseController
         /* @var $repo \Doctrine\ORM\EntityRepository */
         $repo = $em->getRepository('UserBundle\Entity\PaymentType');
 
-        $list = $repo->findBy(array(
-            'city' => $cityId,
-            'category' => $cargoType
-        ));
+        /* @var $cityRepo \Doctrine\ORM\EntityRepository */
+        $cityRepo = $em->getRepository('UserBundle\Entity\City');
 
         $res = [];
-        /* @var $paymentType \UserBundle\Entity\PaymentType */
-        foreach ($list as $paymentType) {
-            $res[$paymentType->term] = $paymentType;
+
+        /* @var $city \UserBundle\Entity\City */
+        if ((($city = $cityRepo->find($cityId))) && $city->paymentPackage) {
+
+            $list = $city->paymentPackage->paymentTypes->toArray();
+
+            $list = array_filter($list, function($item) use ($cargoType)
+            {
+                return $item->category == $cargoType;
+            });
+
+            $res = [];
+            /* @var $paymentType \UserBundle\Entity\PaymentType */
+            foreach ($list as $paymentType) {
+                $res[$paymentType->term] = $paymentType;
+            }
+
+            ksort($res);
         }
-
-        $qb = $em->createQueryBuilder();
-        $query = $qb->select('p')
-                ->from('UserBundle\Entity\PaymentType', "p")
-                ->where('p.city IS NULL and p.category = \'' . $cargoType . '\'')
-                ->getQuery();
-
-        $extra = [];
-        /* @var $paymentType \UserBundle\Entity\PaymentType */
-        foreach ($query->getResult() as $paymentType) {
-            $extra[$paymentType->term] = $paymentType;
-        }
-
-        $res += $extra;
-        
-        ksort($res);
 
         $response = new Response($this->serialize(
                         array('list' => array_values($res))

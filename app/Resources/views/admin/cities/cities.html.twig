@@ -39,6 +39,20 @@
                                 </select>
                             </div>
 
+                            <div class="form-group col-md-3">
+                                <label for="region">
+                                    Категория платежа
+                                </label>
+                                <select class="form-control" name="filter[paymentPackage]">
+                                    <option value="all">Все</option>
+                                    {% for category in categories %}
+                                        <option value="{{ category.id }}" {{ currentFilterValues.paymentPackage is defined  and currentFilterValues.paymentPackage == category.id ? 'selected' : '' }}>
+                                            {{ category.name }}
+                                        </option>
+                                    {% endfor %} 
+                                </select>
+                            </div>
+
                             <div class="form-group pull-right">
                                 <input type="submit" class="btn btn-default" value="Фильтровать" />
                                 <a href="{{ path('admin_cities_list') }}"  class="btn btn-info">Сбросить</a>
@@ -104,6 +118,9 @@
                                             Регион
                                         </th>
                                         <th class="column-title">
+                                            Категория платежа
+                                        </th>
+                                        <th class="column-title">
                                             Активность
                                         </th>
                                         <th class="column-title">
@@ -133,6 +150,9 @@
                                             </td>
                                             <td class="">
                                                 {{ city.getRegion().getName()  }}
+                                            </td>
+                                            <td class="">
+                                                {{ city.paymentPackage ? city.paymentPackage.name : 'Не определена' }}
                                             </td>
                                             <td class="">
                                                 {{ city.isActive() ? 'Да' : 'Нет' }}

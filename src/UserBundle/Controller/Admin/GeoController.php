@@ -155,13 +155,16 @@ class GeoController extends Controller
         /* @var $regionsRepo \Doctrine\ORM\EntityRepository */
         $regionsRepo = $em->getRepository('UserBundle\Entity\Region');
 
+        /* @var $paymentPackageRepo \Doctrine\ORM\EntityRepository */
+        $paymentPackageRepo = $em->getRepository('UserBundle\Entity\PaymentPackage');
+
         $conditions = array();
         if ($filters = $request->get('filter')) {
 
             foreach ($filters as $key => $value) {
 
                 if (($value = trim($value)) && $value != 'all') {
-                    
+
                     $conditions[$key] = $value;
                 }
             }
@@ -173,7 +176,8 @@ class GeoController extends Controller
         return $this->render('admin/cities/cities.html.twig', array(
                     'list' => $list,
                     'regions' => $regionsRepo->findAll(),
-                    'request' => $request
+                    'request' => $request,
+                    'categories' => $paymentPackageRepo->findAll()
         ));
     }
 
@@ -225,6 +229,9 @@ class GeoController extends Controller
         /* @var $regionsRepo \Doctrine\ORM\EntityRepository */
         $regionsRepo = $em->getRepository('UserBundle\Entity\Region');
 
+        /* @var $paymentPackageRepo \Doctrine\ORM\EntityRepository */
+        $paymentPackageRepo = $em->getRepository('UserBundle\Entity\PaymentPackage');
+
         if ($id = $request->get('id')) {
 
             /* @var $city \UserBundle\Entity\City */
@@ -244,6 +251,7 @@ class GeoController extends Controller
             $name = $request->get('name');
             $regionId = $request->get('region');
             $order = abs(intval($request->get('order')));
+            $paymentPackage = abs(intval($request->get('package')));
 
             $validation = new \UserBundle\Validation\User\NameValidation();
             if (!$validation->validateBool($name)) {
@@ -268,6 +276,7 @@ class GeoController extends Controller
                     $city->setOrder($order);
                     $city->setActive($request->get('active') == 1);
                     $city->setRegion($region);
+                    $city->paymentPackage = $paymentPackageRepo->find($paymentPackage);
 
                     if ($isNew) {
                         $em->persist($city);
@@ -289,7 +298,8 @@ class GeoController extends Controller
 
             return $this->render('admin/cities/city_form.html.twig', array(
                         'city' => isset($city) && $city ? $city : null,
-                        'regions' => $regionsRepo->findAll()
+                        'regions' => $regionsRepo->findAll(),
+                        'categories' => $paymentPackageRepo->findAll()
             ));
         }
     }

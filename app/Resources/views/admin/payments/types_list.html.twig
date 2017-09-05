@@ -88,7 +88,73 @@
 
             <div class="clearfix"></div>
 
-            <div class="col-md-12 col-sm-12 col-xs-12">
+            <div class="col-md-4 col-sm-4 col-xs-4">
+                <div class="x_panel">
+                    <div class="x_title">
+
+                        <h2>
+                            Категории платежей
+                        </h2>
+
+                        <div class="navbar-right panel_toolbox">
+                            <a href="#" class="btn btn-success source"  data-toggle="modal" data-target=".add-pp-modal-lg">
+                                Добавить
+                            </a>
+                        </div>
+
+                        <div class="clearfix"></div>
+
+                    </div>
+
+                    <div class="x_content">
+
+                        <div class="table-responsive">
+                            <table id="regions-list-table" class="table table-striped jambo_table">
+                                <thead>
+                                    <tr class="headings">
+
+                                        <th class="column-title">
+                                            #
+                                        </th>
+                                        <th class="column-title">
+                                            Название
+                                        </th>
+                                        <th class="column-title">
+                                            Действия
+                                        </th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+
+                                    {% for num, category in categories %}
+                                        <tr class="{{ num % 2 == 0 ? 'even' : 'odd' }} pointer">
+
+                                            <td class="">
+                                                {{ category.id }}
+                                            </td>
+                                            <td class="">
+                                                {{ category.name }}
+                                            </td>
+                                            <td class=" last">
+                                                <a href="#" title="Редактировать" class="btn btn-info source "  data-toggle="modal" data-target=".add-pp-modal-lg" data-type="{{ category.id }}">
+                                                    <i class="fa fa-edit"></i>
+                                                </a>
+                                                <a href="#" title="Редактировать" class="btn btn-danger source "  data-toggle="modal" data-target=".remove-pp-modal-lg" data-type="{{ category.id }}">
+                                                    <i class="fa fa-remove"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-8 col-sm-8 col-xs-8">
                 <div class="x_panel">
                     <div class="x_title">
 
@@ -112,7 +178,7 @@
                     <div class="x_content">
 
                         <div class="table-responsive">
-                            <table id="regions-list-table" class="table table-striped jambo_table bulk_action">
+                            <table id="package-list-table" class="table table-striped jambo_table bulk_action">
                                 <thead>
                                     <tr class="headings">
                                         <th>
@@ -160,8 +226,8 @@
                                                 {{ paymentType.value }}
                                             </td>
                                             <td class=" last">
-                                                <a href="#" class="btn btn-info source "  data-toggle="modal" data-target=".add-modal-lg" data-type="{{ paymentType.id }}">
-                                                    Редактировать
+                                                <a href="#" title="Редактировать" class="btn btn-info source "  data-toggle="modal" data-target=".add-modal-lg" data-type="{{ paymentType.id }}">
+                                                    <i class="fa fa-edit"></i>
                                                 </a>
                                             </td>
                                         </tr>
@@ -173,6 +239,8 @@
                     </div>
                 </div>
             </div>
+
+
         </div>
     </div>
 
@@ -190,6 +258,31 @@
                         <span aria-hidden="true">×</span>
                     </button>
                     <h4 class="modal-title" id="myModalLabel">Добавить платежный пакет</h4>
+                </div>
+
+                <div class="modal-body">
+
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade add-pp-modal-lg" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                    <h4 class="modal-title" id="myModalLabel">
+                        Добавить платежную категорию
+                    </h4>
                 </div>
 
                 <div class="modal-body">
@@ -227,6 +320,30 @@
             </div>
         </div>
     </div>
+
+    <div class="modal fade remove-pp-modal-lg" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                    <h4 class="modal-title" id="myModalLabel">Удалить категорию платежа</h4>
+                </div>
+
+                <div class="modal-body">
+                    Вы точно хотите удалить выбранную категорию платежа?
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
+                    <button type="button" class="btn btn-danger js-remove" data-dismiss="modal">Удалить</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
 {% endblock %}
 
 {% block javascripts %}
@@ -234,7 +351,7 @@
     <script type="text/javascript">
         $(document).ready(function () {
 
-            var table = $('#regions-list-table');
+            var table = $('#package-list-table');
 
             table.on('changeInput', function (event, count) {
 
@@ -263,6 +380,47 @@
                     })
                     .on('hidden.bs.modal', function (event) {
                         $(this).find('.modal-body').html('');
+                    });
+
+            // модальное окно формы добавления региона
+            $('.add-pp-modal-lg')
+                    .on('show.bs.modal', function (event) {
+
+                        var button = $(event.relatedTarget);
+
+                        var href = '{{ path('admin_payments_category_add') }}';
+                        if (button.data('type'))
+                        {
+                            href += '?id=' + button.data('type');
+                        }
+
+                        $(this).find('.modal-body').load(href);
+                    })
+                    .on('hidden.bs.modal', function (event) {
+                        $(this).find('.modal-body').html('');
+                    });
+
+            // модальное окно формы для удаления регионов
+            $('.remove-pp-modal-lg')
+                    .on('show.bs.modal', function (event) {
+
+                        var button = $(event.relatedTarget);
+                        if (button.data('type')) {
+                            $(this).data('type', button.data('type'));
+                        }
+                    })
+                    .find('.js-remove')
+                    .on('click', function (event) {
+
+                        event.preventDefault();
+                        event.stopPropagation();
+
+                        var modal = $(this).parents('.modal').first();
+                        var href = '{{ path('admin_payments_package_remove') }}';
+
+                        $.post(href, {id: modal.data('type')}, function (data) {
+                              location.reload();
+                        });
                     });
 
             // модальное окно формы для удаления регионов

@@ -40,7 +40,7 @@ class CarriersController extends Controller
         $conditionPhone = $request->get('phone');
 
         if ($request->get('cityId') === null) {
-//            $conditionCity = $cityList[0]->getId();
+            $conditionCity = null;
         } else {
             $conditionCity = intval($request->get('cityId'));
         }

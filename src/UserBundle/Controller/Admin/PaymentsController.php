@@ -34,7 +34,7 @@ class PaymentsController extends Controller
         $cityRepo = $em->getRepository('UserBundle\Entity\City');
         $cityList = $cityRepo->findBy(array(
             'active' => true
-        ), array('id' => 'DESC', 'order' => 'ASC'));
+                ), array('id' => 'DESC', 'order' => 'ASC'));
 
         $conditions = array(
             'success' => true
@@ -52,10 +52,10 @@ class PaymentsController extends Controller
         $list = $repo->findBy($conditions, array('id' => 'DESC'));
 
         return $this->render('admin/payments/list.html.twig', array(
-            'list' => $list,
-            'cities' => $cityList,
-            'filters' => $filters,
-            'request' => $request
+                    'list' => $list,
+                    'cities' => $cityList,
+                    'filters' => $filters,
+                    'request' => $request
         ));
     }
 
@@ -89,11 +89,11 @@ class PaymentsController extends Controller
         $list = $repo->findBy($conditions, array('id' => 'DESC'));
 
         return $this->render('admin/payments/types_list.html.twig', array(
-            'list' => $list,
-            'categories' => $paymentPackageRepo->findAll(),
-            'cargoList' => $this->getParameter('cargo_types'),
-            'request' => $request,
-            'currentFilterValues' => $conditions
+                    'list' => $list,
+                    'categories' => $paymentPackageRepo->findAll(),
+                    'cargoList' => $this->getParameter('cargo_types'),
+                    'request' => $request,
+                    'currentFilterValues' => $conditions
         ));
     }
 
@@ -173,6 +173,10 @@ class PaymentsController extends Controller
 
                 try {
 
+                    if (($existed = $repo->findOneBy(['term' => $term, 'category' => $category, 'package' => $package]))) {
+                        $em->remove($existed);
+                    }
+
                     $paymentType->term = $term;
                     $paymentType->category = $category;
                     $paymentType->package = ($package = $paymentPackageRepo->find($package)) ? $package : null;
@@ -182,7 +186,7 @@ class PaymentsController extends Controller
                         $em->persist($paymentType);
                     }
 
-                    $em->flush($paymentType);
+                    $em->flush();
                 } catch (\Exception $e) {
 
                     $errors[] = 'Возникли ошибки во время добавления региона!';
@@ -197,11 +201,116 @@ class PaymentsController extends Controller
         } else {
 
             return $this->render('admin/payments/payments_types_form.html.twig', array(
-                'paymentType' => isset($paymentType) && $paymentType ? $paymentType : null,
-                'categories' => $paymentPackageRepo->findAll(),
-                'cargoList' => $this->getParameter('cargo_types'),
+                        'paymentType' => isset($paymentType) && $paymentType ? $paymentType : null,
+                        'categories' => $paymentPackageRepo->findAll(),
+                        'cargoList' => $this->getParameter('cargo_types'),
             ));
         }
+    }
+
+    /**
+     * @Route("/payments_settings/add_package_ajax", name="admin_payments_category_add")
+     */
+    public function addPaymentPackageAjax(Request $request)
+    {
+        /* @var $em \Doctrine\ORM\EntityManager */
+        $em = $this->get('doctrine.orm.entity_manager');
+
+        /* @var $paymentPackageRepo \Doctrine\ORM\EntityRepository */
+        $paymentPackageRepo = $em->getRepository('UserBundle\Entity\PaymentPackage');
+
+        if ($id = $request->get('id')) {
+
+            /* @var  $paymentPackage \UserBundle\Entity\PaymentPackage */
+            $paymentPackage = $paymentPackageRepo->find($id);
+        }
+
+        if ($request->isMethod('POST')) {
+
+            $isNew = !isset($paymentPackage) || !$paymentPackage;
+
+            if ($isNew) {
+                $paymentPackage = new \UserBundle\Entity\PaymentPackage();
+            }
+
+            $errors = array();
+            $name = $request->get('name');
+
+            /* @var \UserBundle\Entity\PaymentPackage $existed */
+            if (($existed = $paymentPackageRepo->findOneBy(['name' => $name])) && ($isNew || $paymentPackage->id != $existed->id)) {
+                $errors[] = 'Категория с таким именем уже существует!';
+            }
+
+            if (!$errors) {
+
+                try {
+                    $paymentPackage->name = $name;
+                    if ($isNew) {
+                        $em->persist($paymentPackage);
+                    }
+                    $em->flush($paymentPackage);
+                } catch (\Exception $e) {
+
+                    $errors[] = 'Возникли ошибки во время добавления региона!';
+                }
+            }
+
+            return new JsonResponse(array(
+                'success' => $errors ? 0 : 1,
+                'errors' => $errors,
+                'reload' => $isNew
+            ));
+        } else {
+
+            return $this->render('admin/payments/payments_package_form.html.twig', array(
+                        'package' => isset($paymentPackage) && $paymentPackage ? $paymentPackage : null
+            ));
+        }
+    }
+
+    /**
+     * удаление регионов
+     * @Route("/payments_settings/remove_package_ajax", name="admin_payments_package_remove")
+     * @Method("POST")
+     */
+    public function removePaymentPackageAjaxAction(Request $request)
+    {
+        if ($request->isMethod('POST')) {
+
+            if ($id = $request->get('id')) {
+
+                /* @var $em \Doctrine\ORM\EntityManager */
+                $em = $this->get('doctrine.orm.entity_manager');
+
+                /* @var $repo \Doctrine\ORM\EntityRepository */
+                $repo = $em->getRepository('UserBundle\Entity\PaymentPackage');
+
+                $entity = $repo->findOneBy(array('id' => $id));
+                $em->remove($entity);
+
+                $list = $em->getRepository('UserBundle\Entity\City')->findBy([
+                    'paymentPackage' => $id
+                ]);
+                /* @var $entity \UserBundle\Entity\City  */
+                foreach ($list as $entity) {
+                    $entity->paymentPackage = null;
+                }
+
+                $list = $em->getRepository('UserBundle\Entity\PaymentType')->findBy([
+                    'package' => $id
+                ]);
+                /* @var $entity \UserBundle\Entity\PaymentType  */
+                foreach ($list as $entity) {
+                    $entity->package = null;
+                }
+
+                $em->flush();
+            }
+        }
+
+        return new JsonResponse(array(
+            'success' => 1
+        ));
     }
 
 }
