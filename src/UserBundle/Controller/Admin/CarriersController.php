@@ -314,7 +314,7 @@ class CarriersController extends Controller {
                 }
             } else {
 
-                return $this->render('admin/carriers/ajax/edit.html.twig', array(
+                return $this->render('admin/carriers/ajax/edit_form.html.twig', array(
                             'user' => $user,
                             'cities' => $em->getRepository('UserBundle\Entity\City')->findAll()
                 ));
