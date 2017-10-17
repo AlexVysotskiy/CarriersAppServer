@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * PaymentType entity
- * @ORM\Table("car_type")
+ * @ORM\Table("car_category")
  * @ORM\Entity
  *
  * @author Alexander
