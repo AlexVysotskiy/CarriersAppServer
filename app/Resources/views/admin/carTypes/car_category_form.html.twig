@@ -1,0 +1,59 @@
+<form id="add-form" data-parsley-validate class="form-horizontal form-label-left" 
+      method="POST" action="{{ path('admin_car_type_add_category') }}">
+
+    <div class="form-group">
+        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">
+            Название <span class="required">*</span>
+        </label>
+        <div class="col-md-6 col-sm-6 col-xs-12">
+            <input type="text" id="name" name="name" required="required" 
+                   class="form-control col-md-7 col-xs-12" value="{{ category ? category.name : '' }}">
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
+            <button type="submit" class="btn btn-success">Сохранить</button>
+        </div>
+    </div>
+
+    <div class="errors-list"></div>
+
+    {% if category %}
+        <input type="hidden" name="id" value="{{ category.id }}" />
+    {% endif %}
+
+</form>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        // ajax добавление региона
+        $('#add-form').on('submit', function (event) {
+
+            var errorsHolder = $(this).find('.errors-list');
+            errorsHolder.html('');
+
+            event.preventDefault();
+
+            $.post($(this).attr('action'), $(this).serialize(), function (data) {
+
+                if (data.success == 0)
+                {
+                    for (var k in data.errors)
+                    {
+                        errorsHolder.append('<div class="alert alert-danger alert-dismissible fade in">' + data.errors[k] + '</div>');
+                    }
+
+                } else if (data.reload || true)
+                {
+                    location.reload();
+                } else
+                {
+                    errorsHolder.append('<div class="alert alert-success alert-dismissible fade in">Изменения успешно сохранены!</div>');
+                }
+            }, 'json');
+
+        });
+    });
+</script>

@@ -20,8 +20,7 @@ use UserBundle\Validation;
  *
  * @author Alexander
  */
-class PaymentController extends BaseController
-{
+class PaymentController extends BaseController {
 
     use \UserBundle\Helper\ControllerHelper;
 
@@ -29,8 +28,7 @@ class PaymentController extends BaseController
      * @Route("/payment_pack/{cityId}/{cargoType}", name="api_v1_payment_packs")
      * @Method("GET")
      */
-    public function availablePackagesAction(Request $request)
-    {
+    public function availablePackagesAction(Request $request) {
         $cityId = abs(intval($request->get('cityId')));
         $cargoType = $request->get('cargoType');
 
@@ -50,8 +48,7 @@ class PaymentController extends BaseController
 
             $list = $city->paymentPackage->paymentTypes->toArray();
 
-            $list = array_filter($list, function($item) use ($cargoType)
-            {
+            $list = array_filter($list, function($item) use ($cargoType) {
                 return $item->category == $cargoType;
             });
 
@@ -75,8 +72,7 @@ class PaymentController extends BaseController
      * @Route("/payment", name="api_v1_payment_make")
      * @Method("GET")
      */
-    public function payAction(Request $request)
-    {
+    public function payAction(Request $request) {
         try {
 
             /* @var $em \Doctrine\ORM\EntityManager */
@@ -142,8 +138,7 @@ class PaymentController extends BaseController
      * @Route("/payment/callback", name="api_v1_payment_callback")
      * @Method("GET")
      */
-    public function paymentCallbackAction(Request $request)
-    {
+    public function paymentCallbackAction(Request $request) {
         /* @var $payment \Idma\Robokassa\Payment */
         $payment = $this->initRobokassaPayment();
 
@@ -188,19 +183,15 @@ class PaymentController extends BaseController
      * @Route("/payment/fail", name="api_v1_payment_error")
      * @Method("GET")
      */
-    public function failAction(Request $request)
-    {
+    public function failAction(Request $request) {
         return $this->redirect('unity://fail');
-
-        return new \Symfony\Component\HttpFoundation\JsonResponse(array('success' => 0));
     }
 
     /**
      * @Route("/payment/success", name="api_v1_payment_success")
      * @Method("GET")
      */
-    public function successAction(Request $request)
-    {
+    public function successAction(Request $request) {
         if ($userId = $request->get('testUserId')) {
 
             /* @var $em \Doctrine\ORM\EntityManager */
@@ -218,29 +209,30 @@ class PaymentController extends BaseController
             }
         }
 
-
         return $this->redirect('unity://success');
-        return new \Symfony\Component\HttpFoundation\JsonResponse(array('success' => 1));
     }
 
     /**
-     * @param $user User
+     * @param  User $user
+     * @param $term int
      */
-    protected function activateProfile($user, $term)
-    {
+    protected function activateProfile($user, $term) {
         if ($user->getExpireDate()->getTimestamp() < date('U')) {
             $user->setExpireDate(new \DateTime());
         }
 
         // update extire date
         $user->getExpireDate()->modify('+' . $term . ' month');
+
+        if ($term >= 2 && $user->stars < 4) {
+            $user->stars = 4;
+        }
     }
 
     /**
      * @return Idma\Robokassa\Payment
      */
-    protected function initRobokassaPayment()
-    {
+    protected function initRobokassaPayment() {
         $robokassaSettings = $this->getParameter('robokassa');
         $payment = new \Idma\Robokassa\Payment(
                 $robokassaSettings['merchant_id'], $robokassaSettings['paymentsPasswords']['pass1'], $robokassaSettings['paymentsPasswords']['pass2'], $robokassaSettings['testMode']

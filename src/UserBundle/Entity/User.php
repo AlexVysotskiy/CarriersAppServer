@@ -29,8 +29,7 @@ use Doctrine\ORM\Mapping\Column;
  *      )
  * })
  */
-class User extends BaseUser
-{
+class User extends BaseUser {
 
     const ROLE_ADMIN = 'ROLE_ADMIN';
     const WORK_AREA_ALL = 'ALL';
@@ -156,6 +155,13 @@ class User extends BaseUser
     public $rating = 0;
 
     /**
+     * РЕйтинг данного водител
+     * @ORM\Column(name="stars", type="integer")
+     * @var type 
+     */
+    public $stars = 0;
+
+    /**
      *
      * @ORM\OneToMany(targetEntity="Order", mappedBy="user")
      */
@@ -179,8 +185,7 @@ class User extends BaseUser
      */
     public $recoveryCode;
 
-    public function __construct()
-    {
+    public function __construct() {
         $this->addOnEmails = new ArrayCollection();
         $this->payments = new ArrayCollection();
         $this->dimensions = array();
@@ -196,18 +201,15 @@ class User extends BaseUser
     /**
      * @return \DateTime
      */
-    public function getExpireDate()
-    {
+    public function getExpireDate() {
         return $this->expireDate;
     }
 
-    public function setExpireDate(\DateTime $expireDate)
-    {
+    public function setExpireDate(\DateTime $expireDate) {
         $this->expireDate = $expireDate;
     }
 
-    public function isProfileExpired()
-    {
+    public function isProfileExpired() {
         return $this->expireDate->getTimestamp() < date('U');
     }
 
@@ -216,8 +218,7 @@ class User extends BaseUser
      *
      * @return $this
      */
-    public function addEmail($email)
-    {
+    public function addEmail($email) {
         $addOnEmail = new UserAddOnEmail();
         $addOnEmail->setEmail($email);
         $addOnEmail->setUser($this);
@@ -230,199 +231,167 @@ class User extends BaseUser
     /**
      * @return ArrayCollection
      */
-    public function getAddOnEmails()
-    {
+    public function getAddOnEmails() {
         return $this->addOnEmails;
     }
 
-    public function getCargoType()
-    {
+    public function getCargoType() {
         return $this->cargoType;
     }
 
-    public function getPhone()
-    {
+    public function getPhone() {
         return $this->phone;
     }
 
     /**
      * @return City
      */
-    public function getCity()
-    {
+    public function getCity() {
         return $this->city;
     }
 
-    public function getCityDistrict()
-    {
+    public function getCityDistrict() {
         return $this->cityDistrict;
     }
 
-    public function getDescription()
-    {
+    public function getDescription() {
         return $this->description;
     }
 
-    public function getImage($type)
-    {
+    public function getImage($type) {
         return $type == 'profile' ? $this->getImageProfile() : $this->getImageAuto();
     }
 
-    public function getImageProfile()
-    {
+    public function getImageProfile() {
         return $this->imgProfile;
     }
 
-    public function getImageAuto()
-    {
+    public function getImageAuto() {
         return $this->imgAuto;
     }
 
-    public function setCargoType($cargoType)
-    {
+    public function setCargoType($cargoType) {
         $this->cargoType = $cargoType;
 
         return $this;
     }
 
-    public function setPhone($phone)
-    {
+    public function setPhone($phone) {
         $this->phone = $phone;
 
         return $this;
     }
 
-    public function setCity(City $city)
-    {
+    public function setCity(City $city) {
         $this->city = $city;
 
         return $this;
     }
 
-    public function setCityDistrict($cityDistrict)
-    {
+    public function setCityDistrict($cityDistrict) {
         $this->cityDistrict = $cityDistrict;
 
         return $this;
     }
 
-    public function setDescription($description)
-    {
+    public function setDescription($description) {
         $this->description = $description;
 
         return $this;
     }
 
-    public function setDimensions($dimensions)
-    {
+    public function setDimensions($dimensions) {
         $this->dimensions = $dimensions;
 
         return $this;
     }
 
-    public function getDimensions()
-    {
+    public function getDimensions() {
         return $this->dimensions;
     }
 
-    public function setLoaders($hasLoaders)
-    {
+    public function setLoaders($hasLoaders) {
         $this->loaders = $hasLoaders;
 
 
         return $this;
     }
 
-    public function setImageProfile($imgProfile)
-    {
+    public function setImageProfile($imgProfile) {
         $this->imgProfile = $imgProfile;
         return $this;
     }
 
-    public function setImageAuto($imgAuto)
-    {
+    public function setImageAuto($imgAuto) {
         $this->imgAuto = $imgAuto;
         return $this;
     }
 
-    public function setHidden($hidden)
-    {
+    public function setHidden($hidden) {
         $this->hidden = (bool) $hidden;
         return $this;
     }
 
-    public function hasLoaders()
-    {
+    public function hasLoaders() {
         $this->loaders;
     }
 
-    public function isHidden()
-    {
+    public function isHidden() {
         $this->hidden;
     }
 
-    public function setWorkArea($area)
-    {
+    public function setWorkArea($area) {
         $this->workArea = $area;
 
 
         return $this;
     }
 
-    public function getWorkArea()
-    {
+    public function getWorkArea() {
         return $this->workArea;
     }
 
-    public function setAutoType($auto)
-    {
+    public function setAutoType($auto) {
         $this->autoType = $auto;
 
 
         return $this;
     }
 
-    public function getAutoType()
-    {
+    public function getAutoType() {
         return $this->autoType;
     }
 
-    public function setPrice($price)
-    {
+    public function setPrice($price) {
         $this->price = $price;
 
 
         return $this;
     }
 
-    public function getPrice()
-    {
+    public function getPrice() {
         return $this->price;
     }
 
-    public function setMinHour($minHour)
-    {
+    public function setMinHour($minHour) {
         $this->minHour = $minHour;
 
 
         return $this;
     }
 
-    public function getMinHour()
-    {
+    public function getMinHour() {
         return $this->minHour;
     }
 
-    public function setWorkTimeSettings($workTimeSettings)
-    {
+    public function setWorkTimeSettings($workTimeSettings) {
         $this->workTimeSettings = $workTimeSettings;
 
 
         return $this;
     }
 
-    public function getWorkTimeSettings()
-    {
+    public function getWorkTimeSettings() {
         return $this->workTimeSettings;
     }
 

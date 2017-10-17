@@ -15,15 +15,13 @@ use Symfony\Component\HttpFoundation\JsonResponse;
  *
  * @author Alexander
  */
-class CarriersController extends Controller
-{
+class CarriersController extends Controller {
 
     /**
      * @Route("/carriers_list", name="admin_carriers_list")
      * @Method("GET")
      */
-    public function carriersListAction(Request $request)
-    {
+    public function carriersListAction(Request $request) {
         /* @var $em \Doctrine\ORM\EntityManager */
         $em = $this->get('doctrine.orm.entity_manager');
         /* @var $repo \Doctrine\ORM\EntityRepository */
@@ -88,8 +86,7 @@ class CarriersController extends Controller
      * @Route("/carriers_check", name="admin_carriers_check")
      * @Method("GET")
      */
-    public function carriersCheckAction(Request $request)
-    {
+    public function carriersCheckAction(Request $request) {
         /* @var $em \Doctrine\ORM\EntityManager */
         $em = $this->get('doctrine.orm.entity_manager');
         /* @var $repo \Doctrine\ORM\EntityRepository */
@@ -136,8 +133,7 @@ class CarriersController extends Controller
      * добавление / редактирование региона
      * @Route("/carriers_list/payments_list", name="admin_carriers_payments_list")
      */
-    public function paymentsListAjaxAction(Request $request)
-    {
+    public function paymentsListAjaxAction(Request $request) {
         $userId = $request->get('userId');
 
         /* @var $em \Doctrine\ORM\EntityManager */
@@ -167,8 +163,7 @@ class CarriersController extends Controller
      * добавление / редактирование региона
      * @Route("/carriers_list/toggle_lock", name="admin_carriers_ajax_togglelock")
      */
-    public function toggleLockAjaxAction(Request $request)
-    {
+    public function toggleLockAjaxAction(Request $request) {
         $userId = $request->get('userId');
 
         /* @var $em \Doctrine\ORM\EntityManager */
@@ -192,8 +187,7 @@ class CarriersController extends Controller
      * добавление / редактирование региона
      * @Route("/carriers_list/check", name="admin_carriers_ajax_check")
      */
-    public function toggleCheckAjaxAction(Request $request)
-    {
+    public function toggleCheckAjaxAction(Request $request) {
         $userId = $request->get('userId');
 
         /* @var $em \Doctrine\ORM\EntityManager */
@@ -217,8 +211,7 @@ class CarriersController extends Controller
      * добавление / редактирование региона
      * @Route("/carriers_list/activate", name="admin_carriers_ajax_activate")
      */
-    public function activeAjaxAction(Request $request)
-    {
+    public function activeAjaxAction(Request $request) {
         $userId = $request->get('userId');
 
         /* @var $em \Doctrine\ORM\EntityManager */
@@ -248,8 +241,7 @@ class CarriersController extends Controller
      * добавление / редактирование региона
      * @Route("/carriers_list/deactivate", name="admin_carriers_ajax_deactivate")
      */
-    public function deactiveAjaxAction(Request $request)
-    {
+    public function deactiveAjaxAction(Request $request) {
         $userId = $request->get('userId');
 
         /* @var $em \Doctrine\ORM\EntityManager */
@@ -273,8 +265,7 @@ class CarriersController extends Controller
      * добавление / редактирование региона
      * @Route("/carriers_list/total_remove", name="admin_carriers_ajax_remove")
      */
-    public function totalRemoveAjaxAction(Request $request)
-    {
+    public function totalRemoveAjaxAction(Request $request) {
         $userId = $request->get('userId');
 
         /* @var $em \Doctrine\ORM\EntityManager */
@@ -287,6 +278,47 @@ class CarriersController extends Controller
 
             $em->remove($user);
             $em->flush();
+        }
+
+        return new JsonResponse(array(
+            'success' => 1
+        ));
+    }
+
+    /**
+     * добавление / редактирование региона
+     * @Route("/carriers_list/edit", name="admin_carriers_ajax_edit")
+     */
+    public function editAjaxAction(Request $request) {
+        $userId = $request->get('userId');
+
+        /* @var $em \Doctrine\ORM\EntityManager */
+        $em = $this->get('doctrine.orm.entity_manager');
+        /* @var $repo \Doctrine\ORM\EntityRepository */
+        $repo = $em->getRepository('UserBundle\Entity\User');
+
+        /* @var $user \UserBundle\Entity\User */
+        if ($user = $repo->find($userId)) {
+
+            if ($request->isMethod('post')) {
+
+                try {
+
+                    $this->get('my_user_manager')->editUser($user, $request);
+                } catch (\Exception $e) {
+
+                    return new JsonResponse(array(
+                        'success' => 0,
+                        'errors' => [$e->getMessage()]
+                    ));
+                }
+            } else {
+
+                return $this->render('admin/carriers/ajax/edit.html.twig', array(
+                            'user' => $user,
+                            'cities' => $em->getRepository('UserBundle\Entity\City')->findAll()
+                ));
+            }
         }
 
         return new JsonResponse(array(

@@ -121,6 +121,9 @@
                                         <th class="column-photo2">
                                             Фото авто
                                         </th>
+                                        <th class="column-stars">
+                                            Рейтинг
+                                        </th>
                                         <th class="column-city">
                                             Город
                                         </th>
@@ -168,6 +171,9 @@
                                                 {{ carrier.getCity().getName() }}
                                             </td>
                                             <td>
+                                                {{ carrier.stars }}
+                                            </td>
+                                            <td>
                                                 {{ carrier.getExpireDate().format('H:i:s d-m-Y') }}
                                             </td>
                                             <td>
@@ -210,10 +216,17 @@
                                                         <i class="fa fa-money"></i>
                                                     </a>
                                                 {% endif %}
+
                                                 <a href="#" title="Удалить" class="btn btn-sm btn-danger source" data-toggle="modal"
                                                    data-target=".remove-modal-lg"
                                                    data-carrier="{{ carrier.getId() }}">
                                                     <i class="fa fa-remove"></i>
+                                                </a>
+
+                                                <a href="#" title="Редактировать" class="btn btn-sm btn-success source" data-toggle="modal"
+                                                   data-target=".edit-modal-lg"
+                                                   data-carrier="{{ carrier.getId() }}">
+                                                    <i class="fa fa-edit"></i>
                                                 </a>
                                             </td>
                                         </tr>
@@ -241,6 +254,7 @@
     {% include 'admin/carriers/modals/unlock.html.twig' %}
     {% include 'admin/carriers/modals/allow.html.twig' %}
     {% include 'admin/carriers/modals/disallow.html.twig' %}
+    {% include 'admin/carriers/modals/edit.html.twig' %}
 
 {% endblock %}
 
@@ -266,6 +280,18 @@
 
 
                         var href = '{{ path('admin_carriers_payments_list') }}';
+
+                        href += '?userId=' + button.data('carrier');
+                        $(this).find('.modal-body').load(href);
+                    });
+
+            $('.modal.edit-modal-lg')
+                    .on('show.bs.modal', function (event) {
+
+                        var button = $(event.relatedTarget);
+
+
+                        var href = '{{ path('admin_carriers_ajax_edit') }}';
 
                         href += '?userId=' + button.data('carrier');
                         $(this).find('.modal-body').load(href);
@@ -357,9 +383,6 @@
                             location.reload();
                         });
                     });
-
-
-
         });
     </script>
 

@@ -11,8 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @author Alexander
  */
-class PaymentType
-{
+class PaymentType {
 
     /**
      * @ORM\Id
@@ -27,7 +26,8 @@ class PaymentType
     public $term;
 
     /**
-     * @ORM\Column(type="category", type="string")
+     * @ORM\ManyToOne(targetEntity="CarType")
+     * @ORM\JoinColumn(name="car_type_id", referencedColumnName="id")
      */
     public $category;
 

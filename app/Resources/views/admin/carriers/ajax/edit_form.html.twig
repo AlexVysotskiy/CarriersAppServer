@@ -1,0 +1,165 @@
+<form id="edit-user-form" data-parsley-validate class="form-horizontal form-label-left" method="POST" action="{{ path('admin_carriers_ajax_edit') }}">
+
+    <div class="form-group">
+        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">
+            Имя 
+        </label>
+        <div class="col-md-6 col-sm-6 col-xs-12">
+            <input type="text" id="name" name="username" class="form-control col-md-7 col-xs-12" value="{{ user.getUsername() }}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">
+            Email 
+        </label>
+        <div class="col-md-6 col-sm-6 col-xs-12">
+            <input type="text" id="name" name="email"  class="form-control col-md-7 col-xs-12" value="{{ user.getEmail() }}">
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">
+            Телефон 
+        </label>
+        <div class="col-md-6 col-sm-6 col-xs-12">
+            <input type="text" id="name" name="phone"  class="form-control col-md-7 col-xs-12" value="{{ user.getPhone() }}">
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">
+            Район 
+        </label>
+        <div class="col-md-6 col-sm-6 col-xs-12">
+            <input type="text" id="name" name="city_district"  class="form-control col-md-7 col-xs-12" value="{{ user.getCityDistrict() }}">
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">
+            Описание 
+        </label>
+        <div class="col-md-6 col-sm-6 col-xs-12">
+            <input type="text" id="name" name="description"  class="form-control col-md-7 col-xs-12" value="{{ user.getDescription() }}">
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">
+            Описание автомобиля 
+        </label>
+        <div class="col-md-6 col-sm-6 col-xs-12">
+            <input type="text" id="name" name="auto_type"  class="form-control col-md-7 col-xs-12" value="{{ user.getAutoType() }}">
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">
+            Грузчики 
+        </label>
+        <div class="col-md-6 col-sm-6 col-xs-12">
+            <input type="checkbox" id="name" name="loaders" {{ user.hasLoaders() ? 'checked="checked"' : '' }}>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">
+            Цена 
+        </label>
+        <div class="col-md-6 col-sm-6 col-xs-12">
+            <input type="text" id="name" name="price"  class="form-control col-md-7 col-xs-12" value="{{ user.getPrice() }}">
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">
+            Мин. часы 
+        </label>
+        <div class="col-md-6 col-sm-6 col-xs-12">
+            <input type="text" id="name" name="min_hour"  class="form-control col-md-7 col-xs-12" value="{{ user.getMinHour() }}">
+        </div>
+    </div>
+
+    <div class="form-group">
+
+        <label class="control-label col-md-3 col-sm-3 col-xs-12">
+            Город
+        </label>
+
+        <div class="col-md-6 col-sm-6 col-xs-12">
+            <select class="form-control col-md-7 col-xs-12" name="city_id">
+
+                {% for city in cities %} 
+                    <option {{ user.getCity() ? (user.getCity().getId() == city.getId() ? 'selected' : '') : (loop.first ? 'selected' : '') }} value="{{ city.getId() }}">
+                        {{ city.getName() }}
+                    </option>
+                {% endfor %} 
+
+            </select>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">
+            Анкета скрыта 
+        </label>
+        <div class="col-md-6 col-sm-6 col-xs-12">
+            <input type="checkbox" id="name" name="hidden" {{ user.isHidden() ? 'checked="checked"' : '' }}>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">
+            Рейтинг 
+        </label>
+        <div class="col-md-6 col-sm-6 col-xs-12">
+            <input type="text" id="name" name="stars"  class="form-control col-md-7 col-xs-12" value="{{ user.stars }}">
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
+            <button type="submit" class="btn btn-success">Сохранить</button>
+        </div>
+    </div>
+
+    <div class="errors-list"></div>
+
+    {% if city %}
+        <input type="hidden" name="id" value="{{ user.getId() }}" />
+    {% endif %}
+
+</form>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        // ajax добавление региона
+        $('#edit-user-form').on('submit', function (event) {
+
+            var errorsHolder = $(this).find('.errors-list');
+            errorsHolder.html('');
+
+            event.preventDefault();
+
+            $.post($(this).attr('action'), $(this).serialize(), function (data) {
+
+                if (data.success == 0)
+                {
+                    for (var k in data.errors)
+                    {
+                        errorsHolder.append('<div class="alert alert-danger alert-dismissible fade in">' + data.errors[k] + '</div>');
+                    }
+
+                } else if (data.reload || true)
+                {
+                    location.reload();
+                } else
+                {
+                    errorsHolder.append('<div class="alert alert-success alert-dismissible fade in">Изменения успешно сохранены!</div>');
+                }
+            }, 'json');
+
+        });
+    });
+</script>

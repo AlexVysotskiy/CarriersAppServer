@@ -2,81 +2,6 @@
 
 
 {% block filter %}
-
-    <div class="">
-
-        <div class="row">
-            <div class="col-md-12 col-sm-12 col-xs-12">
-                <div class="x_panel">
-                    <div class="x_title">
-                        <h2>
-                            Фильтр
-                        </h2>
-                        <div class="clearfix"></div>
-                    </div>
-
-                    {% set currentFilterValues = request.get('filter') ? : {} %}
-
-                    <div class="x_content">
-                        <form class=" " method="get">
-                            <div class="form-group col-md-4">
-                                <label for="term">
-                                    Длительность
-                                </label>
-                                <select class="form-control" name="filter[term]">
-                                    <option value="all">Все</option>
-                                    {% for i in [1,2,3,6,12] %}
-                                        <option value="{{ i }}" 
-                                                {{ currentFilterValues.term is defined and currentFilterValues.term == i ? 'selected' : '' }}>
-                                            {{ i }} месяц(-а/-ев)
-                                        </option>
-                                    {% endfor %}
-                                </select>
-                            </div>
-                            <div class="form-group col-md-4">
-                                <label for="region">
-                                    Тип перевозчика
-                                </label>
-                                <select class="form-control" name="filter[category]">
-                                    <option value="all">Все</option>
-                                    {% for cargo in cargoList %} 
-                                        <option value="{{ cargo }}" {{ currentFilterValues.category is defined  and currentFilterValues.category == cargo ? 'selected' : '' }}>
-                                            {{ cargo == 'cargo_over_6000' ? 'более' : 'до' }} {{ cargo|trim('cargo_over', 'left') }} кг.
-                                        </option>
-                                    {% endfor %} 
-                                </select>
-                            </div>
-
-                            <div class="form-group col-md-4">
-                                <label for="region">
-                                    Категория
-                                </label>
-                                <select class="form-control" name="filter[package]">
-                                    <option value="all">Все</option>
-                                    {% for category in categories %}
-                                        <option value="{{ category.id }}" {{ currentFilterValues.package is defined  and currentFilterValues.package == category.id ? 'selected' : '' }}>
-                                            {{ category.name }}
-                                        </option>
-                                    {% endfor %} 
-                                </select>
-                            </div>
-
-                            <div class="form-group pull-right">
-                                <input type="submit" class="btn btn-default" value="Фильтровать" />
-                                <a href="{{ path('admin_payments_types_list') }}"  class="btn btn-info">
-                                    Сбросить
-                                </a>
-                            </div>
-                        </form>
-                        <div class="clearfix"></div>
-                    </div>
-                </div>
-            </div>
-
-        </div>
-
-    </div>
-
 {% endblock %}
 
 
@@ -93,7 +18,7 @@
                     <div class="x_title">
 
                         <h2>
-                            Категории платежей
+                            Категории ТС
                         </h2>
 
                         <div class="navbar-right panel_toolbox">
@@ -128,6 +53,7 @@
                                 <tbody>
 
                                     {% for num, category in categories %}
+
                                         <tr class="{{ num % 2 == 0 ? 'even' : 'odd' }} pointer">
 
                                             <td class="">
@@ -159,14 +85,14 @@
                     <div class="x_title">
 
                         <h2>
-                            Пакеты платежей
+                            Виды ТС
                         </h2>
 
                         <div class="navbar-right panel_toolbox">
-                            <a href="#" class="btn btn-success source"  data-toggle="modal" data-target=".add-modal-lg">
+                            <a href="#" class="btn btn-success source"  data-toggle="modal" data-target=".add-pp-modal-lg">
                                 Добавить
                             </a>
-                            <a href="#" class="btn btn-danger source js-remove-type-trigger" data-toggle="modal" data-target=".remove-modal-lg" disabled="disabled">
+                            <a href="#" class="btn btn-danger source js-remove-type-trigger" data-toggle="modal" data-target=".remove-pp-modal-lg" disabled="disabled">
                                 Удалить
                             </a>
                         </div>
@@ -185,21 +111,18 @@
                                             <input type="checkbox" id="check-all" class="flat">
                                         </th>
                                         <th class="column-title">
-                                            Длительность
+                                            Название
                                         </th>
                                         <th class="column-title">
-                                            Тип перевозчика
+                                            Псевдоним
                                         </th>
                                         <th class="column-title">
                                             Категория
                                         </th>
-                                        <th class="column-title">
-                                            Стоимость
-                                        </th>
                                         <th class="column-title no-link last">
                                             <span class="nobr">Действия</span>
                                         </th>
-                                        <th class="bulk-actions" colspan="5">
+                                        <th class="bulk-actions" colspan="3">
                                             <a class="antoo" style="color:#fff; font-weight:500;">Действие над записями ( <span class="action-cnt"> </span> ) <i class="fa fa-chevron-down"></i></a>
                                         </th>
                                     </tr>
@@ -207,26 +130,22 @@
 
                                 <tbody>
 
-                                    {% for num, paymentType in list %}
+                                    {% for num, type in types %}
                                         <tr class="{{ num % 2 == 0 ? 'even' : 'odd' }} pointer">
                                             <td class="a-center ">
-                                                <input type="checkbox" class="flat" name="table_records" value="{{ paymentType.id }}" />
-                                            </td>                                          
+                                                <input type="checkbox" class="flat" name="table_records" value="{{ type.id }}" />
+                                            </td>    
                                             <td class="">
-                                                {{ paymentType.term }} месяц(-а/-ев)
+                                                {{ type.name }}
                                             </td>
                                             <td class="">
-                                                {{ paymentType.category == 'cargo_over_6000' ? 'более' : 'до' }} 
-                                                {{ paymentType.category|trim('cargo_over', 'left') }} кг.
+                                                {{ type.aliase }}
                                             </td>
                                             <td class="">
-                                                {{ paymentType.package ? paymentType.package.name : 'Не определено' }}
-                                            </td>
-                                            <td class="">
-                                                {{ paymentType.value }}
+                                                {{ type.category.name }}
                                             </td>
                                             <td class=" last">
-                                                <a href="#" title="Редактировать" class="btn btn-info source "  data-toggle="modal" data-target=".add-modal-lg" data-type="{{ paymentType.id }}">
+                                                <a href="#" title="Редактировать" class="btn btn-info source "  data-toggle="modal" data-target=".add-modal-lg" data-type="{{ type.id }}">
                                                     <i class="fa fa-edit"></i>
                                                 </a>
                                             </td>
@@ -257,7 +176,7 @@
                     <button type="button" class="close" data-dismiss="modal">
                         <span aria-hidden="true">×</span>
                     </button>
-                    <h4 class="modal-title" id="myModalLabel">Добавить платежный пакет</h4>
+                    <h4 class="modal-title" id="myModalLabel">Добавить вид ТС</h4>
                 </div>
 
                 <div class="modal-body">
@@ -281,7 +200,7 @@
                         <span aria-hidden="true">×</span>
                     </button>
                     <h4 class="modal-title" id="myModalLabel">
-                        Добавить платежную категорию
+                        Добавить категорию ТС
                     </h4>
                 </div>
 
@@ -305,11 +224,11 @@
                     <button type="button" class="close" data-dismiss="modal">
                         <span aria-hidden="true">×</span>
                     </button>
-                    <h4 class="modal-title" id="myModalLabel">Удалить пакет(ы)</h4>
+                    <h4 class="modal-title" id="myModalLabel">Удалить ТС</h4>
                 </div>
 
                 <div class="modal-body">
-                    Вы точно хотите удалить выбранные платежные пакеты?
+                    Вы точно хотите удалить выбранные ТС?
                 </div>
 
                 <div class="modal-footer">
@@ -329,11 +248,11 @@
                     <button type="button" class="close" data-dismiss="modal">
                         <span aria-hidden="true">×</span>
                     </button>
-                    <h4 class="modal-title" id="myModalLabel">Удалить категорию платежа</h4>
+                    <h4 class="modal-title" id="myModalLabel">Удалить категорию ТС</h4>
                 </div>
 
                 <div class="modal-body">
-                    Вы точно хотите удалить выбранную категорию платежа?
+                    Вы точно хотите удалить выбранную категорию ТС?
                 </div>
 
                 <div class="modal-footer">
@@ -370,7 +289,7 @@
 
                         var button = $(event.relatedTarget);
 
-                        var href = '{{ path('admin_payments_types_add') }}';
+                        var href = '{{ path('admin_car_type_add') }}';
                         if (button.data('type'))
                         {
                             href += '?id=' + button.data('type');
@@ -382,13 +301,12 @@
                         $(this).find('.modal-body').html('');
                     });
 
-            // модальное окно формы добавления региона
             $('.add-pp-modal-lg')
                     .on('show.bs.modal', function (event) {
 
                         var button = $(event.relatedTarget);
 
-                        var href = '{{ path('admin_payments_category_add') }}';
+                        var href = '{{ path('admin_car_type_add_category') }}';
                         if (button.data('type'))
                         {
                             href += '?id=' + button.data('type');
@@ -400,7 +318,6 @@
                         $(this).find('.modal-body').html('');
                     });
 
-            // модальное окно формы для удаления регионов
             $('.remove-pp-modal-lg')
                     .on('show.bs.modal', function (event) {
 
@@ -416,10 +333,10 @@
                         event.stopPropagation();
 
                         var modal = $(this).parents('.modal').first();
-                        var href = '{{ path('admin_payments_package_remove') }}';
+                        var href = '{{ path('admin_car_type_remove_category') }}';
 
                         $.post(href, {id: modal.data('type')}, function (data) {
-                              location.reload();
+                            location.reload();
                         });
                     });
 
@@ -432,7 +349,7 @@
 
                         var button = $(this);
 
-                        var href = '{{ path('admin_payments_types_remove') }}';
+                        var href = '{{ path('admin_car_type_remove') }}';
 
                         var list = [];
                         $(".bulk_action input[name='table_records']:checked").each(function () {

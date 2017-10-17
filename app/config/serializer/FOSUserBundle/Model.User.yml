@@ -41,3 +41,5 @@ FOS\UserBundle\Model\User:
             expose: true
         email:
             expose: true
+        stars:
+            expose: true

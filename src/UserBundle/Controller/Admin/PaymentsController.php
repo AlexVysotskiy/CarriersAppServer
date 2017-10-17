@@ -74,26 +74,13 @@ class PaymentsController extends Controller
         /* @var $paymentPackageRepo \Doctrine\ORM\EntityRepository */
         $paymentPackageRepo = $em->getRepository('UserBundle\Entity\PaymentPackage');
 
-        $conditions = array();
-        if ($filters = $request->get('filter')) {
-
-            foreach ($filters as $key => $value) {
-
-                if (($value = trim($value)) && $value != 'all') {
-
-                    $conditions[$key] = $value;
-                }
-            }
-        }
-
-        $list = $repo->findBy($conditions, array('id' => 'DESC'));
+        $list = $repo->findBy([], array('id' => 'DESC'));
 
         return $this->render('admin/payments/types_list.html.twig', array(
                     'list' => $list,
                     'categories' => $paymentPackageRepo->findAll(),
                     'cargoList' => $this->getParameter('cargo_types'),
-                    'request' => $request,
-                    'currentFilterValues' => $conditions
+                    'request' => $request
         ));
     }
 
@@ -165,9 +152,7 @@ class PaymentsController extends Controller
 
             if (!$value) {
                 $errors[] = 'Введена неверная стоимость!';
-            } /* elseif (!($city = $cityRepo->find($city))) {
-              $errors[] = 'Выбран несуществующий город!';
-              } */
+            }
 
             if (!$errors) {
 

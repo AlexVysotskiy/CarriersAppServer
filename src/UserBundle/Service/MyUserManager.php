@@ -7,8 +7,7 @@ use Symfony\Component\HttpFoundation\Request;
 use UserBundle\Entity\User;
 use UserBundle\Validation;
 
-class MyUserManager extends UserManager
-{
+class MyUserManager extends UserManager {
 
     /**
      *
@@ -19,8 +18,7 @@ class MyUserManager extends UserManager
     /**
      * @inheritdoc
      */
-    public function findUserByUsernameOrEmail($usernameOrEmail)
-    {
+    public function findUserByUsernameOrEmail($usernameOrEmail) {
         $user = parent::findUserByUsernameOrEmail($usernameOrEmail);
         if (null === $user) {
             $userAddOnEmailRepo = $this->objectManager->getRepository('UserBundle:UserAddOnEmail');
@@ -33,8 +31,7 @@ class MyUserManager extends UserManager
         return $user;
     }
 
-    public function registerUser(Request $request)
-    {
+    public function registerUser(Request $request) {
         $params = $this->getParameters($request, array('images'));
 
         $validator = new Validation\Validator($this->getValidatorsList());
@@ -52,11 +49,9 @@ class MyUserManager extends UserManager
         return $user;
     }
 
-    public function editUser(User $user, Request $request)
-    {
-        $params = $this->getParameters($request, array('new_image'));
+    public function editUser(User $user, Request $request) {
 
-        $params['images'] = $params['new_image'];
+        $params = $this->getParameters($request, array('new_image'));
 
         $validatorsList = $this->getValidatorsList();
         $validatorsList['phone'] = new Validation\User\EditedPhoneValidation($this, $user->getPhone());
@@ -80,10 +75,9 @@ class MyUserManager extends UserManager
      * @param User $user
      * @param array $params
      */
-    protected function fillUserValues(User $user, $params)
-    {
+    protected function fillUserValues(User $user, $params) {
         // размеры
-        $dimensions = array();
+        $dimensions = $user->getDimensions();
         if (isset($params['dimensions'])) {
             $dimensions = json_decode($params['dimensions'], true);
         }
@@ -93,7 +87,7 @@ class MyUserManager extends UserManager
         }
 
         // область работы
-        $workArea = User::WORK_AREA_ALL;
+        $workArea = $user->getWorkArea() ? : User::WORK_AREA_ALL;
         if (isset($params['work_area'])) {
 
             $workArea = json_decode($params['work_area'], true);
@@ -108,7 +102,7 @@ class MyUserManager extends UserManager
         }
 
         // настройка времени работы
-        $workSettings = array();
+        $workSettings = $user->getWorkTimeSettings() ? : [];
         if (isset($params['work_time']) && ($settings = json_decode($params['work_time'], true))) {
             $workSettings = $settings;
         }
@@ -167,11 +161,22 @@ class MyUserManager extends UserManager
             $user->setPlainPassword($params['password']);
         }
 
+        if (isset($params['stars'])) {
+
+            $user->stars = intval(trim($params['stars']));
+        } else {
+
+            // Add rating for users
+            $newRating = $user->getAutoType() ? ( $user->getImageAuto() && $user->getImageProfile() ? 3 : 2 ) : 1;
+            if ($user->stars < $newRating) {
+                $user->stars = $newRating;
+            }
+        }
+
         $this->updateUser($user);
     }
 
-    protected function getParameters(Request $request, $extraParams = array())
-    {
+    protected function getParameters(Request $request, $extraParams = array()) {
         $keys = array_merge(array(
             'username',
             'password',
@@ -200,8 +205,7 @@ class MyUserManager extends UserManager
         return $params;
     }
 
-    protected function getValidatorsList()
-    {
+    protected function getValidatorsList() {
         return array(
             'username' => new Validation\User\NameValidation(),
             'password' => new Validation\User\PasswordValidation(),
@@ -218,8 +222,7 @@ class MyUserManager extends UserManager
         );
     }
 
-    public function setImageHelper($imageHelper)
-    {
+    public function setImageHelper($imageHelper) {
         $this->imageHelper = $imageHelper;
     }
 

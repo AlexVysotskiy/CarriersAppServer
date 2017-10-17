@@ -3,51 +3,6 @@
 
 {% block filter %}
 
-    <div class="">
-
-        <div class="row">
-            <div class="col-md-12 col-sm-12 col-xs-12">
-                <div class="x_panel">
-                    <div class="x_title">
-                        <h2>
-                            Фильтр
-                        </h2>
-                        <div class="clearfix"></div>
-                    </div>
-
-                    {% set currentFilterValues = request.get('filter') ? : {} %}
-
-                    <div class="x_content">
-                        <form class=" " method="get">
-                            <div class="form-group col-md-4">
-                                <label for="region">
-                                    Город
-                                </label>
-                                <select class="form-control" name="filter[city]">
-                                    <option value="all">Все</option>
-                                    {% for city in cities %} 
-                                        <option value="{{ city.getId() }}" {{ currentFilterValues.city is defined  and currentFilterValues.city == city.getId() ? 'selected' : '' }}>
-                                            {{ city.getName() }}
-                                        </option>
-                                    {% endfor %} 
-                                </select>
-                            </div>
-
-                            <div class="form-group pull-right">
-                                <input type="submit" class="btn btn-default" value="Фильтровать" />
-                                <a href="{{ path('admin_payments_list') }}"  class="btn btn-info">
-                                    Сбросить
-                                </a>
-                            </div>
-                        </form>
-                        <div class="clearfix"></div>
-                    </div>
-                </div>
-            </div>
-
-        </div>
-
-    </div>
 
 {% endblock %}
 
