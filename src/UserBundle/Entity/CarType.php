@@ -26,7 +26,7 @@ class CarType {
     public $name;
 
     /**
-     * @ORM\Column(type="aliase", nullable=false)
+     * @ORM\Column(type="string", nullable=false)
      */
     public $aliase;
 
