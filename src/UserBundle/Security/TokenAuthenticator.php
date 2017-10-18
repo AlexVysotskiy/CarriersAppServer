@@ -60,9 +60,9 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
                         ->findOneBy(
                                 [
                                     'phone' => $username,
-                                    //'enabled' => true,
+                                    'enabled' => true,
                                     'removed' => 0,
-                                    'checked' => 1
+                                    //'checked' => 1
                                 ]
         );
     }

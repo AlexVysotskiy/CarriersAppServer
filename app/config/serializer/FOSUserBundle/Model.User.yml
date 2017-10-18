@@ -43,5 +43,3 @@ FOS\UserBundle\Model\User:
             expose: true
         stars:
             expose: true
-        enabled:
-            expose: true
