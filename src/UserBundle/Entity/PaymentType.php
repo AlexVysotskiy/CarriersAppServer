@@ -26,12 +26,14 @@ class PaymentType {
     public $term;
 
     /**
+     * @var CarType
      * @ORM\ManyToOne(targetEntity="CarType")
      * @ORM\JoinColumn(name="car_type_id", referencedColumnName="id")
      */
     public $category;
 
     /**
+     * @var PaymentPackage
      * @ORM\ManyToOne(targetEntity="PaymentPackage")
      * @ORM\JoinColumn(name="payment_package_id", referencedColumnName="id")
      */

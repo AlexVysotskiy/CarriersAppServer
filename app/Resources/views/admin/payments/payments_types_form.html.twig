@@ -7,7 +7,7 @@
         </label>
         <div class="col-md-6 col-sm-6 col-xs-12">
             <select class="form-control" name="term">
-                {% for i in [1,2,3,6,12] %}
+                {% for i in durations %}
                     <option {{ paymentType ? (paymentType.term == i ? 'selected' : '') : '' }} value="{{ i }}" >{{ i }} месяц(-а/-ев)</option>
                 {% endfor %}
             </select>    

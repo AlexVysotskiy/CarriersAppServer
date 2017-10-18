@@ -210,8 +210,21 @@
                                                                     {{ duration }} месяц(-а/-ев)
                                                                 </td>
                                                                 {% for category in categories %}
-                                                                    <td class="column-title">
-                                                                        {{ category.name }}
+                                                                    <td class="column-title text-center">
+
+                                                                        {% if list[car_type.aliase][duration ~ '_' ~ category.id] is defined %}
+
+                                                                            {{ list[car_type.aliase][duration ~ '_' ~ category.id].value }}
+
+                                                                            <a href="#" title="Редактировать" class="btn btn-info source " data-toggle="modal" data-target=".add-modal-lg">
+                                                                                <i class="fa fa-edit"></i>
+                                                                            </a>
+                                                                        {% else %}
+                                                                            <a href="#" title="Добавить" class="btn btn-success source " data-toggle="modal" data-target=".add-modal-lg">
+                                                                                <i class="fa fa-plus"></i>
+                                                                            </a>
+                                                                        {% endif %}
+
                                                                     </td>
                                                                 {% endfor %} 
                                                             </tr>

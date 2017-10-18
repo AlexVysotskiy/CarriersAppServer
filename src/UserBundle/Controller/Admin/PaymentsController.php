@@ -18,6 +18,12 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 class PaymentsController extends Controller {
 
     /**
+     *
+     * @var type 
+     */
+    private $durations = [1, 2, 3, 6, 12];
+
+    /**
      * @Route("/payments_list", name="admin_payments_list")
      * @Method("GET")
      */
@@ -71,11 +77,22 @@ class PaymentsController extends Controller {
         /* @var $paymentPackageRepo \Doctrine\ORM\EntityRepository */
         $paymentPackageRepo = $em->getRepository('UserBundle\Entity\PaymentPackage');
 
-        $list = $repo->findBy([], array('id' => 'DESC'));
+        $list = [];
+        /* @var $payment \UserBundle\Entity\PaymentType */
+        foreach ($repo->findAll() as $payment) {
+
+            $al = $payment->category->aliase;
+            if (!isset($list[$al])) {
+                $list[$al] = [];
+            }
+
+            $list[$al][$payment->term . '_' . $payment->package->id] = $payment;
+        }
+
 
         return $this->render('admin/payments/types_list.html.twig', array(
                     'list' => $list,
-                    'durations' => [1, 2, 3, 6, 12],
+                    'durations' => $this->durations,
                     'categories' => $paymentPackageRepo->findAll(),
                     'cargoList' => $this->getParameter('cargo_types'),
                     'car_types' => $em->getRepository('UserBundle\Entity\CarType')->findAll(),
@@ -186,6 +203,7 @@ class PaymentsController extends Controller {
                         'paymentType' => isset($paymentType) && $paymentType ? $paymentType : null,
                         'categories' => $paymentPackageRepo->findAll(),
                         'cargoList' => $this->getParameter('cargo_types'),
+                        'durations' => $this->durations
             ));
         }
     }
