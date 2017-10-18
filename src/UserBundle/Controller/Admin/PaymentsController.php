@@ -15,15 +15,13 @@ use Symfony\Component\HttpFoundation\JsonResponse;
  *
  * @author Alexander
  */
-class PaymentsController extends Controller
-{
+class PaymentsController extends Controller {
 
     /**
      * @Route("/payments_list", name="admin_payments_list")
      * @Method("GET")
      */
-    public function paymentsListAction(Request $request)
-    {
+    public function paymentsListAction(Request $request) {
         /* @var $em \Doctrine\ORM\EntityManager */
         $em = $this->get('doctrine.orm.entity_manager');
 
@@ -63,8 +61,7 @@ class PaymentsController extends Controller
      * @Route("/payments_settings/list", name="admin_payments_types_list")
      * @Method("GET")
      */
-    public function paymentTypesListAction(Request $request)
-    {
+    public function paymentTypesListAction(Request $request) {
         /* @var $em \Doctrine\ORM\EntityManager */
         $em = $this->get('doctrine.orm.entity_manager');
 
@@ -80,6 +77,7 @@ class PaymentsController extends Controller
                     'list' => $list,
                     'categories' => $paymentPackageRepo->findAll(),
                     'cargoList' => $this->getParameter('cargo_types'),
+                    'car_types' => $em->getRepository('UserBundle\Entity\CarType')->findAll(),
                     'request' => $request
         ));
     }
@@ -89,8 +87,7 @@ class PaymentsController extends Controller
      * @Route("/payments_settings/remove_ajax", name="admin_payments_types_remove")
      * @Method("POST")
      */
-    public function removePaymentTypeAjaxAction(Request $request)
-    {
+    public function removePaymentTypeAjaxAction(Request $request) {
         if ($request->isMethod('POST')) {
 
             if (($list = $request->get('list')) && is_array($list)) {
@@ -118,8 +115,7 @@ class PaymentsController extends Controller
     /**
      * @Route("/payments_settings/add_ajax", name="admin_payments_types_add")
      */
-    public function addPaymentTypeAjax(Request $request)
-    {
+    public function addPaymentTypeAjax(Request $request) {
         /* @var $em \Doctrine\ORM\EntityManager */
         $em = $this->get('doctrine.orm.entity_manager');
 
@@ -196,8 +192,7 @@ class PaymentsController extends Controller
     /**
      * @Route("/payments_settings/add_package_ajax", name="admin_payments_category_add")
      */
-    public function addPaymentPackageAjax(Request $request)
-    {
+    public function addPaymentPackageAjax(Request $request) {
         /* @var $em \Doctrine\ORM\EntityManager */
         $em = $this->get('doctrine.orm.entity_manager');
 
@@ -258,8 +253,7 @@ class PaymentsController extends Controller
      * @Route("/payments_settings/remove_package_ajax", name="admin_payments_package_remove")
      * @Method("POST")
      */
-    public function removePaymentPackageAjaxAction(Request $request)
-    {
+    public function removePaymentPackageAjaxAction(Request $request) {
         if ($request->isMethod('POST')) {
 
             if ($id = $request->get('id')) {
