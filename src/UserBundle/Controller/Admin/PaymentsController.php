@@ -149,19 +149,25 @@ class PaymentsController extends Controller {
             $paymentType = $repo->find($id);
         }
 
+        $isNew = !isset($paymentType) || !$paymentType;
+
+        $term = abs(intval($request->get('term')));
+        $category = abs(intval($request->get('category')));
+        $package = abs(intval($request->get('package')));
+
+        if ($isNew) {
+
+            $paymentType = new \UserBundle\Entity\PaymentType();
+
+            $paymentType->term = $term;
+            $paymentType->category = $em->getRepository('UserBundle\Entity\CarType')->find($category);
+            $paymentType->package = $paymentPackageRepo->find($package);
+        }
+
         if ($request->isMethod('POST')) {
-
-            $isNew = !isset($paymentType) || !$paymentType;
-
-            if ($isNew) {
-                $paymentType = new \UserBundle\Entity\PaymentType();
-            }
 
             $errors = array();
 
-            $term = abs(intval($request->get('term')));
-            $category = $request->get('category');
-            $package = abs(intval($request->get('package')));
             $value = abs(floatval($request->get('value')));
 
             if (!$value) {
@@ -172,13 +178,6 @@ class PaymentsController extends Controller {
 
                 try {
 
-                    if (($existed = $repo->findOneBy(['term' => $term, 'category' => $category, 'package' => $package]))) {
-                        $em->remove($existed);
-                    }
-
-                    $paymentType->term = $term;
-                    $paymentType->category = $category;
-                    $paymentType->package = ($package = $paymentPackageRepo->find($package)) ? $package : null;
                     $paymentType->value = $value;
 
                     if ($isNew) {
@@ -202,7 +201,6 @@ class PaymentsController extends Controller {
             return $this->render('admin/payments/payments_types_form.html.twig', array(
                         'paymentType' => isset($paymentType) && $paymentType ? $paymentType : null,
                         'categories' => $paymentPackageRepo->findAll(),
-                        'cargoList' => $this->getParameter('cargo_types'),
                         'durations' => $this->durations
             ));
         }

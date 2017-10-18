@@ -216,11 +216,11 @@
 
                                                                             {{ list[car_type.aliase][duration ~ '_' ~ category.id].value }}
 
-                                                                            <a href="#" title="Редактировать" class="btn btn-info source " data-toggle="modal" data-target=".add-modal-lg">
+                                                                            <a href="#" title="Редактировать" class="btn btn-info source " data-id="{{ list[car_type.aliase][duration ~ '_' ~ category.id].id }}" data-toggle="modal" data-target=".add-modal-lg">
                                                                                 <i class="fa fa-edit"></i>
                                                                             </a>
                                                                         {% else %}
-                                                                            <a href="#" title="Добавить" class="btn btn-success source " data-toggle="modal" data-target=".add-modal-lg">
+                                                                            <a href="#" title="Добавить" data-term="{{ duration }}" data-category="{{ category.id }}" class="btn btn-success source " data-toggle="modal" data-target=".add-modal-lg">
                                                                                 <i class="fa fa-plus"></i>
                                                                             </a>
                                                                         {% endif %}
@@ -303,30 +303,6 @@
         </div>
     </div>
 
-    <div class="modal fade remove-modal-lg" tabindex="-1" role="dialog" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">
-                        <span aria-hidden="true">×</span>
-                    </button>
-                    <h4 class="modal-title" id="myModalLabel">Удалить пакет(ы)</h4>
-                </div>
-
-                <div class="modal-body">
-                    Вы точно хотите удалить выбранные платежные пакеты?
-                </div>
-
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
-                    <button type="button" class="btn btn-danger js-remove" data-dismiss="modal">Удалить</button>
-                </div>
-
-            </div>
-        </div>
-    </div>
-
     <div class="modal fade remove-pp-modal-lg" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
@@ -376,10 +352,20 @@
 
                         var button = $(event.relatedTarget);
 
-                        var href = '{{ path('admin_payments_types_add') }}';
-                        if (button.data('type'))
+                        var href = '{{ path('admin_payments_types_add') }}?t=1';
+                        if (button.data('id'))
                         {
-                            href += '?id=' + button.data('type');
+                            href += '&id=' + button.data('id');
+                        }
+
+                        if (button.data('category'))
+                        {
+                            href += '&category=' + button.data('category');
+                        }
+
+                        if (button.data('term'))
+                        {
+                            href += '&term=' + button.data('term');
                         }
 
                         $(this).find('.modal-body').load(href);
@@ -427,30 +413,6 @@
                         $.post(href, {id: modal.data('type')}, function (data) {
                             location.reload();
                         });
-                    });
-
-            // модальное окно формы для удаления регионов
-            $('.remove-modal-lg').find('.js-remove')
-                    .on('click', function (event) {
-
-                        event.preventDefault();
-                        event.stopPropagation();
-
-                        var button = $(this);
-
-                        var href = '{{ path('admin_payments_types_remove') }}';
-
-                        var list = [];
-                        $(".bulk_action input[name='table_records']:checked").each(function () {
-                            list.push($(this).val());
-                        });
-
-                        if (list.length)
-                        {
-                            $.post(href, {list: list}, function (data) {
-                                location.reload();
-                            });
-                        }
                     });
         });
     </script>

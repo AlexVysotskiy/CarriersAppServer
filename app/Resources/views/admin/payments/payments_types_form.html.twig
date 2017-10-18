@@ -6,11 +6,8 @@
             Длительность <span class="required">*</span>
         </label>
         <div class="col-md-6 col-sm-6 col-xs-12">
-            <select class="form-control" name="term">
-                {% for i in durations %}
-                    <option {{ paymentType ? (paymentType.term == i ? 'selected' : '') : '' }} value="{{ i }}" >{{ i }} месяц(-а/-ев)</option>
-                {% endfor %}
-            </select>    
+            {{ paymentType.term }} месяц(а/ев)
+            <input type="hidden" name="term" value="{{ paymentType.term }}" />
         </div>
     </div>
     <div class="form-group">
@@ -20,13 +17,8 @@
         </label>
 
         <div class="col-md-6 col-sm-6 col-xs-12">
-            <select class="form-control" name="category">
-                {% for cargo in cargoList %} 
-                    <option {{ paymentType ? (paymentType.category == cargo ? 'selected' : '') : '' }} value="{{ cargo }}">
-                        {{ cargo == 'cargo_over_6000' ? 'более' : 'до' }} {{ cargo|trim('cargo_over', 'left') }} кг.
-                    </option>
-                {% endfor %} 
-            </select>
+            {{ paymentType.category.category.name }}: {{ paymentType.category.name }}
+            <input type="hidden" name="category" value="{{ paymentType.category.id }}" />
         </div>
     </div>
     <div class="form-group">
@@ -36,14 +28,8 @@
         </label>
 
         <div class="col-md-6 col-sm-6 col-xs-12">
-            <select class="form-control col-md-7 col-xs-12" name="package">
-                {% for category in categories %}
-                    <option  {{ paymentType ? (paymentType.package and paymentType.package.id == category.id ? 'selected' : '') : '' }}  value="{{ category.id }}">
-                        {{ category.name }}
-                    </option>
-                {% endfor %} 
-
-            </select>
+            {{ paymentType.package.name }}
+            <input type="hidden" name="package" value="{{ paymentType.package.id }}" />
         </div>
     </div>
 
@@ -64,7 +50,7 @@
 
     <div class="errors-list"></div>
 
-    {% if paymentType %}
+    {% if paymentType and paymentType.id %}
         <input type="hidden" name="id" value="{{ paymentType.id }}" />
     {% endif %}
 
