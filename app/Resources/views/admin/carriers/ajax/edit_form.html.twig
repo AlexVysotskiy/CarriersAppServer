@@ -58,7 +58,7 @@
             Грузчики 
         </label>
         <div class="col-md-6 col-sm-6 col-xs-12">
-            <input type="checkbox" id="name" name="loaders" {{ user.hasLoaders() ? 'checked="checked"' : '' }}>
+            <input type="checkbox" id="name" name="loaders" value="1" {{ user.hasLoaders() ? 'checked="checked"' : '' }}>
         </div>
     </div>
 
@@ -104,7 +104,7 @@
             Анкета скрыта 
         </label>
         <div class="col-md-6 col-sm-6 col-xs-12">
-            <input type="checkbox" id="name" name="hidden" {{ user.isHidden() ? 'checked="checked"' : '' }}>
+            <input type="checkbox" id="name" name="hidden" {{ user.isHidden() ? 'checked="checked"' : '' }} value="1">
         </div>
     </div>
 
