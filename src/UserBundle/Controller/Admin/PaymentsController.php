@@ -75,6 +75,7 @@ class PaymentsController extends Controller {
 
         return $this->render('admin/payments/types_list.html.twig', array(
                     'list' => $list,
+                    'durations' => [1, 2, 3, 6, 12],
                     'categories' => $paymentPackageRepo->findAll(),
                     'cargoList' => $this->getParameter('cargo_types'),
                     'car_types' => $em->getRepository('UserBundle\Entity\CarType')->findAll(),

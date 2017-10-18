@@ -25,7 +25,7 @@
                                 </label>
                                 <select class="form-control" name="filter[term]">
                                     <option value="all">Все</option>
-                                    {% for i in [1,2,3,6,12] %}
+                                    {% for i in durations %}
                                         <option value="{{ i }}" 
                                                 {{ currentFilterValues.term is defined and currentFilterValues.term == i ? 'selected' : '' }}>
                                             {{ i }} месяц(-а/-ев)
@@ -187,73 +187,33 @@
                                     <div id="tab-{{ car_type.aliase }}" class="tab-pane {{ loop.first ? 'active' : '' }}">
                                         <div class="panel-body">
 
-                                            <div class="navbar-right panel_toolbox">
-                                                <a href="#" class="btn btn-success source"  
-                                                   data-toggle="modal" data-target=".add-modal-lg" data-cartype="{{ car_type.aliase }}">
-                                                    Добавить
-                                                </a>
-                                                <a href="#" class="btn btn-danger source js-remove-type-trigger" 
-                                                   data-toggle="modal" data-target=".remove-modal-lg" disabled="disabled"
-                                                   data-cartype="{{ car_type.aliase }}">
-                                                    Удалить
-                                                </a>
-                                            </div>
-
-                                            <div class="clearfix"></div>
-
                                             <div class="table-responsive">
                                                 <table id="package-list-table" class="table table-striped jambo_table bulk_action">
                                                     <thead>
                                                         <tr class="headings">
                                                             <th>
-                                                                <input type="checkbox" id="check-all" class="flat">
                                                             </th>
-                                                            <th class="column-title">
-                                                                Длительность
-                                                            </th>
-                                                            <th class="column-title">
-                                                                Тип перевозчика
-                                                            </th>
-                                                            <th class="column-title">
-                                                                Категория
-                                                            </th>
-                                                            <th class="column-title">
-                                                                Стоимость
-                                                            </th>
-                                                            <th class="column-title no-link last">
-                                                                <span class="nobr">Действия</span>
-                                                            </th>
-                                                            <th class="bulk-actions" colspan="5">
-                                                                <a class="antoo" style="color:#fff; font-weight:500;">Действие над записями ( <span class="action-cnt"> </span> ) <i class="fa fa-chevron-down"></i></a>
-                                                            </th>
+                                                            {% for category in categories %}
+                                                                <th class="column-title">
+                                                                    {{ category.name }}
+                                                                </th>
+                                                            {% endfor %} 
+
                                                         </tr>
                                                     </thead>
 
                                                     <tbody>
 
-                                                        {% for num, paymentType in list %}
-                                                            <tr class="{{ num % 2 == 0 ? 'even' : 'odd' }} pointer">
-                                                                <td class="a-center ">
-                                                                    <input type="checkbox" class="flat" name="table_records" value="{{ paymentType.id }}" />
-                                                                </td>                                          
-                                                                <td class="">
-                                                                    {{ paymentType.term }} месяц(-а/-ев)
+                                                        {% for duration in durations %}
+                                                            <tr>
+                                                                <td>
+                                                                    {{ duration }} месяц(-а/-ев)
                                                                 </td>
-                                                                <td class="">
-                                                                    {{ paymentType.category == 'cargo_over_6000' ? 'более' : 'до' }} 
-                                                                    {{ paymentType.category|trim('cargo_over', 'left') }} кг.
-                                                                </td>
-                                                                <td class="">
-                                                                    {{ paymentType.package ? paymentType.package.name : 'Не определено' }}
-                                                                </td>
-                                                                <td class="">
-                                                                    {{ paymentType.value }}
-                                                                </td>
-                                                                <td class=" last">
-                                                                    <a href="#" title="Редактировать" class="btn btn-info source "  data-toggle="modal" data-target=".add-modal-lg" data-type="{{ paymentType.id }}">
-                                                                        <i class="fa fa-edit"></i>
-                                                                    </a>
-                                                                </td>
+                                                                {% for category in categories %}
+                                                                    <td class="column-title">
+                                                                        {{ category.name }}
+                                                                    </td>
+                                                                {% endfor %} 
                                                             </tr>
                                                         {% endfor %}
 
