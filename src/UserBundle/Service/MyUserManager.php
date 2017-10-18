@@ -51,7 +51,7 @@ class MyUserManager extends UserManager {
 
     public function editUser(User $user, Request $request) {
 
-        $params = $this->getParameters($request, array('new_image'));
+        $params = $this->getParameters($request, array('new_image', 'stars'));
 
         $validatorsList = $this->getValidatorsList();
         $validatorsList['phone'] = new Validation\User\EditedPhoneValidation($this, $user->getPhone());
