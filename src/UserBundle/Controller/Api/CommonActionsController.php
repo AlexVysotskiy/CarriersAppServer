@@ -27,8 +27,8 @@ class CommonActionsController extends Controller
         $repo = $em->getRepository('UserBundle\Entity\Setting');
 
         $response = new Response($this->serialize(array(
-                    'phone' => $repo->findOneBy(['name' => 'phone'])->value
-                )), Response::HTTP_OK);
+            'phone' => $repo->findOneBy(['name' => 'phone'])->value
+        )), Response::HTTP_OK);
 
         return $this->setBaseHeaders($response);
     }
@@ -50,20 +50,20 @@ class CommonActionsController extends Controller
         $user = $em->getRepository('UserBundle\Entity\User')->find($request->get('id'));
 
         $message = (new \Swift_Message('Запрос на обратный звонок от перевозчика #' . $user->getId() . '.'))
-                ->setFrom($email->value, 'Перевозчик')
-                ->setTo($email->value)
-                ->setBody(
+            ->setFrom($email->value, 'Перевозчик')
+            ->setTo($email->value)
+            ->setBody(
                 'Поступил запрос на обратный звонок от перевозчика #' .
                 $user->getId() . ' ' . $user->getUsername() . ' '
                 . ' из ' . ' г. '
                 . $user->getCity()->getName() . ', тел. ' . $user->getPhone(), 'text/plain'
-        );
+            );
 
         $this->get('mailer')->send($message);
 
         $response = new Response($this->serialize(array(
-                    'success' => 1
-                )), Response::HTTP_OK);
+            'success' => 1
+        )), Response::HTTP_OK);
 
         return $this->setBaseHeaders($response);
     }
@@ -81,8 +81,8 @@ class CommonActionsController extends Controller
         $repo = $em->getRepository('UserBundle\Entity\Setting');
 
         $response = new Response($this->serialize(array(
-                    'message' => $repo->findOneBy(['name' => 'push_message'])->value
-                )), Response::HTTP_OK);
+            'message' => $repo->findOneBy(['name' => 'push_message'])->value
+        )), Response::HTTP_OK);
 
         return $this->setBaseHeaders($response);
     }
@@ -105,23 +105,23 @@ class CommonActionsController extends Controller
         if ($text = trim($request->get('text'))) {
 
             $message = (new \Swift_Message('Запрос/отзыв на обратный звонок от перевозчика #' . $user->getId() . '.'))
-                    ->setFrom($email->value, 'Перевозчик')
-                    ->setTo($email->value)
-                    ->setBody(
+                ->setFrom($email->value, 'Перевозчик')
+                ->setTo($email->value)
+                ->setBody(
                     'Поступил запрос/отзыв от перевозчика #' .
                     $user->getId() . ' ' . $user->getUsername() . ' '
                     . ' из ' . ' г. '
                     . $user->getCity()->getName() . ', тел. ' . $user->getPhone()
                     . '.' . PHP_EOL . PHP_EOL
                     . PHP_EOL . 'Текст:' . PHP_EOL . $text . '.', 'text/plain'
-            );
+                );
 
             $this->get('mailer')->send($message);
         }
 
         $response = new Response($this->serialize(array(
-                    'success' => 1
-                )), Response::HTTP_OK);
+            'success' => 1
+        )), Response::HTTP_OK);
 
         return $this->setBaseHeaders($response);
     }
@@ -141,7 +141,7 @@ class CommonActionsController extends Controller
 
         try {
 
-            /* @var $user \UserBundle\Entity\User  */
+            /* @var $user \UserBundle\Entity\User */
             if ($user = $userManager->findUserBy(['email' => $request->get('email'), 'removed' => 0])) {
 
                 $password = $this->generatePassword();
@@ -151,12 +151,12 @@ class CommonActionsController extends Controller
                 $email = $repoSetting->findOneBy(['name' => 'email']);
 
                 $message = (new \Swift_Message('Запрос на восстановление пароля от учетной записи в приложении "Перевозчик".'))
-                        ->setFrom($email->value, 'Перевозчик')
-                        ->setTo($user->getEmail())
-                        ->setBody(
+                    ->setFrom($email->value, 'Перевозчик')
+                    ->setTo($user->getEmail())
+                    ->setBody(
                         'Ваш новый пароль от учетной записи: ' . $password . PHP_EOL . PHP_EOL
                         . 'Обязательно смените его при следующей авторизации!.', 'text/plain'
-                );
+                    );
 
                 $result = $this->get('mailer')->send($message);
 
@@ -166,7 +166,7 @@ class CommonActionsController extends Controller
                 $result = ['success' => 1];
             }
         } catch (\Exception $e) {
-            
+
         }
 
         $response = new Response($this->serialize($result), Response::HTTP_OK);

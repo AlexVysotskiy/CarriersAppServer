@@ -39,11 +39,11 @@ class CarriersController extends Controller
         $list = $this->getCarriersList(array(
             'city' => $cityId,
             'enabled' => true
-                ), $lastId, $count);
+        ), $lastId, $count);
 
         $response = new Response($this->serialize(
-                        array('list' => $list)
-                ), Response::HTTP_OK);
+            array('list' => $list)
+        ), Response::HTTP_OK);
 
         return $this->setBaseHeaders($response);
     }
@@ -67,11 +67,11 @@ class CarriersController extends Controller
             'city' => $cityId,
             'cargoType' => $cargoType,
             'enabled' => true
-                ), $lastId, $count);
+        ), $lastId, $count);
 
         $response = new Response($this->serialize(
-                        array('list' => $list)
-                ), Response::HTTP_OK);
+            array('list' => $list)
+        ), Response::HTTP_OK);
 
         return $this->setBaseHeaders($response);
     }
@@ -89,8 +89,8 @@ class CarriersController extends Controller
         $carrier = $userManager->findUserBy(array('id' => $carrierId));
 
         $response = new Response($this->serialize(
-                        array('carrier' => $carrier)
-                ), Response::HTTP_OK);
+            array('carrier' => $carrier)
+        ), Response::HTTP_OK);
 
         return $this->setBaseHeaders($response);
     }
@@ -109,14 +109,33 @@ class CarriersController extends Controller
 
         /* @var $carrier User */
         if ($carrier = $userManager->findUserBy(array('id' => $carrierId))) {
-            
+
             $carrier->rating++;
             $userManager->updateUser($carrier);
         }
-        
+
         $response = new Response($this->serialize(
-                        array('success' => isset($carrier) ? $carrier->rating : 1)
-                ), Response::HTTP_OK);
+            array('success' => isset($carrier) ? $carrier->rating : 1)
+        ), Response::HTTP_OK);
+
+        return $this->setBaseHeaders($response);
+    }
+
+
+    /**
+     * @Route("/carrier_car_types/list", name="api_v1_carrier_car_type_list")
+     */
+    public function carTypeListAction(Request $request)
+    {
+        /* @var $em \Doctrine\ORM\EntityManager */
+        $em = $this->get('doctrine.orm.entity_manager');
+
+        $result = [
+            'categories' => $em->getRepository('UserBundle\Entity\CarCategory')->findAll(),
+            'transport' => $em->getRepository('UserBundle\Entity\CarType')->findAll(),
+        ];
+
+        $response = new Response($this->serialize($result), Response::HTTP_OK);
 
         return $this->setBaseHeaders($response);
     }
@@ -130,7 +149,7 @@ class CarriersController extends Controller
 
         foreach ($conditions as $name => $value) {
 
-            $query .= " u.$name = " . (is_numeric($value) ? $value : "'$value'" ) . " and";
+            $query .= " u.$name = " . (is_numeric($value) ? $value : "'$value'") . " and";
         }
 
         $query = rtrim($query, 'and') . ' and u.hidden != 1 and u.removed != 1 and u.checked = 1 and u.expireDate > \'' . date('Y-m-d H:i:s') . '\'';
