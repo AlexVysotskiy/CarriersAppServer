@@ -210,7 +210,8 @@
                                                                     {{ duration }} месяц(-а/-ев)
                                                                 </td>
                                                                 {% for category in categories %}
-                                                                    <td class="column-title text-center">
+                                                                    
+                                                                    <td id="{{ car_type.aliase ~ '_' ~ duration ~ '_' ~ category.id }}" class="column-title text-center">
 
                                                                         {% if list[car_type.aliase][duration ~ '_' ~ category.id] is defined %}
 
@@ -367,7 +368,7 @@
                         {
                             href += '&term=' + button.data('term');
                         }
-                        
+
                         if (button.data('package'))
                         {
                             href += '&package=' + button.data('package');

@@ -67,7 +67,9 @@
 
             event.preventDefault();
 
-            $.post($(this).attr('action'), $(this).serialize(), function (data) {
+            var form = $(this);
+
+            $.post($(this).attr('action'), form.serialize(), function (data) {
 
                 if (data.success == 0)
                 {
@@ -76,9 +78,11 @@
                         errorsHolder.append('<div class="alert alert-danger alert-dismissible fade in">' + data.errors[k] + '</div>');
                     }
 
-                } else if (data.reload || true)
+                } else if (data.reload)
                 {
-                    location.reload();
+                    var el = $('#{{ paymentType.category.aliase ~ '_' ~ paymentType.term ~ '_' ~ paymentType.package.id }}');
+                    el.html(data.value);
+                    form.parents('.modal').first().modal('hide');
                 } else
                 {
                     errorsHolder.append('<div class="alert alert-success alert-dismissible fade in">Изменения успешно сохранены!</div>');

@@ -194,7 +194,8 @@ class PaymentsController extends Controller {
             return new JsonResponse(array(
                 'success' => $errors ? 0 : 1,
                 'errors' => $errors,
-                'reload' => $isNew
+                'reload' => $isNew,
+                'value' => $value
             ));
         } else {
 
