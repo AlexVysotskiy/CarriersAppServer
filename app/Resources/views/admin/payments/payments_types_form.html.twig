@@ -78,7 +78,7 @@
                         errorsHolder.append('<div class="alert alert-danger alert-dismissible fade in">' + data.errors[k] + '</div>');
                     }
 
-                } else if (data.reload)
+                } else if (data.reload || true)
                 {
                     var el = $('#{{ paymentType.category.aliase ~ '_' ~ paymentType.term ~ '_' ~ paymentType.package.id }}');
                     el.html(data.value);
