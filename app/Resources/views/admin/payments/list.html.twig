@@ -83,12 +83,11 @@
                                                 {{ order.city.getName() }}
                                             </td>
                                             <td class="">
+
                                                 {{  order.term ~ 'м. ' }}
 
                                                 {% if order.user %}
-
-                                                    {% set cat = order.user.getCargoType() %}
-                                                    {{ (cat == 'cargo_over_6000' ? 'более' : 'до') ~ cat|trim('cargo_over', 'left') ~ ' кг.'}}
+                                                    {{  carTypes[order.user.getCargoType()].name }}
                                                 {% endif %}
 
                                             </td>

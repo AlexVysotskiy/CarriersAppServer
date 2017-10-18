@@ -9,17 +9,19 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use UserBundle\Entity\CarType;
 
 /**
  * Админка для платежей
  *
  * @author Alexander
  */
-class PaymentsController extends Controller {
+class PaymentsController extends Controller
+{
 
     /**
      *
-     * @var type 
+     * @var type
      */
     private $durations = [1, 2, 3, 6, 12];
 
@@ -27,7 +29,8 @@ class PaymentsController extends Controller {
      * @Route("/payments_list", name="admin_payments_list")
      * @Method("GET")
      */
-    public function paymentsListAction(Request $request) {
+    public function paymentsListAction(Request $request)
+    {
         /* @var $em \Doctrine\ORM\EntityManager */
         $em = $this->get('doctrine.orm.entity_manager');
 
@@ -38,7 +41,7 @@ class PaymentsController extends Controller {
         $cityRepo = $em->getRepository('UserBundle\Entity\City');
         $cityList = $cityRepo->findBy(array(
             'active' => true
-                ), array('id' => 'DESC', 'order' => 'ASC'));
+        ), array('id' => 'DESC', 'order' => 'ASC'));
 
         $conditions = array(
             'success' => true
@@ -53,13 +56,20 @@ class PaymentsController extends Controller {
             }
         }
 
+        $carTypes = [];
+        /** @var CarType $entity */
+        foreach ($em->getRepository('UserBundle\Entity\CarType')->findAll() as $entity) {
+            $carTypes[$entity->aliase] = $entity;
+        }
+
         $list = $repo->findBy($conditions, array('id' => 'DESC'));
 
         return $this->render('admin/payments/list.html.twig', array(
-                    'list' => $list,
-                    'cities' => $cityList,
-                    'filters' => $filters,
-                    'request' => $request
+            'list' => $list,
+            'cities' => $cityList,
+            'carTypes' => $carTypes,
+            'filters' => $filters,
+            'request' => $request
         ));
     }
 
@@ -67,7 +77,8 @@ class PaymentsController extends Controller {
      * @Route("/payments_settings/list", name="admin_payments_types_list")
      * @Method("GET")
      */
-    public function paymentTypesListAction(Request $request) {
+    public function paymentTypesListAction(Request $request)
+    {
         /* @var $em \Doctrine\ORM\EntityManager */
         $em = $this->get('doctrine.orm.entity_manager');
 
@@ -91,12 +102,12 @@ class PaymentsController extends Controller {
 
 
         return $this->render('admin/payments/types_list.html.twig', array(
-                    'list' => $list,
-                    'durations' => $this->durations,
-                    'categories' => $paymentPackageRepo->findAll(),
-                    'cargoList' => $this->getParameter('cargo_types'),
-                    'car_types' => $em->getRepository('UserBundle\Entity\CarType')->findAll(),
-                    'request' => $request
+            'list' => $list,
+            'durations' => $this->durations,
+            'categories' => $paymentPackageRepo->findAll(),
+            'cargoList' => $this->getParameter('cargo_types'),
+            'car_types' => $em->getRepository('UserBundle\Entity\CarType')->findAll(),
+            'request' => $request
         ));
     }
 
@@ -105,7 +116,8 @@ class PaymentsController extends Controller {
      * @Route("/payments_settings/remove_ajax", name="admin_payments_types_remove")
      * @Method("POST")
      */
-    public function removePaymentTypeAjaxAction(Request $request) {
+    public function removePaymentTypeAjaxAction(Request $request)
+    {
         if ($request->isMethod('POST')) {
 
             if (($list = $request->get('list')) && is_array($list)) {
@@ -133,7 +145,8 @@ class PaymentsController extends Controller {
     /**
      * @Route("/payments_settings/add_ajax", name="admin_payments_types_add")
      */
-    public function addPaymentTypeAjax(Request $request) {
+    public function addPaymentTypeAjax(Request $request)
+    {
         /* @var $em \Doctrine\ORM\EntityManager */
         $em = $this->get('doctrine.orm.entity_manager');
 
@@ -200,9 +213,9 @@ class PaymentsController extends Controller {
         } else {
 
             return $this->render('admin/payments/payments_types_form.html.twig', array(
-                        'paymentType' => isset($paymentType) && $paymentType ? $paymentType : null,
-                        'categories' => $paymentPackageRepo->findAll(),
-                        'durations' => $this->durations
+                'paymentType' => isset($paymentType) && $paymentType ? $paymentType : null,
+                'categories' => $paymentPackageRepo->findAll(),
+                'durations' => $this->durations
             ));
         }
     }
@@ -210,7 +223,8 @@ class PaymentsController extends Controller {
     /**
      * @Route("/payments_settings/add_package_ajax", name="admin_payments_category_add")
      */
-    public function addPaymentPackageAjax(Request $request) {
+    public function addPaymentPackageAjax(Request $request)
+    {
         /* @var $em \Doctrine\ORM\EntityManager */
         $em = $this->get('doctrine.orm.entity_manager');
 
@@ -261,7 +275,7 @@ class PaymentsController extends Controller {
         } else {
 
             return $this->render('admin/payments/payments_package_form.html.twig', array(
-                        'package' => isset($paymentPackage) && $paymentPackage ? $paymentPackage : null
+                'package' => isset($paymentPackage) && $paymentPackage ? $paymentPackage : null
             ));
         }
     }
@@ -271,7 +285,8 @@ class PaymentsController extends Controller {
      * @Route("/payments_settings/remove_package_ajax", name="admin_payments_package_remove")
      * @Method("POST")
      */
-    public function removePaymentPackageAjaxAction(Request $request) {
+    public function removePaymentPackageAjaxAction(Request $request)
+    {
         if ($request->isMethod('POST')) {
 
             if ($id = $request->get('id')) {
@@ -288,7 +303,7 @@ class PaymentsController extends Controller {
                 $list = $em->getRepository('UserBundle\Entity\City')->findBy([
                     'paymentPackage' => $id
                 ]);
-                /* @var $entity \UserBundle\Entity\City  */
+                /* @var $entity \UserBundle\Entity\City */
                 foreach ($list as $entity) {
                     $entity->paymentPackage = null;
                 }
@@ -296,7 +311,7 @@ class PaymentsController extends Controller {
                 $list = $em->getRepository('UserBundle\Entity\PaymentType')->findBy([
                     'package' => $id
                 ]);
-                /* @var $entity \UserBundle\Entity\PaymentType  */
+                /* @var $entity \UserBundle\Entity\PaymentType */
                 foreach ($list as $entity) {
                     $entity->package = null;
                 }
