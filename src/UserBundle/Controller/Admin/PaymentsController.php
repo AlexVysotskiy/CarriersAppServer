@@ -152,7 +152,7 @@ class PaymentsController extends Controller {
         $isNew = !isset($paymentType) || !$paymentType;
 
         $term = abs(intval($request->get('term')));
-        $category = abs(intval($request->get('category')));
+        $cartype = abs(intval($request->get('category')));
         $package = abs(intval($request->get('package')));
 
         if ($isNew) {
@@ -160,7 +160,7 @@ class PaymentsController extends Controller {
             $paymentType = new \UserBundle\Entity\PaymentType();
 
             $paymentType->term = $term;
-            $paymentType->category = $em->getRepository('UserBundle\Entity\CarType')->find($category);
+            $paymentType->category = $em->getRepository('UserBundle\Entity\CarType')->find($cartype);
             $paymentType->package = $paymentPackageRepo->find($package);
         }
 

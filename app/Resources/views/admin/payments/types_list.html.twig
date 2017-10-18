@@ -220,7 +220,7 @@
                                                                                 <i class="fa fa-edit"></i>
                                                                             </a>
                                                                         {% else %}
-                                                                            <a href="#" title="Добавить" data-term="{{ duration }}" data-category="{{ category.id }}" class="btn btn-success source " data-toggle="modal" data-target=".add-modal-lg">
+                                                                            <a href="#" title="Добавить" data-term="{{ duration }}" data-category="{{ car_type.id }}" data-package="{{ category.id }}"  class="btn btn-success source " data-toggle="modal" data-target=".add-modal-lg">
                                                                                 <i class="fa fa-plus"></i>
                                                                             </a>
                                                                         {% endif %}
@@ -366,6 +366,11 @@
                         if (button.data('term'))
                         {
                             href += '&term=' + button.data('term');
+                        }
+                        
+                        if (button.data('package'))
+                        {
+                            href += '&package=' + button.data('package');
                         }
 
                         $(this).find('.modal-body').load(href);
