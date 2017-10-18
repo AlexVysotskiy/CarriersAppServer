@@ -55,6 +55,7 @@ class MyUserManager extends UserManager {
 
         $validatorsList = $this->getValidatorsList();
         $validatorsList['phone'] = new Validation\User\EditedPhoneValidation($this, $user->getPhone());
+        $validatorsList['email'] = new Validation\User\EditedEmailValidation($this, $user->getEmail());
 
         if (!$params['password']) {
             unset($validatorsList['password']);
