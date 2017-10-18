@@ -49,7 +49,7 @@ class PaymentController extends BaseController {
             $list = $city->paymentPackage->paymentTypes->toArray();
 
             $list = array_filter($list, function($item) use ($cargoType) {
-                return $item->category == $cargoType;
+                return $item->category->aliase == $cargoType;
             });
 
             $res = [];

@@ -214,12 +214,12 @@ class MyUserManager extends UserManager {
             'phone' => new Validation\User\PhoneValidation($this),
             'price' => new Validation\User\NotZeroValidation('Стоимость является обязательным полем!'),
             'min_hour' => new Validation\User\NotZeroValidation('Количество часов является обязательным полем!'),
-            'city_id' => new Validation\User\CityValidation($this->objectManager),
-            'cargo_type' => new Validation\User\ValueFromRangeValidation([
+            'city_id' => new Validation\User\CityValidation($this->objectManager)
+            /*'cargo_type' => new Validation\User\ValueFromRangeValidation([
                 'cargo_300', 'cargo_700',
                 'cargo_1500', 'cargo_3000',
                 'cargo_6000', 'cargo_over_6000'
-                    ], 'Выбран неверный тип перевозки!'),
+                    ], 'Выбран неверный тип перевозки!'),*/
         );
     }
 
