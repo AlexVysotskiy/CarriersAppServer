@@ -127,6 +127,7 @@
 
     {% if user %}
         <input type="hidden" name="id" value="{{ user.getId() }}" />
+        <input type="hidden" name="cargo_type" value="{{ user.getCargoType() }}" />
     {% endif %}
 
 </form>
