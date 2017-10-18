@@ -290,7 +290,7 @@ class CarriersController extends Controller {
      * @Route("/carriers_list/edit", name="admin_carriers_ajax_edit")
      */
     public function editAjaxAction(Request $request) {
-        $userId = $request->get('id');
+        $userId = $request->get('userId') ? : $request->get('id');
 
         /* @var $em \Doctrine\ORM\EntityManager */
         $em = $this->get('doctrine.orm.entity_manager');
