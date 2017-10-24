@@ -163,7 +163,7 @@ class User extends BaseUser {
 
     /**
      *
-     * @ORM\OneToMany(targetEntity="Order", mappedBy="user")
+     * @ORM\OneToMany(targetEntity="Order", mappedBy="user", cascade={"all"})
      */
     public $payments;
 
