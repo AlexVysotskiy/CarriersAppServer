@@ -168,10 +168,11 @@
                                                 {% endif %}
                                             </td>
                                             <td>
-                                                {{ carrier.getCity().getName() }}
+                                                {{ carrier.stars }}
+
                                             </td>
                                             <td>
-                                                {{ carrier.stars }}
+                                                {{ carrier.getCity().getName() }}
                                             </td>
                                             <td>
                                                 {{ carrier.getExpireDate().format('H:i:s d-m-Y') }}
