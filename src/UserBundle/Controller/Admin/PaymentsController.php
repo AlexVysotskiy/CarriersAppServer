@@ -208,7 +208,8 @@ class PaymentsController extends Controller
                 'success' => $errors ? 0 : 1,
                 'errors' => $errors,
                 'reload' => $isNew,
-                'value' => $value
+                'value' => $value,
+                'id' => $paymentType->id
             ));
         } else {
 
