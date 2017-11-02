@@ -211,13 +211,13 @@
                                                                 </td>
                                                                 {% for category in categories %}
                                                                     
-                                                                    <td id="{{ car_type.aliase ~ '_' ~ duration ~ '_' ~ category.id }}" class="column-title text-center">
+                                                                    <td id="{{ car_type.aliase ~ '_' ~ duration ~ '_' ~ category.id }}" class="column-title text-center" data-id="{{ list[car_type.aliase][duration ~ '_' ~ category.id].id }}">
 
                                                                         {% if list[car_type.aliase][duration ~ '_' ~ category.id] is defined %}
 
                                                                             {{ list[car_type.aliase][duration ~ '_' ~ category.id].value }}
 
-                                                                            <a href="#" title="Редактировать" class="btn btn-info source " data-id="{{ list[car_type.aliase][duration ~ '_' ~ category.id].id }}" data-toggle="modal" data-target=".add-modal-lg">
+                                                                            <a href="#" title="Редактировать" class="btn btn-info source edit" data-toggle="modal" data-target=".add-modal-lg">
                                                                                 <i class="fa fa-edit"></i>
                                                                             </a>
                                                                         {% else %}
@@ -354,9 +354,9 @@
                         var button = $(event.relatedTarget);
 
                         var href = '{{ path('admin_payments_types_add') }}?t=1';
-                        if (button.data('id'))
+                        if (button.hasClass('edit'))
                         {
-                            href += '&id=' + button.data('id');
+                            href += '&id=' + button.parent().data('id');
                         }
 
                         if (button.data('category'))

@@ -14,7 +14,7 @@ security:
             memory:
                 users:
                     admin:
-                        password: v6RF_uhqvk
+                        password: tehnika
                         roles: [ROLE_USER, ROLE_ADMIN]
         fos_userbundle:
             id: fos_user.user_provider.username

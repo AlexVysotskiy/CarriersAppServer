@@ -81,7 +81,7 @@
                 } else if (data.reload || true)
                 {
                     var el = $('#{{ paymentType.category.aliase ~ '_' ~ paymentType.term ~ '_' ~ paymentType.package.id }}');
-                    el.html(data.value);
+                    el.html(data.value + ' ' + '<a href="#" title="Редактировать" class="btn btn-info source edit" data-toggle="modal" data-target=".add-modal-lg"><i class="fa fa-edit"></i></a>');
                     form.parents('.modal').first().modal('hide');
                 } else
                 {
